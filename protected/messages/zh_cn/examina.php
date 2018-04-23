@@ -1,0 +1,70 @@
+<?php
+return array(
+    'the name of already exists'=>'名称已经存在',
+    ' can not repeat'=>'不能重复',
+    'Data exception, please refresh retry.'=>'数据异常，请刷新重试',
+    ' can not empty'=>'不能为空',
+
+	'Images' => '图片',
+	'City' => '城市',
+
+	' Did not find' => '没找到',
+	'Employee Name' => '员工名字',
+    'Remark' => '备注',
+    'name' => '名字',
+    'display name' => '描述',
+
+    'add question' => '添加试题',
+    'question code' => '试题编号',
+    'question name' => '试题内容',
+    'question list' => '试题列表',
+    'question form' => '试题表单',
+    'question remark' => '试题讲解',
+    'correct answer' => '正确答案',
+    'wrong answer A' => '错误答案A',
+    'wrong answer B' => '错误答案B',
+    'wrong answer C' => '错误答案C',
+
+    'choose' => '选项',
+
+    'test name' => '测验单名字',
+    'test display' => '测验单描述',
+    'start time' => '开始时间',
+    'end time' => '结束时间',
+    'question num' => '试题数量',
+    'Scope of application' => '测验范围',
+    'staff select' => '选择员工',
+    'staff all' => '员工范围',
+    'all staff' => '所有员工',
+    'city all' => '城市范围',
+    'all city' => '所有城市',
+    'custom' => '自定义',
+    'test list' => '测验单列表',
+    'test form' => '测验单表单',
+
+    'correct num' => '正确数量',
+    'wrong num' => '错误数量',
+    'not involved' => '未参与',
+    'expired' => '已过期',
+    'No need to participate' => '不需要参与',
+    'start test' => '开始测验',
+    'next title' => '下一题',
+
+    'test results' => '测试结果',
+    'Detail' => '详情',
+    'Interpretation' => '讲解',
+    'Participate in time' => '参与时间',
+    'correct title' => '正确试题',
+    'wrong title' => '错误试题',
+    'simulation results' => '模拟结果',
+
+    'The results of the simulation test are not included in the test results, only for personal reference.' => '模拟测验的结果不计入测试结果，仅提供个人参考',
+
+    'already involved' => '已参与人数',
+    'Import File' => '导入',
+    'file' => '文件',
+    'correct' => '正确率',
+    'occurrences' => '出现次数',
+    'sum correct' => '总正确率',
+);
+?>

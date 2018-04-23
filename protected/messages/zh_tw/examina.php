@@ -1,0 +1,70 @@
+<?php
+return array(
+    'the name of already exists'=>'名稱已經存在',
+    ' can not repeat'=>'不能重複',
+    'Data exception, please refresh retry.'=>'數據異常，請刷新重試',
+    ' can not empty'=>'不能為空',
+
+    'Images' => '圖片',
+    'City' => '城市',
+
+    ' Did not find' => '沒找到',
+    'Employee Name' => '員工名字',
+    'Remark' => '備註',
+    'name' => '名字',
+    'display name' => '描述',
+
+    'add question' => '添加試題',
+    'question code' => '試題編號',
+    'question name' => '試題內容',
+    'question list' => '試題列表',
+    'question form' => '試題表單',
+    'question remark' => '試題講解',
+    'correct answer' => '正確答案',
+    'wrong answer A' => '錯誤答案A',
+    'wrong answer B' => '錯誤答案B',
+    'wrong answer C' => '錯誤答案C',
+
+    'choose' => '選項',
+
+    'test name' => '測驗單名字',
+    'test display' => '測驗單描述',
+    'start time' => '開始時間',
+    'end time' => '結束時間',
+    'question num' => '試題數量',
+    'Scope of application' => '測驗範圍',
+    'staff select' => '選擇員工',
+    'staff all' => '員工範圍',
+    'all staff' => '所有員工',
+    'city all' => '城市範圍',
+    'all city' => '所有城市',
+    'custom' => '自定義',
+    'test list' => '測驗單列表',
+    'test form' => '測驗單表單',
+
+    'correct num' => '正確數量',
+    'wrong num' => '錯誤數量',
+    'not involved' => '未參與',
+    'expired' => '已過期',
+    'No need to participate' => '不需要參與',
+    'start test' => '開始測驗',
+    'next title' => '下一題',
+
+    'test results' => '測驗結果',
+    'Detail' => '詳情',
+    'Interpretation' => '講解',
+    'Participate in time' => '參與時間',
+    'correct title' => '正確試題',
+    'wrong title' => '錯誤試題',
+    'simulation results' => '模擬結果',
+
+    'The results of the simulation test are not included in the test results, only for personal reference.' => '模擬測驗的結構不計入測試結果，僅提供個人參考',
+
+    'already involved' => '已參與人數',
+    'Import File' => '導入',
+    'file' => '文件',
+    'correct' => '正確率',
+    'occurrences' => '出現次數',
+    'sum correct' => '總正確率',
+);
+?>
