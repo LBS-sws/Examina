@@ -15,7 +15,12 @@ $this->pageTitle=Yii::app()->name . ' - simTest Form';
 <style>
     #staffDiv .checkbox-inline{width: 100px;}
     .resultDiv.have-error .resultBody_t{color:red;}
+    .resultDiv.have-error .remark{color:red;border-color: red;}
     .resultBody_b{padding-left: 20px;}
+
+    .radio>label:after{font: normal normal normal 14px/1 FontAwesome;float: left;width: 18px;margin-left: -18px;text-align: center;line-height: 18px;}
+    .radio>label.text-danger:after{content: "\f00d"}
+    .radio>label.text-primary:after{content: "\f00c"}
 </style>
 <section class="content-header">
 	<h1>

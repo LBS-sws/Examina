@@ -27,7 +27,7 @@ class StatisticsViewList extends CListPageModel
 		$suffix = Yii::app()->params['envSuffix'];
 		$city = Yii::app()->user->city();
         $city_allow = Yii::app()->user->city_allow();
-		$sql1 = "select d.id,d.name AS employee_name,d.city,a.lcd from exa_examina a 
+		$sql1 = "select d.id,d.name AS employee_name,d.city,min(a.lcd) AS lcd from exa_examina a 
                 LEFT JOIN hr$suffix.hr_employee d ON a.employee_id = d.id
                 where a.quiz_id = '$index' 
 			";

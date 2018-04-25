@@ -1,3 +1,9 @@
+<style>
+    #wrongdialog dd:after{font: normal normal normal 14px/1 FontAwesome;float: left;width: 18px;margin-left: -18px;text-align: center;line-height: 18px;}
+    #wrongdialog dd.text-danger:after{content: "\f00d"}
+    #wrongdialog dd.text-primary:after{content: "\f00c"}
+</style>
+
 <?php
 	$ftrbtn = array();
 	$ftrbtn[] = TbHtml::button(Yii::t('dialog','Close'), array('data-dismiss'=>'modal','color'=>TbHtml::BUTTON_COLOR_DEFAULT,"class"=>"pull-right"));
