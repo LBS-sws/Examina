@@ -92,6 +92,18 @@ class MyTestList extends CListPageModel
 		return true;
 	}
 
+	//判斷員工能否參加考試  true:允許參加  false：不允許參加
+	public function judeStaff($quz_id,$staff_id){
+	    $model = new TestTopForm();
+        $model->retrieveData($quz_id);
+        $record = $model->getAttributes();
+        $list = MyTestList::judgeStaffTest($record,$staff_id);
+        if($list["bool"]===false){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 	//判斷員工是否參與測驗
 	private function judgeStaffTest($record,$staff_id=""){

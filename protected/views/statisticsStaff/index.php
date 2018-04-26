@@ -11,7 +11,7 @@ $this->pageTitle=Yii::app()->name . ' - statisticsStaff';
 
 <section class="content-header">
     <h1>
-        <strong><?php echo Yii::t('app','Title results statistics'); ?></strong>
+        <strong><?php echo Yii::t('app','Staff results statistics'); ?></strong>
     </h1>
     <!--
         <ol class="breadcrumb">
@@ -29,7 +29,7 @@ $this->pageTitle=Yii::app()->name . ' - statisticsStaff';
         'city',
     );
    $this->widget('ext.layout.ListPageWidget', array(
-        'title'=>Yii::t('app','Title results statistics'),
+        'title'=>Yii::t('app','Staff results statistics'),
         'model'=>$model,
         'viewhdr'=>'//statisticsStaff/_listhdr',
         'viewdtl'=>'//statisticsStaff/_listdtl',
