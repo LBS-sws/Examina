@@ -66,5 +66,6 @@ return array(
     'correct' => '正確率',
     'occurrences' => '出現次數',
     'sum correct' => '總正確率',
+    'Not started' => '沒有開始',
 );
 ?>

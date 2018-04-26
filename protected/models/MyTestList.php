@@ -114,18 +114,18 @@ class MyTestList extends CListPageModel
             ->leftJoin("exa_title_choose b","a.choose_id = b.id")
             ->where("a.quiz_id=:quiz_id and a.employee_id=:employee_id", array(':quiz_id'=>$record["id"],':employee_id'=>$staff_id))->queryAll();
 	    if(!$count){
-            if($record["staff_all"] == 1){
-                return array(
-                    "bool"=>false,
-                    "string"=>Yii::t("examina","not involved"),
-                    "color"=>" text-primary",
-                ); //沒有參與
-            }else{
-                $row = Yii::app()->db->createCommand()->select("*")->from("exa_quiz_staff")
-                    ->where("quiz_id=:quiz_id and employee_id=:employee_id", array(':quiz_id'=>$record["id"],':employee_id'=>$staff_id))->queryRow();
-                if($row){
-                    $date = date("Y-m-d");
-                    if($date>=date("Y-m-d",strtotime($record['start_time'])) && $date<=date("Y-m-d",strtotime($record['end_time']))){
+            $date = date("Y-m-d");
+            if($date>=date("Y-m-d",strtotime($record['start_time'])) && $date<=date("Y-m-d",strtotime($record['end_time']))){
+                if($record["staff_all"] == 1){
+                    return array(
+                        "bool"=>false,
+                        "string"=>Yii::t("examina","not involved"),
+                        "color"=>" text-primary",
+                    ); //沒有參與
+                }else{
+                    $row = Yii::app()->db->createCommand()->select("*")->from("exa_quiz_staff")
+                        ->where("quiz_id=:quiz_id and employee_id=:employee_id", array(':quiz_id'=>$record["id"],':employee_id'=>$staff_id))->queryRow();
+                    if($row){
                         return array(
                             "bool"=>false,
                             "string"=>Yii::t("examina","not involved"),
@@ -134,16 +134,24 @@ class MyTestList extends CListPageModel
                     }else{
                         return array(
                             "bool"=>true,
-                            "string"=>Yii::t("examina","expired"),
-                            "color"=>" text-danger",
-                        ); //已過期
+                            "string"=>Yii::t("examina","No need to participate"),
+                            "color"=>"",
+                        ); //不需要參與
                     }
+                }
+            }else{
+                if($date<date("Y-m-d",strtotime($record['start_time']))){
+                    return array(
+                        "bool"=>true,
+                        "string"=>Yii::t("examina","Not started"),
+                        "color"=>" text-muted",
+                    ); //沒有開始
                 }else{
                     return array(
                         "bool"=>true,
-                        "string"=>Yii::t("examina","No need to participate"),
-                        "color"=>"",
-                    ); //不需要參與
+                        "string"=>Yii::t("examina","expired"),
+                        "color"=>" text-danger",
+                    ); //已過期
                 }
             }
         }else{
