@@ -11,6 +11,7 @@ class QuestionForm extends CFormModel
 	public $id = 0;
 	public $title_code;
 	public $name;
+	public $type_id;
 	public $remark;
 	public $city;
 	public $answerList=array(
@@ -32,6 +33,7 @@ class QuestionForm extends CFormModel
             'name'=>Yii::t('examina','question name'),
             'city'=>Yii::t('examina','City'),
             'remark'=>Yii::t('examina','question remark'),
+            'type_id'=>Yii::t('examina','category name'),
 
             'answer'=>Yii::t('examina','correct answer'),
             'answer_a'=>Yii::t('examina','wrong answer A'),
@@ -47,8 +49,9 @@ class QuestionForm extends CFormModel
 	{
 		return array(
 			//array('id, position, leave_reason, remarks, email, staff_type, leader','safe'),
-            array('id, title_code, name, remark, answerList','safe'),
+            array('id, title_code, name, remark, type_id, answerList','safe'),
 			array('name','required'),
+			array('type_id','required'),
 			array('answerList','required'),
 			array('name','validateName'),
 			array('answerList','validateAnswer'),
@@ -116,6 +119,7 @@ class QuestionForm extends CFormModel
 			foreach ($rows as $row)
 			{
 				$this->id = $row['id'];
+				$this->type_id = $row['type_id'];
 				$this->title_code = $row['title_code'];
 				$this->remark = $row['remark'];
                 $this->name = $row['name'];
@@ -165,15 +169,16 @@ class QuestionForm extends CFormModel
 				break;
 			case 'new':
 				$sql = "insert into exa_title(
-							remark, name, city, lcu
+							remark, name, type_id, city, lcu
 						) values (
-							:remark, :name, :city, :lcu
+							:remark, :name, :type_id, :city, :lcu
 						)";
 				break;
 			case 'edit':
 				$sql = "update exa_title set
 							remark = :remark, 
 							name = :name, 
+							type_id = :type_id, 
 							luu = :luu
 						where id = :id
 						";
@@ -187,6 +192,8 @@ class QuestionForm extends CFormModel
 			$command->bindParam(':remark',$this->remark,PDO::PARAM_STR);
 		if (strpos($sql,':name')!==false)
 			$command->bindParam(':name',$this->name,PDO::PARAM_STR);
+		if (strpos($sql,':type_id')!==false)
+			$command->bindParam(':type_id',$this->type_id,PDO::PARAM_INT);
 
         if (strpos($sql,':city')!==false)
             $command->bindParam(':city',$city,PDO::PARAM_STR);

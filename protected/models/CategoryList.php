@@ -1,6 +1,6 @@
 <?php
 
-class QuestionList extends CListPageModel
+class CategoryList extends CListPageModel
 {
 	/**
 	 * Declares customized attribute labels.
@@ -11,11 +11,8 @@ class QuestionList extends CListPageModel
 	{
 		return array(	
 			'id'=>Yii::t('examina','ID'),
-			'title_code'=>Yii::t('examina','question code'),
-			'name'=>Yii::t('examina','question name'),
-            'city'=>Yii::t('examina','City'),
-            'city_name'=>Yii::t('examina','City'),
-            'type_name'=>Yii::t('examina','category name'),
+			'bumen_ex'=>Yii::t('examina','department'),
+			'name'=>Yii::t('examina','category name'),
 		);
 	}
 
@@ -24,30 +21,22 @@ class QuestionList extends CListPageModel
 		$suffix = Yii::app()->params['envSuffix'];
 		$city = Yii::app()->user->city();
         $city_allow = Yii::app()->user->city_allow();
-		$sql1 = "select a.*,b.name AS type_name from exa_title a 
-                LEFT JOIN exa_type b ON a.type_id = b.id
-                where a.id>0 
+		$sql1 = "select * from exa_type 
+                where id>0 
 			";
-        $sql2 = "select count(*) from exa_title a 
-                LEFT JOIN exa_type b ON a.type_id = b.id
-                where a.id>0 
+        $sql2 = "select count(*) from exa_type 
+                where id>0 
 			";
 		$clause = "";
 		if (!empty($this->searchField) && !empty($this->searchValue)) {
 			$svalue = str_replace("'","\'",$this->searchValue);
 			switch ($this->searchField) {
-				case 'title_code':
-					$clause .= General::getSqlConditionClause('a.title_code',$svalue);
+				case 'bumen_ex':
+                    $clause .= General::getSqlConditionClause('bumen_ex',$svalue);
 					break;
 				case 'name':
-					$clause .= General::getSqlConditionClause('a.name',$svalue);
+					$clause .= General::getSqlConditionClause('name',$svalue);
 					break;
-				case 'type_name':
-					$clause .= General::getSqlConditionClause('b.name',$svalue);
-					break;
-                case 'city_name':
-                    $clause .= ' and a.city in '.WordForm::getCityCodeSqlLikeName($svalue);
-                    break;
 			}
 		}
 		
@@ -69,14 +58,13 @@ class QuestionList extends CListPageModel
 			foreach ($records as $k=>$record) {
 				$this->attr[] = array(
 					'id'=>$record['id'],
-					'title_code'=>$record['title_code'],
+					'bumen_ex'=>$record['bumen_ex'],
 					'name'=>$record['name'],
-					'type_name'=>$record['type_name'],
 				);
 			}
 		}
 		$session = Yii::app()->session;
-		$session['question_01'] = $this->getCriteria();
+		$session['category_01'] = $this->getCriteria();
 		return true;
 	}
 

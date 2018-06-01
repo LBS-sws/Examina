@@ -12,10 +12,7 @@ return array(
     'Personnel'=>'人事系統',
     'Integral'=>'學分系統',
     'Examina'=>'測驗系統',
-'Quiz'=>'測驗系統',
-'Sales'=>'銷售系統',
-'Academic Credit'=>'學分系統',    
-	
+
 'Data Entry'=>'數據輸入',
 
     'Department'=>'工作部門',
@@ -83,6 +80,7 @@ return array(
     'Test results statistics'=>'測驗單結果統計',
     'Title results statistics'=>'試題結果統計',
     'Staff results statistics'=>'員工結果統計',
+    'Test categories'=>'測驗類別',
     //沈超添加结束
 );
 ?>

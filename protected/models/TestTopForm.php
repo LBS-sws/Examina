@@ -20,6 +20,7 @@ class TestTopForm extends CFormModel
 	public $correctList=0;
 	public $wrongList=0;
 	public $lcd;
+	public $type_id;
 	/**
 	 * Declares customized attribute labels.
 	 * If not declared here, an attribute would have a label that is
@@ -40,6 +41,7 @@ class TestTopForm extends CFormModel
             'correct_num'=>Yii::t('examina','correct num'),
             'wrong_num'=>Yii::t('examina','wrong num'),
             'lcd'=>Yii::t('examina','Participate in time'),
+            'type_id'=>Yii::t('examina','category name'),
         );
 	}
 
@@ -50,7 +52,8 @@ class TestTopForm extends CFormModel
 	{
 		return array(
 			//array('id, position, leave_reason, remarks, email, staff_type, leader','safe'),
-            array('id, name, dis_name, start_time, end_time, exa_num, city, staff_all, staffList','safe'),
+            array('id, name, dis_name, start_time, end_time, exa_num, city, staff_all, type_id, staffList','safe'),
+			array('type_id','required'),
 			array('name','required'),
 			array('start_time','required'),
 			array('end_time','required'),
@@ -88,7 +91,7 @@ class TestTopForm extends CFormModel
 	public function validateNumber($attribute, $params){
 	    if(is_numeric($this->exa_num)){
 	        if(floatval($this->exa_num) == intval($this->exa_num)){
-                $count = Yii::app()->db->createCommand()->select("count(*)")->from("exa_title")->queryScalar();
+                $count = Yii::app()->db->createCommand()->select("count(*)")->where("type_id=:id",array(":id"=>$this->type_id))->from("exa_title")->queryScalar();
                 if($this->exa_num>$count){
                     $message = Yii::t('examina','question num'). "不能大于".$count;
                     $this->addError($attribute,$message);
@@ -207,6 +210,7 @@ class TestTopForm extends CFormModel
 				$this->id = $row['id'];
 				$this->dis_name = $row['dis_name'];
                 $this->name = $row['name'];
+                $this->type_id = $row['type_id'];
                 $this->start_time = $row['start_time'];
                 $this->end_time = $row['end_time'];
                 $this->exa_num = $row['exa_num'];
@@ -246,9 +250,9 @@ class TestTopForm extends CFormModel
 				break;
 			case 'new':
 				$sql = "insert into exa_quiz(
-							dis_name, name, start_time, end_time, exa_num, city, staff_all, lcu
+							dis_name, name, start_time, end_time, type_id, exa_num, city, staff_all, lcu
 						) values (
-							:dis_name, :name, :start_time, :end_time, :exa_num, :city, :staff_all, :lcu
+							:dis_name, :name, :start_time, :end_time, :type_id, :exa_num, :city, :staff_all, :lcu
 						)";
 				break;
 			case 'edit':
@@ -257,6 +261,7 @@ class TestTopForm extends CFormModel
 							name = :name, 
 							start_time = :start_time, 
 							end_time = :end_time, 
+							type_id = :type_id, 
 							exa_num = :exa_num, 
 							city = :city, 
 							staff_all = :staff_all,  
@@ -281,6 +286,8 @@ class TestTopForm extends CFormModel
 			$command->bindParam(':exa_num',$this->exa_num,PDO::PARAM_INT);
 		if (strpos($sql,':staff_all')!==false)
 			$command->bindParam(':staff_all',$this->staff_all,PDO::PARAM_INT);
+		if (strpos($sql,':type_id')!==false)
+			$command->bindParam(':type_id',$this->type_id,PDO::PARAM_INT);
 
         if (strpos($sql,':city')!==false)
             $command->bindParam(':city',$this->city,PDO::PARAM_STR);

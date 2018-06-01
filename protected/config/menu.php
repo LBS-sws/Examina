@@ -17,6 +17,10 @@ return array(
     'System Setting'=>array(
         'access'=>'SS',
         'items'=>array(
+            'Test categories'=>array(
+                'access'=>'SS03',
+                'url'=>'/category/index',
+            ),
             'Exam question bank'=>array(
                 'access'=>'SS01',
                 'url'=>'/question/index',

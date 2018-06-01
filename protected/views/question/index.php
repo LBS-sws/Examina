@@ -45,6 +45,7 @@ $this->pageTitle=Yii::app()->name . ' - Question';
     $search = array(
         'title_code',
         'name',
+        'type_name',
     );
     //if (!Yii::app()->user->isSingleCity()) $search[] = 'city_name';
    $this->widget('ext.layout.ListPageWidget', array(

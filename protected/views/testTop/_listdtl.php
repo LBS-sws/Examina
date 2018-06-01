@@ -7,6 +7,7 @@
 
 
     <td><?php echo $this->record['name']; ?></td>
+    <td><?php echo $this->record['type_name']; ?></td>
     <td><?php echo $this->record['city']; ?></td>
     <td><?php echo $this->record['start_time']; ?></td>
     <td><?php echo $this->record['end_time']; ?></td>

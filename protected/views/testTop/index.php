@@ -38,6 +38,7 @@ $this->pageTitle=Yii::app()->name . ' - testTop';
     $search = array(
         'name',
         'exa_num',
+        'type_name',
     );
     $search_add_html="";
     $modelName = get_class($model);

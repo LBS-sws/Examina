@@ -17,6 +17,7 @@ class StatisticsTestList extends CListPageModel
 			'exa_num'=>Yii::t('examina','question num'),
             'city'=>Yii::t('examina','city all'),
             'city_name'=>Yii::t('examina','City'),
+            'type_name'=>Yii::t('examina','category name'),
 		);
 	}
 
@@ -25,11 +26,13 @@ class StatisticsTestList extends CListPageModel
 		$suffix = Yii::app()->params['envSuffix'];
 		$city = Yii::app()->user->city();
         $city_allow = Yii::app()->user->city_allow();
-		$sql1 = "select * from exa_quiz 
-                where id>0 
+		$sql1 = "select a.*,b.name AS type_name from exa_quiz a 
+                LEFT JOIN exa_type b ON a.type_id = b.id
+                where a.id>0 
 			";
-        $sql2 = "select count(*) from exa_quiz 
-                where id>0 
+        $sql2 = "select count(*) from exa_quiz a 
+                LEFT JOIN exa_type b ON a.type_id = b.id
+                where a.id>0 
 			";
 		$clause = "";
 		if (!empty($this->searchField) && !empty($this->searchValue)) {
@@ -37,14 +40,17 @@ class StatisticsTestList extends CListPageModel
 			switch ($this->searchField) {
 				case 'exa_num':
 				    if(is_numeric($svalue)){
-                        $clause .= ' and exa_num = "'.$svalue.'"';
+                        $clause .= ' and a.exa_num = "'.$svalue.'"';
                     }
 					break;
 				case 'name':
-					$clause .= General::getSqlConditionClause('name',$svalue);
+					$clause .= General::getSqlConditionClause('a.name',$svalue);
 					break;
+                case 'type_name':
+                    $clause .= General::getSqlConditionClause('b.name',$svalue);
+                    break;
                 case 'city_name':
-                    $clause .= ' and city in '.TestTopList::getCityCodeSqlLikeName($svalue);
+                    $clause .= ' and a.city in '.TestTopList::getCityCodeSqlLikeName($svalue);
                     break;
 			}
 		}
@@ -71,6 +77,7 @@ class StatisticsTestList extends CListPageModel
 					'end_time'=>date("Y-m-d",strtotime($record['end_time'])),
 					'name'=>$record['name'],
 					'exa_num'=>$record['exa_num'],
+                    'type_name'=>$record['type_name'],
 					'already'=>$list['already'],
 					'correct'=>$list['correct'],
 					'city'=>empty($record['city'])?Yii::t('examina','all city'):CGeneral::getCityName($record["city"]),

@@ -7,6 +7,7 @@
 
     <td><?php echo $this->record['title_code']; ?></td>
     <td><?php echo $this->record['name']; ?></td>
+    <td><?php echo $this->record['type_name']; ?></td>
 </tr>
 
 

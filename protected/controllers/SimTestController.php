@@ -62,6 +62,7 @@ class SimTestController extends Controller
             if ($model->validate()) {
                 $quizModel = new Examina(-1);
                 $quizModel->_testNum = $model->exa_num;
+                $quizModel->_typeId = $model->type_id;
                 $quizModel->roundList();
                 $this->render('form',array('model'=>$quizModel,));
             } else {

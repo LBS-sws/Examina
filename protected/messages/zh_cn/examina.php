@@ -67,5 +67,12 @@ return array(
     'occurrences' => '出现次数',
     'sum correct' => '总正确率',
     'Not started' => '没有开始',
+    'Test categories list'=>'测验类别列表',
+    'Test categories form'=>'测验类别表单',
+    'add category'=>'添加类别',
+    'category name'=>'类别名称',
+    'department'=>'部门',
+    'all'=>'全部',
+    'select'=>'选择',
 );
 ?>

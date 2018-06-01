@@ -12,10 +12,7 @@ return array(
 	'Personnel'=>'人事系统',
     'Integral'=>'学分系统',
     'Examina'=>'测验系统',
-    'Quiz'=>'测验系统',
-	'Sales'=>'销售系统',
-	'Academic Credit'=>'学分系统',
-	
+
 	'Data Entry'=>'数据输入',
 	'Misc'=>'其他',
 
@@ -79,6 +76,7 @@ return array(
     'Test results statistics'=>'测验单结果统计',
     'Title results statistics'=>'试题结果统计',
     'Staff results statistics'=>'员工结果统计',
+    'Test categories'=>'测验类别',
     //沈超添加结束
 );
 ?>

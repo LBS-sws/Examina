@@ -67,6 +67,15 @@ $this->pageTitle=Yii::app()->name . ' - question Form';
 			</div>
             <?php endif ?>
 			<div class="form-group">
+				<?php echo $form->labelEx($model,'type_id',array('class'=>"col-sm-2 control-label")); ?>
+                <div class="col-sm-3">
+                    <?php echo $form->dropDownList($model, 'type_id',CategoryForm::getCategoryList(),
+                        array('readonly'=>($model->scenario=='view'))
+                    );
+                    ?>
+                </div>
+			</div>
+			<div class="form-group">
 				<?php echo $form->labelEx($model,'name',array('class'=>"col-sm-2 control-label")); ?>
                 <div class="col-sm-5">
                     <?php echo $form->textArea($model, 'name',

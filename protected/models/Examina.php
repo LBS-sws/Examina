@@ -2,6 +2,7 @@
 class Examina{
 
     public $_quizId;//測驗單id
+    public $_typeId;//類別id
     public $_bool;//是否隨機出試題 true:是
 
     public $_testNum;//測驗單題目數量
@@ -30,6 +31,7 @@ class Examina{
         if($rows){
             $this->_quizList = $rows;
             $this->_testNum = $rows["exa_num"];
+            $this->_typeId = $rows["type_id"];
             if($bool){
                 $this->roundList();
             }else{
@@ -60,7 +62,7 @@ class Examina{
         $staff_id = Yii::app()->user->staff_id();//當前員工
         $command = Yii::app()->db->createCommand();
         $command->reset();
-        $rows = $command->select()->from("exa_title")->queryAll();
+        $rows = $command->select()->from("exa_title")->where("type_id=:id",array(":id"=>$this->_typeId))->queryAll();
         if($rows){
             $this->_testNum = $this->_testNum>count($rows)?count($rows):$this->_testNum; //測驗單題目數量不能大於試題數量
             foreach ($rows as $row){
@@ -69,7 +71,9 @@ class Examina{
             $command->reset();
             $rows = $command->select("a.title_id")->from("exa_examina a")
                 ->leftJoin("exa_title_choose b","a.choose_id=b.id")
-                ->where("a.employee_id=:employee_id and b.judge=0", array(':employee_id'=>$staff_id))->queryAll();
+                ->leftJoin("exa_title c","a.title_id=c.id")
+                ->where("a.employee_id=:employee_id and b.judge=0 and c.type_id=:type_id",
+                    array(':employee_id'=>$staff_id,':type_id'=>$this->_typeId))->queryAll();
             if($rows){
                 $this->_errorList = array_column($rows,"title_id","title_id");
             }

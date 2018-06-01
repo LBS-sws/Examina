@@ -19,6 +19,7 @@ class MyTestList extends CListPageModel
             'city_name'=>Yii::t('examina','City'),
             'correct_num'=>Yii::t('examina','correct num'),
             'wrong_num'=>Yii::t('examina','wrong num'),
+            'type_name'=>Yii::t('examina','category name'),
 		);
 	}
 
@@ -27,11 +28,14 @@ class MyTestList extends CListPageModel
 		$suffix = Yii::app()->params['envSuffix'];
 		$city = Yii::app()->user->city();
         $city_allow = Yii::app()->user->city_allow();
-		$sql1 = "select a.* from exa_quiz a 
-                where (a.city ='' || a.city = '$city') 
+        $bumen = Yii::app()->user->bumen();
+		$sql1 = "select a.*,b.name AS type_name from exa_quiz a 
+                LEFT JOIN exa_type b ON a.type_id = b.id
+                where (a.city ='' || a.city = '$city') AND (b.bumen=''||b.bumen LIKE '%,$bumen,%') 
 			";
 		$sql2 = "select COUNT(a.id) from exa_quiz a 
-                where (a.city ='' || a.city = '$city') 
+                LEFT JOIN exa_type b ON a.type_id = b.id
+                where (a.city ='' || a.city = '$city') AND (b.bumen=''||b.bumen LIKE '%,$bumen,%')  
 			";
 		$clause = "";
 		if (!empty($this->searchField) && !empty($this->searchValue)) {
@@ -45,6 +49,9 @@ class MyTestList extends CListPageModel
 				case 'name':
 					$clause .= General::getSqlConditionClause('a.name',$svalue);
 					break;
+                case 'type_name':
+                    $clause .= General::getSqlConditionClause('b.name',$svalue);
+                    break;
                 case 'city_name':
                     $clause .= ' and a.city in '.TestTopList::getCityCodeSqlLikeName($svalue);
                     break;
@@ -78,6 +85,7 @@ class MyTestList extends CListPageModel
 					'end_time'=>date("Y-m-d",strtotime($record['end_time'])),
 					'name'=>$record['name'],
 					'exa_num'=>$record['exa_num'],
+					'type_name'=>$record['type_name'],
 					'color'=>$list['color'],
 					'correct'=>empty($list['string'])?$list['correct']:$list['string'],
 					'correct_num'=>empty($list['string'])?$list['correct_num']:$list['string'],
@@ -116,13 +124,13 @@ class MyTestList extends CListPageModel
 	    if(!$count){
             $date = date("Y-m-d");
             if($date>=date("Y-m-d",strtotime($record['start_time'])) && $date<=date("Y-m-d",strtotime($record['end_time']))){
-                if($record["staff_all"] == 1){
+                if($record["staff_all"] == 1){ //全部員工
                     return array(
                         "bool"=>false,
                         "string"=>Yii::t("examina","not involved"),
                         "color"=>" text-primary",
                     ); //沒有參與
-                }else{
+                }else{ //自定義員工
                     $row = Yii::app()->db->createCommand()->select("*")->from("exa_quiz_staff")
                         ->where("quiz_id=:quiz_id and employee_id=:employee_id", array(':quiz_id'=>$record["id"],':employee_id'=>$staff_id))->queryRow();
                     if($row){

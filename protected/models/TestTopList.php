@@ -18,6 +18,7 @@ class TestTopList extends CListPageModel
 			'end_time'=>Yii::t('examina','end time'),
 			'exa_num'=>Yii::t('examina','question num'),
             'city'=>Yii::t('examina','city all'),
+            'type_name'=>Yii::t('examina','category name'),
             'city_name'=>Yii::t('examina','City'),
 		);
 	}
@@ -34,11 +35,13 @@ class TestTopList extends CListPageModel
 		$suffix = Yii::app()->params['envSuffix'];
 		$city = Yii::app()->user->city();
         $city_allow = Yii::app()->user->city_allow();
-		$sql1 = "select * from exa_quiz 
-                where id>0 
+		$sql1 = "select a.*,b.name AS type_name from exa_quiz a 
+                LEFT JOIN exa_type b ON a.type_id = b.id
+                where a.id>0 
 			";
-        $sql2 = "select count(*) from exa_quiz 
-                where id>0 
+        $sql2 = "select count(*) from exa_quiz a 
+                LEFT JOIN exa_type b ON a.type_id = b.id
+                where a.id>0 
 			";
 		$clause = "";
 		if (!empty($this->searchField) && !empty($this->searchValue)) {
@@ -46,24 +49,27 @@ class TestTopList extends CListPageModel
 			switch ($this->searchField) {
 				case 'exa_num':
 				    if(is_numeric($svalue)){
-                        $clause .= ' and exa_num = "'.$svalue.'"';
+                        $clause .= ' and a.exa_num = "'.$svalue.'"';
                     }
 					break;
+                case 'type_name':
+                    $clause .= General::getSqlConditionClause('b.name',$svalue);
+                    break;
 				case 'name':
-					$clause .= General::getSqlConditionClause('name',$svalue);
+					$clause .= General::getSqlConditionClause('a.name',$svalue);
 					break;
                 case 'city_name':
-                    $clause .= ' and city in '.$this->getCityCodeSqlLikeName($svalue);
+                    $clause .= ' and a.city in '.$this->getCityCodeSqlLikeName($svalue);
                     break;
 			}
 		}
         if (!empty($this->searchTimeStart) && !empty($this->searchTimeStart)) {
             $svalue = str_replace("'","\'",$this->searchTimeStart);
-            $clause .= " and start_time >='$svalue' ";
+            $clause .= " and a.start_time >='$svalue' ";
         }
         if (!empty($this->searchTimeEnd) && !empty($this->searchTimeEnd)) {
             $svalue = str_replace("'","\'",$this->searchTimeEnd);
-            $clause .= " and start_time <='$svalue' ";
+            $clause .= " and a.start_time <='$svalue' ";
         }
 		
 		$order = "";
@@ -87,6 +93,7 @@ class TestTopList extends CListPageModel
 					'start_time'=>date("Y-m-d",strtotime($record['start_time'])),
 					'end_time'=>date("Y-m-d",strtotime($record['end_time'])),
 					'name'=>$record['name'],
+					'type_name'=>$record['type_name'],
 					'exa_num'=>$record['exa_num'],
 					'city'=>empty($record['city'])?Yii::t('examina','all city'):CGeneral::getCityName($record["city"]),
 				);

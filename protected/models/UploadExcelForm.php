@@ -91,6 +91,15 @@ class UploadExcelForm extends CFormModel
                 return array("status"=>0,"error"=>$this->start_title."：".$list["name"]."已存在");
             }
         }
+        if($list["name"] == "类别名称"){
+            $rows = Yii::app()->db->createCommand()->select("id")->from("exa_type")
+                ->where('name=:name',array(':name'=>$value))->queryRow();
+            if($rows){
+                $value = $rows["id"];
+            }else{
+                $value = '';
+            }
+        }
         return array("status"=>1,"data"=>$value);
     }
 
@@ -113,6 +122,7 @@ class UploadExcelForm extends CFormModel
             array("name"=>"错误答案B","sqlName"=>"choose_name","judge"=>"0","empty"=>true),
             array("name"=>"错误答案C","sqlName"=>"choose_name","judge"=>"0","empty"=>true),
             array("name"=>"备注","sqlName"=>"remark","empty"=>false),
+            array("name"=>"类别名称","sqlName"=>"type_id","empty"=>false),
         );
         return $arr;
     }

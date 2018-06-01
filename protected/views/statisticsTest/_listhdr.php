@@ -1,22 +1,27 @@
 <tr>
 	<th></th>
 	<th>
-		<?php echo TbHtml::link($this->getLabelName('name').$this->drawOrderArrow('name'),'#',$this->createOrderLink('statisticsTest-list','name'))
+		<?php echo TbHtml::link($this->getLabelName('name').$this->drawOrderArrow('a.name'),'#',$this->createOrderLink('statisticsTest-list','a.name'))
+			;
+		?>
+	</th>
+	<th>
+		<?php echo TbHtml::link($this->getLabelName('type_name').$this->drawOrderArrow('b.name'),'#',$this->createOrderLink('statisticsTest-list','b.name'))
 			;
 		?>
 	</th>
     <th>
-        <?php echo TbHtml::link($this->getLabelName('city').$this->drawOrderArrow('city'),'#',$this->createOrderLink('statisticsTest-list','city'))
+        <?php echo TbHtml::link($this->getLabelName('city').$this->drawOrderArrow('a.city'),'#',$this->createOrderLink('statisticsTest-list','a.city'))
         ;
         ?>
     </th>
 	<th>
-		<?php echo TbHtml::link($this->getLabelName('start_time').$this->drawOrderArrow('start_time'),'#',$this->createOrderLink('statisticsTest-list','start_time'))
+		<?php echo TbHtml::link($this->getLabelName('start_time').$this->drawOrderArrow('a.start_time'),'#',$this->createOrderLink('statisticsTest-list','a.start_time'))
 			;
 		?>
 	</th>
 	<th>
-		<?php echo TbHtml::link($this->getLabelName('end_time').$this->drawOrderArrow('end_time'),'#',$this->createOrderLink('statisticsTest-list','end_time'))
+		<?php echo TbHtml::link($this->getLabelName('end_time').$this->drawOrderArrow('a.end_time'),'#',$this->createOrderLink('statisticsTest-list','a.end_time'))
 			;
 		?>
 	</th>
