@@ -29,13 +29,11 @@ class MyTestList extends CListPageModel
 		$city = Yii::app()->user->city();
         $city_allow = Yii::app()->user->city_allow();
         $bumen = Yii::app()->user->bumen();
-		$sql1 = "select a.*,b.name AS type_name from exa_quiz a 
-                LEFT JOIN exa_type b ON a.type_id = b.id
-                where (a.city ='' || a.city = '$city') AND (b.bumen=''||b.bumen LIKE '%,$bumen,%') 
+		$sql1 = "select a.* from exa_quiz a 
+                where (a.city ='' || a.city = '$city') AND (a.bumen=''||a.bumen LIKE '%,$bumen,%') 
 			";
 		$sql2 = "select COUNT(a.id) from exa_quiz a 
-                LEFT JOIN exa_type b ON a.type_id = b.id
-                where (a.city ='' || a.city = '$city') AND (b.bumen=''||b.bumen LIKE '%,$bumen,%')  
+                where (a.city ='' || a.city = '$city') AND (a.bumen=''||a.bumen LIKE '%,$bumen,%')  
 			";
 		$clause = "";
 		if (!empty($this->searchField) && !empty($this->searchValue)) {
@@ -49,9 +47,6 @@ class MyTestList extends CListPageModel
 				case 'name':
 					$clause .= General::getSqlConditionClause('a.name',$svalue);
 					break;
-                case 'type_name':
-                    $clause .= General::getSqlConditionClause('b.name',$svalue);
-                    break;
                 case 'city_name':
                     $clause .= ' and a.city in '.TestTopList::getCityCodeSqlLikeName($svalue);
                     break;
@@ -85,7 +80,6 @@ class MyTestList extends CListPageModel
 					'end_time'=>date("Y-m-d",strtotime($record['end_time'])),
 					'name'=>$record['name'],
 					'exa_num'=>$record['exa_num'],
-					'type_name'=>$record['type_name'],
 					'color'=>$list['color'],
 					'correct'=>empty($list['string'])?$list['correct']:$list['string'],
 					'correct_num'=>empty($list['string'])?$list['correct_num']:$list['string'],

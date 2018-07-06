@@ -58,6 +58,7 @@ $this->pageTitle=Yii::app()->name . ' - testTop Form';
 		<div class="box-body">
 			<?php echo $form->hiddenField($model, 'scenario'); ?>
 			<?php echo $form->hiddenField($model, 'id'); ?>
+            <?php echo $form->hiddenField($model, 'bumen',array("id"=>"bumen")); ?>
 
             <?php
             $this->renderPartial('//site/testTopForm',array(
@@ -66,6 +67,23 @@ $this->pageTitle=Yii::app()->name . ' - testTop Form';
                 'readonly'=>($model->scenario=='view'),
             ));
             ?>
+
+            <div class="form-group">
+                <?php echo $form->labelEx($model,'bumen_ex',array('class'=>"col-sm-2 control-label")); ?>
+                <div class="col-sm-5">
+                    <?php echo $form->textArea($model, 'bumen_ex',
+                        array('readonly'=>(true),'rows'=>4,"id"=>"bumen_ex")
+                    ); ?>
+                </div>
+                <div class="col-sm-2">
+                    <?php
+                    echo TbHtml::button('<span class="fa fa-search"></span> '.Yii::t('examina','select'),
+                        array('data-toggle'=>'modal','data-target'=>'#bumendialog',)
+                    );
+                    ?>
+                </div>
+            </div>
+
             <legend><?php echo Yii::t("examina","Scope of application")?></legend>
             <div class="form-group">
                 <?php echo $form->labelEx($model,'city',array('class'=>"col-sm-2 control-label")); ?>
@@ -101,6 +119,7 @@ $this->pageTitle=Yii::app()->name . ' - testTop Form';
 
 <?php
 $this->renderPartial('//site/removedialog');
+$this->renderPartial('//site/bumendialog');
 ?>
 <?php
 $js = "

@@ -27,11 +27,13 @@ return array(
 
     'choose' => '選項',
 
+    'for test' => '所屬測驗單',
     'test name' => '測驗單名字',
     'test display' => '測驗單描述',
     'start time' => '開始時間',
     'end time' => '結束時間',
-    'question num' => '試題數量',
+    'question num' => '試題隨機數量',
+    'question end num' => '試題回答數量',
     'Scope of application' => '測驗範圍',
     'staff select' => '選擇員工',
     'staff all' => '員工範圍',
@@ -74,5 +76,7 @@ return array(
     'department'=>'部門',
     'all'=>'全部',
     'select'=>'選擇',
+    'Success Num：'=>'正確數量：',
+    'Error Num：'=>'錯誤數量：',
 );
 ?>

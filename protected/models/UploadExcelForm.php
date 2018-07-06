@@ -9,6 +9,7 @@ class UploadExcelForm extends CFormModel
 {
 	/* User Fields */
 	public $file;
+	public $quiz_id;
 	public $error_list=array();
 	public $start_title="";
 
@@ -19,7 +20,9 @@ class UploadExcelForm extends CFormModel
 	public function rules()
 	{
 		return array(
-            array('file','safe'),
+            array('file,quiz_id','safe'),
+            array('quiz_id','required'),
+            array('quiz_id', 'numerical', 'integerOnly'=>true),
             array('file', 'file', 'types'=>'xlsx,xls', 'allowEmpty'=>false, 'maxFiles'=>1),
 		);
 	}
@@ -61,6 +64,7 @@ class UploadExcelForm extends CFormModel
                 //新增
                 $arrList["lcu"] = $uid;
                 $arrList["city"] = $city;
+                $arrList["quiz_id"] = $this->quiz_id;
                 Yii::app()->db->createCommand()->insert("exa_title", $arrList);
                 $insetId = Yii::app()->db->getLastInsertID();
                 $code = $this->lenStr($insetId);
@@ -77,7 +81,7 @@ class UploadExcelForm extends CFormModel
             }
         }
         $error = implode("<br>",$this->error_list);
-        Dialog::message(Yii::t('dialog','Information'), Yii::t('procurement','Success Num：').$successNum."<br>".Yii::t('procurement','Error Num：').$errNum."<br>".$error);
+        Dialog::message(Yii::t('dialog','Information'), Yii::t('examina','Success Num：').$successNum."<br>".Yii::t('examina','Error Num：').$errNum."<br>".$error);
     }
 
     private function validateStr($value,$list){
@@ -86,18 +90,9 @@ class UploadExcelForm extends CFormModel
         }
         if($list["name"] == "试题内容"){
             $rows = Yii::app()->db->createCommand()->select("id")->from("exa_title")
-                ->where('name=:name',array(':name'=>$value))->queryRow();
+                ->where('name=:name and quiz_id=:quiz_id',array(':name'=>$value,':quiz_id'=>$this->quiz_id))->queryRow();
             if($rows){
                 return array("status"=>0,"error"=>$this->start_title."：".$list["name"]."已存在");
-            }
-        }
-        if($list["name"] == "类别名称"){
-            $rows = Yii::app()->db->createCommand()->select("id")->from("exa_type")
-                ->where('name=:name',array(':name'=>$value))->queryRow();
-            if($rows){
-                $value = $rows["id"];
-            }else{
-                $value = '';
             }
         }
         return array("status"=>1,"data"=>$value);
@@ -122,7 +117,6 @@ class UploadExcelForm extends CFormModel
             array("name"=>"错误答案B","sqlName"=>"choose_name","judge"=>"0","empty"=>true),
             array("name"=>"错误答案C","sqlName"=>"choose_name","judge"=>"0","empty"=>true),
             array("name"=>"备注","sqlName"=>"remark","empty"=>false),
-            array("name"=>"类别名称","sqlName"=>"type_id","empty"=>false),
         );
         return $arr;
     }

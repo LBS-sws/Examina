@@ -20,7 +20,7 @@ $this->beginWidget('bootstrap.widgets.TbModal', array(
         ?>
     </label>
     <div class="col-sm-3">
-        <?php echo TbHtml::dropDownList('city',"",CategoryForm::getAllCityList(),array("id"=>"city")); ?>
+        <?php echo TbHtml::dropDownList('city',"",TestTopForm::getAllCityList(),array("id"=>"select_city")); ?>
     </div>
     <label class="col-sm-2 control-label"><?php echo Yii::t("examina","department");?></label>
     <div class="col-sm-3">
@@ -47,10 +47,10 @@ $this->endWidget();
                 ajaxBool = false;
                 $.ajax({
                     type: "POST",
-                    url: "<?php echo Yii::app()->createUrl('category/ajaxDepartment');?>",
+                    url: "<?php echo Yii::app()->createUrl('testTop/ajaxDepartment');?>",
                     dataType: "json",
                     data: {
-                        "city":$("#city").val(),
+                        "city":$("#select_city").val(),
                         "department":$("#department").val()
                     },
                     success: function(msg){

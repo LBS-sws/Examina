@@ -48,8 +48,12 @@ class QuestionController extends Controller
     public static function allowReadOnly() {
         return Yii::app()->user->validFunction('SS01');
     }
-    public function actionIndex($pageNum=0){
+    public function actionIndex($pageNum=0,$index = 0){
         $model = new QuestionList;
+        if(!is_numeric($index)){
+            throw new CHttpException(404,'The requested page does not exist.');
+        }
+        $model->index = $index;
         if (isset($_POST['QuestionList'])) {
             $model->attributes = $_POST['QuestionList'];
         } else {
@@ -65,15 +69,23 @@ class QuestionController extends Controller
     }
 
 
-    public function actionNew()
+    public function actionNew($quiz_id)
     {
+        if(!is_numeric($quiz_id)){
+            throw new CHttpException(404,'The requested page does not exist.');
+        }
         $model = new QuestionForm('new');
+        $model->quiz_id = $quiz_id;
         $this->render('form',array('model'=>$model,));
     }
 
-    public function actionEdit($index)
+    public function actionEdit($index,$quiz_id)
     {
+        if(!is_numeric($quiz_id)){
+            throw new CHttpException(404,'The requested page does not exist.');
+        }
         $model = new QuestionForm('edit');
+        $model->quiz_id = $quiz_id;
         if (!$model->retrieveData($index)) {
             throw new CHttpException(404,'The requested page does not exist.');
         } else {
@@ -81,9 +93,13 @@ class QuestionController extends Controller
         }
     }
 
-    public function actionView($index)
+    public function actionView($index,$quiz_id)
     {
+        if(!is_numeric($quiz_id)){
+            throw new CHttpException(404,'The requested page does not exist.');
+        }
         $model = new QuestionForm('view');
+        $model->quiz_id = $quiz_id;
         if (!$model->retrieveData($index)) {
             throw new CHttpException(404,'The requested page does not exist.');
         } else {
@@ -100,7 +116,7 @@ class QuestionController extends Controller
             if ($model->validate()) {
                 $model->saveData();
                 Dialog::message(Yii::t('dialog','Information'), Yii::t('dialog','Save Done'));
-                $this->redirect(Yii::app()->createUrl('question/edit',array('index'=>$model->id)));
+                $this->redirect(Yii::app()->createUrl('question/edit',array('index'=>$model->id,'quiz_id'=>$model->quiz_id)));
             } else {
                 $message = CHtml::errorSummary($model);
                 Dialog::message(Yii::t('dialog','Validation Message'), $message);
@@ -109,7 +125,7 @@ class QuestionController extends Controller
         }
     }
 
-    //刪除公司
+    //刪除試題
     public function actionDelete(){
         $model = new QuestionForm('delete');
         if (isset($_POST['QuestionForm'])) {
@@ -119,16 +135,16 @@ class QuestionController extends Controller
                 Dialog::message(Yii::t('dialog','Information'), Yii::t('dialog','Record Deleted'));
             }else{
                 Dialog::message(Yii::t('dialog','Information'), Yii::t('dialog','This record is used by some user records'));
-                $this->redirect(Yii::app()->createUrl('question/edit',array('index'=>$model->id)));
+                $this->redirect(Yii::app()->createUrl('question/edit',array('index'=>$model->id,'quiz_id'=>$model->quiz_id)));
             }
         }
-        $this->redirect(Yii::app()->createUrl('question/index'));
+        $this->redirect(Yii::app()->createUrl('question/index',array('index'=>$model->quiz_id)));
     }
 
     //導入
     public function actionImportQuestion(){
         $model = new UploadExcelForm();
-        //$model->attributes = $_POST['UploadExcelForm'];
+        $model->attributes = $_POST['UploadExcelForm'];
         $img = CUploadedFile::getInstance($model,'file');
         $city = Yii::app()->user->city();
         $path =Yii::app()->basePath."/../upload/";
@@ -143,6 +159,10 @@ class QuestionController extends Controller
         if (!file_exists($path)){
             mkdir($path);
         }
+        if(empty($img)){
+            Dialog::message(Yii::t('dialog','Validation Message'), "文件不能为空");
+            $this->redirect(Yii::app()->createUrl('question/index',array('index'=>$model->quiz_id)));
+        }
         $url = "upload/excel/".$city."/".date("YmdHis").".".$img->getExtensionName();
         $model->file = $img->getName();
         if ($model->file && $model->validate()) {
@@ -150,11 +170,11 @@ class QuestionController extends Controller
             $loadExcel = new LoadExcel($url);
             $list = $loadExcel->getExcelList();
             $model->loadGoods($list);
-            $this->redirect(Yii::app()->createUrl('question/index'));
+            $this->redirect(Yii::app()->createUrl('question/index',array('index'=>$model->quiz_id)));
         }else{
             $message = CHtml::errorSummary($model);
             Dialog::message(Yii::t('dialog','Validation Message'), $message);
-            $this->redirect(Yii::app()->createUrl('question/index'));
+            $this->redirect(Yii::app()->createUrl('question/index',array('index'=>$model->quiz_id)));
         }
     }
 }

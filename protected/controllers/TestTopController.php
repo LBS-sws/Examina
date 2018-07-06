@@ -28,7 +28,7 @@ class TestTopController extends Controller
     {
         return array(
             array('allow',
-                'actions'=>array('new','edit','save','delete'),
+                'actions'=>array('new','edit','save','delete','ajaxDepartment'),
                 'expression'=>array('TestTopController','allowReadWrite'),
             ),
             array('allow',
@@ -117,7 +117,7 @@ class TestTopController extends Controller
         }
     }
 
-    //刪除公司
+    //刪除測驗單
     public function actionDelete(){
         $model = new TestTopForm('delete');
         if (isset($_POST['TestTopForm'])) {
@@ -133,6 +133,19 @@ class TestTopController extends Controller
         $this->redirect(Yii::app()->createUrl('testTop/index'));
     }
 
+    //所有城市列表
+    public function getAllCityList(){
+        $suffix = Yii::app()->params['envSuffix'];
+        $arr = array(""=>"全部");
+        $rows = Yii::app()->db->createCommand()->select()->from("security$suffix.sec_city")->queryAll();
+        if($rows){
+            foreach ($rows as $row){
+                $arr[$row["code"]] = $row["name"];
+            }
+        }
+        return $arr;
+    }
+
     //員工列表的異步請求
     public function actionAjaxStaff(){
         if(Yii::app()->request->isAjaxRequest) {//是否ajax请求
@@ -146,5 +159,18 @@ class TestTopController extends Controller
         }else{
             $this->redirect(Yii::app()->createUrl('testTop/index'));
         }
+    }
+
+    //部門的異步請求
+    public function actionAjaxDepartment(){
+        if(Yii::app()->request->isAjaxRequest) {//是否ajax请求
+            $city = $_POST['city'];
+            $department = $_POST['department'];
+            $arr = TestTopForm::searchDepartment($city,$department);
+            echo CJSON::encode($arr);
+        }else{
+            echo "Error:404";
+        }
+        Yii::app()->end();
     }
 }

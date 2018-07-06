@@ -9,7 +9,7 @@ class SimTestForm extends CFormModel
 {
 	/* User Fields */
 	public $exa_num;
-	public $type_id;
+	public $quiz_id;
 	/**
 	 * Declares customized attribute labels.
 	 * If not declared here, an attribute would have a label that is
@@ -19,7 +19,7 @@ class SimTestForm extends CFormModel
 	{
         return array(
             'exa_num'=>Yii::t('examina','question num'),
-            'type_id'=>Yii::t('examina','category name'),
+            'quiz_id'=>Yii::t('examina','test name'),
         );
 	}
 
@@ -30,8 +30,8 @@ class SimTestForm extends CFormModel
 	{
 		return array(
 			//array('id, position, leave_reason, remarks, email, staff_type, leader','safe'),
-            array('type_id,exa_num','safe'),
-			array('type_id','required'),
+            array('quiz_id,exa_num','safe'),
+			array('quiz_id','required'),
 			array('exa_num','required'),
 			array('exa_num','validateNumber'),
             array('exa_num', 'numerical', 'min'=>1, 'integerOnly'=>true),
@@ -41,7 +41,7 @@ class SimTestForm extends CFormModel
 	public function validateNumber($attribute, $params){
 	    if(is_numeric($this->exa_num)){
 	        if(floatval($this->exa_num) == intval($this->exa_num)){
-                $count = Yii::app()->db->createCommand()->select("count(*)")->from("exa_title")->where("type_id=:id",array(":id"=>$this->type_id))->queryScalar();
+                $count = Yii::app()->db->createCommand()->select("count(*)")->from("exa_title")->where("quiz_id=:id",array(":id"=>$this->quiz_id))->queryScalar();
                 if($this->exa_num>$count){
                     $message = Yii::t('examina','question num'). "不能大于".$count;
                     $this->addError($attribute,$message);

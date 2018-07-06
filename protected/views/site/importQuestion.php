@@ -18,6 +18,7 @@
 <div class="form-group">
     <label class="col-sm-2 control-label"><?php echo Yii::t("examina","file");?></label>
     <div class="col-sm-6">
+        <?php echo TbHtml::hiddenField($name.'[quiz_id]',$model->index);?>
         <?php echo TbHtml::fileField($name.'[file]',"",array("class"=>"form-control")); ?>
     </div>
 </div>

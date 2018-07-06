@@ -11,7 +11,7 @@ class QuestionForm extends CFormModel
 	public $id = 0;
 	public $title_code;
 	public $name;
-	public $type_id;
+	public $quiz_id;
 	public $remark;
 	public $city;
 	public $answerList=array(
@@ -33,7 +33,7 @@ class QuestionForm extends CFormModel
             'name'=>Yii::t('examina','question name'),
             'city'=>Yii::t('examina','City'),
             'remark'=>Yii::t('examina','question remark'),
-            'type_id'=>Yii::t('examina','category name'),
+            'quiz_id'=>Yii::t('examina','for test'),
 
             'answer'=>Yii::t('examina','correct answer'),
             'answer_a'=>Yii::t('examina','wrong answer A'),
@@ -49,9 +49,10 @@ class QuestionForm extends CFormModel
 	{
 		return array(
 			//array('id, position, leave_reason, remarks, email, staff_type, leader','safe'),
-            array('id, title_code, name, remark, type_id, answerList','safe'),
+            array('id, title_code, name, remark, quiz_id, answerList','safe'),
 			array('name','required'),
-			array('type_id','required'),
+			array('quiz_id','required'),
+            array('quiz_id', 'numerical', 'integerOnly'=>true),
 			array('answerList','required'),
 			array('name','validateName'),
 			array('answerList','validateAnswer'),
@@ -60,12 +61,16 @@ class QuestionForm extends CFormModel
 
 	public function validateName($attribute, $params){
         $id = -1;
+        $quiz_id = -1;
         if(!empty($this->id)){
             $id = $this->id;
         }
+        if(!empty($this->quiz_id)){
+            $quiz_id = $this->quiz_id;
+        }
         $rows = Yii::app()->db->createCommand()->select("id")->from("exa_title")
-            ->where('name=:name and id!=:id',
-                array(':name'=>$this->name,':id'=>$id))->queryAll();
+            ->where('name=:name and id!=:id and quiz_id=:quiz_id',
+                array(':name'=>$this->name,':id'=>$id,':quiz_id'=>$quiz_id))->queryAll();
         if(count($rows)>0){
             $message = Yii::t('examina','question name'). Yii::t('examina',' can not repeat');
             $this->addError($attribute,$message);
@@ -119,7 +124,7 @@ class QuestionForm extends CFormModel
 			foreach ($rows as $row)
 			{
 				$this->id = $row['id'];
-				$this->type_id = $row['type_id'];
+				$this->quiz_id = $row['quiz_id'];
 				$this->title_code = $row['title_code'];
 				$this->remark = $row['remark'];
                 $this->name = $row['name'];
@@ -169,16 +174,15 @@ class QuestionForm extends CFormModel
 				break;
 			case 'new':
 				$sql = "insert into exa_title(
-							remark, name, type_id, city, lcu
+							remark, name, quiz_id, city, lcu
 						) values (
-							:remark, :name, :type_id, :city, :lcu
+							:remark, :name, :quiz_id, :city, :lcu
 						)";
 				break;
 			case 'edit':
 				$sql = "update exa_title set
 							remark = :remark, 
 							name = :name, 
-							type_id = :type_id, 
 							luu = :luu
 						where id = :id
 						";
@@ -192,8 +196,8 @@ class QuestionForm extends CFormModel
 			$command->bindParam(':remark',$this->remark,PDO::PARAM_STR);
 		if (strpos($sql,':name')!==false)
 			$command->bindParam(':name',$this->name,PDO::PARAM_STR);
-		if (strpos($sql,':type_id')!==false)
-			$command->bindParam(':type_id',$this->type_id,PDO::PARAM_INT);
+		if (strpos($sql,':quiz_id')!==false)
+			$command->bindParam(':quiz_id',$this->quiz_id,PDO::PARAM_INT);
 
         if (strpos($sql,':city')!==false)
             $command->bindParam(':city',$city,PDO::PARAM_STR);

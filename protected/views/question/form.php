@@ -30,7 +30,7 @@ $this->pageTitle=Yii::app()->name . ' - question Form';
 	<div class="box"><div class="box-body">
 	<div class="btn-group" role="group">
 		<?php echo TbHtml::button('<span class="fa fa-reply"></span> '.Yii::t('misc','Back'), array(
-				'submit'=>Yii::app()->createUrl('question/index')));
+				'submit'=>Yii::app()->createUrl('question/index',array('index'=>$model->quiz_id))));
 		?>
 
         <?php if ($model->scenario!='view'): ?>
@@ -40,7 +40,7 @@ $this->pageTitle=Yii::app()->name . ' - question Form';
             <?php if ($model->scenario=='edit'): ?>
                 <?php
                 echo TbHtml::button('<span class="fa fa-file-o"></span> '.Yii::t('examina','add question'), array(
-                    'submit'=>Yii::app()->createUrl('question/new'),
+                    'submit'=>Yii::app()->createUrl('question/new',array('quiz_id'=>$model->quiz_id)),
                 ));
                 ?>
                 <?php echo TbHtml::button('<span class="fa fa-remove"></span> '.Yii::t('misc','Delete'), array(
@@ -56,6 +56,13 @@ $this->pageTitle=Yii::app()->name . ' - question Form';
 		<div class="box-body">
 			<?php echo $form->hiddenField($model, 'scenario'); ?>
 			<?php echo $form->hiddenField($model, 'id'); ?>
+			<?php echo $form->hiddenField($model, 'quiz_id'); ?>
+            <div class="form-group">
+                <?php echo $form->labelEx($model,'quiz_id',array('class'=>"col-sm-2 control-label")); ?>
+                <div class="col-sm-3">
+                    <?php echo TbHtml::textField("",TestTopForm::getQuizTitleName($model->quiz_id),array('readonly'=>true));?>
+                </div>
+            </div>
             <?php if ($model->scenario!='new'): ?>
 			<div class="form-group">
 				<?php echo $form->labelEx($model,'title_code',array('class'=>"col-sm-2 control-label")); ?>
@@ -66,15 +73,6 @@ $this->pageTitle=Yii::app()->name . ' - question Form';
                 </div>
 			</div>
             <?php endif ?>
-			<div class="form-group">
-				<?php echo $form->labelEx($model,'type_id',array('class'=>"col-sm-2 control-label")); ?>
-                <div class="col-sm-3">
-                    <?php echo $form->dropDownList($model, 'type_id',CategoryForm::getCategoryList(),
-                        array('readonly'=>($model->scenario=='view'))
-                    );
-                    ?>
-                </div>
-			</div>
 			<div class="form-group">
 				<?php echo $form->labelEx($model,'name',array('class'=>"col-sm-2 control-label")); ?>
                 <div class="col-sm-5">

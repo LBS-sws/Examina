@@ -2,6 +2,7 @@
 
 class QuestionList extends CListPageModel
 {
+    public $index = 0;
 	/**
 	 * Declares customized attribute labels.
 	 * If not declared here, an attribute would have a label that is
@@ -24,13 +25,12 @@ class QuestionList extends CListPageModel
 		$suffix = Yii::app()->params['envSuffix'];
 		$city = Yii::app()->user->city();
         $city_allow = Yii::app()->user->city_allow();
-		$sql1 = "select a.*,b.name AS type_name from exa_title a 
-                LEFT JOIN exa_type b ON a.type_id = b.id
-                where a.id>0 
+        $index = $this->index;
+		$sql1 = "select a.* from exa_title a 
+                where a.quiz_id = $index 
 			";
         $sql2 = "select count(*) from exa_title a 
-                LEFT JOIN exa_type b ON a.type_id = b.id
-                where a.id>0 
+                where a.quiz_id = $index 
 			";
 		$clause = "";
 		if (!empty($this->searchField) && !empty($this->searchValue)) {
@@ -41,9 +41,6 @@ class QuestionList extends CListPageModel
 					break;
 				case 'name':
 					$clause .= General::getSqlConditionClause('a.name',$svalue);
-					break;
-				case 'type_name':
-					$clause .= General::getSqlConditionClause('b.name',$svalue);
 					break;
                 case 'city_name':
                     $clause .= ' and a.city in '.WordForm::getCityCodeSqlLikeName($svalue);
@@ -71,7 +68,6 @@ class QuestionList extends CListPageModel
 					'id'=>$record['id'],
 					'title_code'=>$record['title_code'],
 					'name'=>$record['name'],
-					'type_name'=>$record['type_name'],
 				);
 			}
 		}

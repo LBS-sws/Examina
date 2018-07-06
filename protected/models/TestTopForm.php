@@ -20,7 +20,8 @@ class TestTopForm extends CFormModel
 	public $correctList=0;
 	public $wrongList=0;
 	public $lcd;
-	public $type_id;
+	public $bumen;
+    public $bumen_ex="全部";
 	/**
 	 * Declares customized attribute labels.
 	 * If not declared here, an attribute would have a label that is
@@ -41,7 +42,8 @@ class TestTopForm extends CFormModel
             'correct_num'=>Yii::t('examina','correct num'),
             'wrong_num'=>Yii::t('examina','wrong num'),
             'lcd'=>Yii::t('examina','Participate in time'),
-            'type_id'=>Yii::t('examina','category name'),
+            'bumen_ex'=>Yii::t('examina','department'),
+            'bumen'=>Yii::t('examina','department'),
         );
 	}
 
@@ -52,15 +54,13 @@ class TestTopForm extends CFormModel
 	{
 		return array(
 			//array('id, position, leave_reason, remarks, email, staff_type, leader','safe'),
-            array('id, name, dis_name, start_time, end_time, exa_num, city, staff_all, type_id, staffList','safe'),
-			array('type_id','required'),
+            array('id, name, dis_name, start_time, end_time, exa_num, city, staff_all, staffList, bumen, bumen_ex','safe'),
 			array('name','required'),
 			array('start_time','required'),
 			array('end_time','required'),
 			array('exa_num','required'),
 			array('name','validateName'),
 			array('staffList','validateStaff'),
-			array('exa_num','validateNumber'),
             array('exa_num', 'numerical', 'min'=>1, 'integerOnly'=>true),
 		);
 	}
@@ -84,18 +84,6 @@ class TestTopForm extends CFormModel
 	        if(empty($this->staffList)){
                 $message = Yii::t('examina','staff select'). Yii::t('examina',' can not empty');
                 $this->addError($attribute,$message);
-            }
-        }
-    }
-
-	public function validateNumber($attribute, $params){
-	    if(is_numeric($this->exa_num)){
-	        if(floatval($this->exa_num) == intval($this->exa_num)){
-                $count = Yii::app()->db->createCommand()->select("count(*)")->where("type_id=:id",array(":id"=>$this->type_id))->from("exa_title")->queryScalar();
-                if($this->exa_num>$count){
-                    $message = Yii::t('examina','question num'). "不能大于".$count;
-                    $this->addError($attribute,$message);
-                }
             }
         }
     }
@@ -149,6 +137,19 @@ class TestTopForm extends CFormModel
         return $staffList;
     }
 
+    //獲取測驗單列表（僅能使用的）
+    public function getAllTestListOnly(){
+        $bumen = Yii::app()->user->bumen();
+        $arr= array(""=>"");
+        $rows = Yii::app()->db->createCommand()->select("id,name")->from("exa_quiz")->where("bumen LIKE '%,$bumen,%' or bumen=''")->queryAll();
+        if($rows){
+            foreach ($rows as $row){
+                $arr[$row["id"]] = $row["name"];
+            }
+        }
+        return $arr;
+    }
+
     //獲取正確數量
     public function getCorrectNum(){
         $staff_id = Yii::app()->user->staff_id();
@@ -186,6 +187,27 @@ class TestTopForm extends CFormModel
         return $arr;
     }
 
+    //部門查詢
+    public function searchDepartment($city,$department){
+        $suffix = Yii::app()->params['envSuffix'];
+        $arr = array();
+        $sql = "";
+        if(!empty($city)){
+            $sql.="and city='$city' ";
+        }
+        if(!empty($department)){
+            $sql.="and name like '%$department%' ";
+        }
+        $rows = Yii::app()->db->createCommand()->select()->from("hr$suffix.hr_dept")
+            ->where("type = 0 $sql")->queryAll();
+        if($rows){
+            foreach ($rows as $row){
+                $arr[$row["id"]] = $row["name"];
+            }
+        }
+        return $arr;
+    }
+
 	public function getQuizTitleName($quiz_id)
 	{
         $rows = Yii::app()->db->createCommand()->select("name")->from("exa_quiz")
@@ -210,11 +232,12 @@ class TestTopForm extends CFormModel
 				$this->id = $row['id'];
 				$this->dis_name = $row['dis_name'];
                 $this->name = $row['name'];
-                $this->type_id = $row['type_id'];
                 $this->start_time = $row['start_time'];
                 $this->end_time = $row['end_time'];
                 $this->exa_num = $row['exa_num'];
                 $this->city = $row['city'];
+                $this->bumen = $row['bumen'];
+                $this->bumen_ex = $row['bumen_ex'];
                 $this->staff_all = $row['staff_all'];
                 $this->staffList = $this->getStaffListToTestId();
 				break;
@@ -250,9 +273,9 @@ class TestTopForm extends CFormModel
 				break;
 			case 'new':
 				$sql = "insert into exa_quiz(
-							dis_name, name, start_time, end_time, type_id, exa_num, city, staff_all, lcu
+							dis_name, name, start_time, end_time, exa_num, city, staff_all, bumen_ex, bumen, lcu
 						) values (
-							:dis_name, :name, :start_time, :end_time, :type_id, :exa_num, :city, :staff_all, :lcu
+							:dis_name, :name, :start_time, :end_time, :exa_num, :city, :staff_all, :bumen_ex, :bumen, :lcu
 						)";
 				break;
 			case 'edit':
@@ -261,9 +284,10 @@ class TestTopForm extends CFormModel
 							name = :name, 
 							start_time = :start_time, 
 							end_time = :end_time, 
-							type_id = :type_id, 
 							exa_num = :exa_num, 
 							city = :city, 
+							bumen_ex = :bumen_ex, 
+							bumen = :bumen, 
 							staff_all = :staff_all,  
 							luu = :luu
 						where id = :id
@@ -286,8 +310,10 @@ class TestTopForm extends CFormModel
 			$command->bindParam(':exa_num',$this->exa_num,PDO::PARAM_INT);
 		if (strpos($sql,':staff_all')!==false)
 			$command->bindParam(':staff_all',$this->staff_all,PDO::PARAM_INT);
-		if (strpos($sql,':type_id')!==false)
-			$command->bindParam(':type_id',$this->type_id,PDO::PARAM_INT);
+        if (strpos($sql,':bumen_ex')!==false)
+            $command->bindParam(':bumen_ex',$this->bumen_ex,PDO::PARAM_STR);
+        if (strpos($sql,':bumen')!==false)
+            $command->bindParam(':bumen',$this->bumen,PDO::PARAM_STR);
 
         if (strpos($sql,':city')!==false)
             $command->bindParam(':city',$this->city,PDO::PARAM_STR);

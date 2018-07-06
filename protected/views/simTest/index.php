@@ -46,9 +46,9 @@ $this->pageTitle=Yii::app()->name . ' - simTest Form';
             </div>
 
             <div class="form-group">
-                <?php echo $form->labelEx($model,'type_id',array('class'=>"col-sm-2 control-label")); ?>
+                <?php echo $form->labelEx($model,'quiz_id',array('class'=>"col-sm-2 control-label")); ?>
                 <div class="col-sm-3">
-                    <?php echo $form->dropDownList($model, 'type_id',CategoryForm::getCategoryListOnly(),
+                    <?php echo $form->dropDownList($model, 'quiz_id',TestTopForm::getAllTestListOnly(),
                         array('readonly'=>(false))
                     );
                     ?>

@@ -10,9 +10,4 @@
 			;
 		?>
 	</th>
-	<th>
-		<?php echo TbHtml::link($this->getLabelName('type_name').$this->drawOrderArrow('b.name'),'#',$this->createOrderLink('question-list','b.name'))
-			;
-		?>
-	</th>
 </tr>

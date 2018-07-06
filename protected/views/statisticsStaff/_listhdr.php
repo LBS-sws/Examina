@@ -10,7 +10,7 @@
         ?>
     </th>
     <th>
-        <?php echo "<a href='#'>".Yii::t("examina","question num")."</a>";?>
+        <?php echo "<a href='#'>".Yii::t("examina","question end num")."</a>";?>
     </th>
     <th>
         <?php echo "<a href='#'>".Yii::t("examina","correct num")."</a>";?>

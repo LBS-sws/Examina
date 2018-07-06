@@ -2,7 +2,7 @@
 class Examina{
 
     public $_quizId;//測驗單id
-    public $_typeId;//類別id
+    //public $_typeId;//類別id (後期刪除)
     public $_bool;//是否隨機出試題 true:是
 
     public $_testNum;//測驗單題目數量
@@ -31,7 +31,7 @@ class Examina{
         if($rows){
             $this->_quizList = $rows;
             $this->_testNum = $rows["exa_num"];
-            $this->_typeId = $rows["type_id"];
+            //$this->_typeId = $rows["type_id"];
             if($bool){
                 $this->roundList();
             }else{
@@ -62,18 +62,20 @@ class Examina{
         $staff_id = Yii::app()->user->staff_id();//當前員工
         $command = Yii::app()->db->createCommand();
         $command->reset();
-        $rows = $command->select()->from("exa_title")->where("type_id=:id",array(":id"=>$this->_typeId))->queryAll();
+        $rows = $command->select()->from("exa_title")->where("quiz_id=:id",array(":id"=>$this->_quizId))->queryAll();
         if($rows){
             $this->_testNum = $this->_testNum>count($rows)?count($rows):$this->_testNum; //測驗單題目數量不能大於試題數量
             foreach ($rows as $row){
                 $this->_testList[$row['id']] = $row;
             }
             $command->reset();
+
+            //由於測驗單只能進行一次，且試題為單個綁定測驗單，所以試題錯誤列表只能為模擬測驗提供
             $rows = $command->select("a.title_id")->from("exa_examina a")
                 ->leftJoin("exa_title_choose b","a.choose_id=b.id")
                 ->leftJoin("exa_title c","a.title_id=c.id")
-                ->where("a.employee_id=:employee_id and b.judge=0 and c.type_id=:type_id",
-                    array(':employee_id'=>$staff_id,':type_id'=>$this->_typeId))->queryAll();
+                ->where("a.employee_id=:employee_id and b.judge=0 and c.quiz_id=:quiz_id",
+                    array(':employee_id'=>$staff_id,':quiz_id'=>$this->_quizId))->queryAll();
             if($rows){
                 $this->_errorList = array_column($rows,"title_id","title_id");
             }
