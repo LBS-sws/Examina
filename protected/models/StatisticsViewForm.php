@@ -22,7 +22,7 @@ class StatisticsViewForm extends CFormModel
     public $correctList=0;
     public $wrongList=0;
     public $lcd;
-    public $type_id;
+    public $quiz_id;
     /**
      * Declares customized attribute labels.
      * If not declared here, an attribute would have a label that is
@@ -43,7 +43,7 @@ class StatisticsViewForm extends CFormModel
             'correct_num'=>Yii::t('examina','correct num'),
             'wrong_num'=>Yii::t('examina','wrong num'),
             'lcd'=>Yii::t('examina','Participate in time'),
-            'type_id'=>Yii::t('examina','category name'),
+            'quiz_id'=>Yii::t('examina','category name'),
         );
     }
 
@@ -54,8 +54,8 @@ class StatisticsViewForm extends CFormModel
     {
         return array(
             //array('id, position, leave_reason, remarks, email, staff_type, leader','safe'),
-            array('id, name, dis_name, start_time, end_time, type_id, exa_num, city, staff_all, staffList','safe'),
-            array('type_id','required'),
+            array('id, name, dis_name, start_time, end_time, quiz_id, exa_num, city, staff_all, staffList','safe'),
+            array('quiz_id','required'),
             array('name','required'),
             array('start_time','required'),
             array('end_time','required'),
@@ -227,7 +227,6 @@ class StatisticsViewForm extends CFormModel
                 $this->end_time = $row['end_time'];
                 $this->exa_num = $row['exa_num'];
                 $this->city = $row['city'];
-                $this->type_id = $row['type_id'];
                 $this->staff_all = $row['staff_all'];
                 $this->staffList = $this->getStaffListToTestId();
                 break;
