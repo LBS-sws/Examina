@@ -42,11 +42,11 @@ class QuestionController extends Controller
     }
 
     public static function allowReadWrite() {
-        return Yii::app()->user->validRWFunction('SS01');
+        return Yii::app()->user->validRWFunction('SS02');
     }
 
     public static function allowReadOnly() {
-        return Yii::app()->user->validFunction('SS01');
+        return Yii::app()->user->validFunction('SS02');
     }
     public function actionIndex($pageNum=0,$index = 0){
         $model = new QuestionList;
