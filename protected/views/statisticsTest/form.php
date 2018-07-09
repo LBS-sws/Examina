@@ -49,35 +49,7 @@ $this->pageTitle=Yii::app()->name . ' - statisticsTest Form';
                 'readonly'=>(true),
             ));
             ?>
-            <legend><?php echo Yii::t("examina","Scope of application")?></legend>
-            <div class="form-group">
-                <?php echo $form->labelEx($model,'city',array('class'=>"col-sm-2 control-label")); ?>
-                <div class="col-sm-3">
-                    <?php echo $form->dropDownList($model, 'city',$model->getAllCityList(),
-                        array('readonly'=>($model->scenario=='view'),"id"=>"city")
-                    ); ?>
-                </div>
-            </div>
-            <div class="form-group">
-                <?php echo $form->labelEx($model,'staff_all',array('class'=>"col-sm-2 control-label")); ?>
-                <div class="col-sm-3">
-                    <?php echo $form->dropDownList($model, 'staff_all',array(1=>Yii::t("examina","all staff"),0=>Yii::t("examina","custom")),
-                        array('readonly'=>($model->scenario=='view'),"id"=>"staff_all")
-                    ); ?>
-                </div>
-            </div>
-            <div class="form-group" id="staffList" style="display: none;">
-                <?php echo $form->labelEx($model,'staffList',array('class'=>"col-sm-2 control-label")); ?>
-                <div class="col-sm-8" id="staffDiv">
-                    <?php if (!empty($model->city)): ?>
-                        <?php echo $form->inlineCheckBoxList($model, 'staffList',$model->getAllStaffList($model->city),
-                            array('disabled'=>($model->scenario=='view'))
-                        ); ?>
-                    <?php else:;?>
-                        <label class="control-label text-warning">请选择城市</label>
-                    <?php endif; ?>
-                </div>
-            </div>
+
             <?php
             $testBool = $model->getCorrectNum();
             if ($testBool): ?>
@@ -126,13 +98,7 @@ $this->renderPartial('//site/wrongList',array(
 ?>
 <?php
 $js = "
-    $('#staff_all').on('change',function(){
-        if($(this).val() == 1){
-            $('#staffList').slideUp(100);
-        }else{
-            $('#staffList').slideDown(100);
-        }
-    }).trigger('change');
+
 ";
 Yii::app()->clientScript->registerScript('calcFunction',$js,CClientScript::POS_READY);
 

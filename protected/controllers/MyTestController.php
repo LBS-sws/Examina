@@ -75,7 +75,7 @@ class MyTestController extends Controller
             $this->render('new',array('model'=>$quizModel,));
             //var_dump($quizModel->getResultList());
         }else{
-            throw new CHttpException(404,'The requested page does not exist.');
+            throw new CHttpException(403,'該測驗單沒有試題無法開始測驗，請聯繫管理員.');
         }
     }
 

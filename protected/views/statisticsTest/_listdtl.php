@@ -11,7 +11,7 @@
 
 
     <td><?php echo $this->record['name']; ?></td>
-    <td><?php echo $this->record['city']; ?></td>
+    <td><?php echo $this->record['bumen_ex']; ?></td>
     <td><?php echo $this->record['start_time']; ?></td>
     <td><?php echo $this->record['end_time']; ?></td>
     <td><?php echo $this->record['already']; ?></td>

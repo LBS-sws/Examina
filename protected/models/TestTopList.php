@@ -17,8 +17,7 @@ class TestTopList extends CListPageModel
 			'start_time'=>Yii::t('examina','start time'),
 			'end_time'=>Yii::t('examina','end time'),
 			'exa_num'=>Yii::t('examina','question num'),
-            'city'=>Yii::t('examina','city all'),
-            'city_name'=>Yii::t('examina','City'),
+            'bumen_ex'=>Yii::t('examina','department'),
 		);
 	}
 
@@ -52,9 +51,9 @@ class TestTopList extends CListPageModel
 				case 'name':
 					$clause .= General::getSqlConditionClause('a.name',$svalue);
 					break;
-                case 'city_name':
-                    $clause .= ' and a.city in '.$this->getCityCodeSqlLikeName($svalue);
-                    break;
+				case 'bumen_ex':
+					$clause .= General::getSqlConditionClause('a.bumen_ex',$svalue);
+					break;
 			}
 		}
         if (!empty($this->searchTimeStart) && !empty($this->searchTimeStart)) {
@@ -88,7 +87,7 @@ class TestTopList extends CListPageModel
 					'end_time'=>date("Y-m-d",strtotime($record['end_time'])),
 					'name'=>$record['name'],
 					'exa_num'=>$record['exa_num'],
-					'city'=>empty($record['city'])?Yii::t('examina','all city'):CGeneral::getCityName($record["city"]),
+					'bumen_ex'=>$record['bumen_ex'],
 				);
 			}
 		}

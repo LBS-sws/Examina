@@ -27,7 +27,7 @@ $this->pageTitle=Yii::app()->name . ' - MyTest';
     $search = array(
         'name',
         'exa_num',
-        'type_name',
+        'bumen_ex',
     );
    $this->widget('ext.layout.ListPageWidget', array(
         'title'=>Yii::t('app','Test list'),

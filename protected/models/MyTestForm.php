@@ -77,6 +77,7 @@ class MyTestForm extends CFormModel
     }
 
 	public function validateName($attribute, $params){
+        $bumen = Yii::app()->user->bumen();
         $staff_id = Yii::app()->user->staff_id();
         if(empty($staff_id)){
             $message = Yii::t('examina','Employee Name'). Yii::t('examina',' Did not find');
@@ -84,18 +85,8 @@ class MyTestForm extends CFormModel
             return false;
         }
         $rows = Yii::app()->db->createCommand()->select("*")->from("exa_quiz")
-            ->where('id=:id',array(':id'=>$this->quiz_id))->queryRow();
-        if($rows){
-            if($rows["staff_all"] != 1){
-                $staff_id = Yii::app()->user->staff_id();
-                $rows = Yii::app()->db->createCommand()->select("*")->from("exa_quiz_staff")
-                    ->where('employee_id=:employee_id and quiz_id=:quiz_id',array(':quiz_id'=>$this->quiz_id,':employee_id'=>$staff_id))->queryRow();
-                if(!$rows){
-                    $message = Yii::t('examina','No need to participate');
-                    $this->addError($attribute,$message);
-                }
-            }
-        }else{
+            ->where("id=:id and (bumen=''||bumen LIKE '%,$bumen,%')",array(':id'=>$this->quiz_id))->queryRow();
+        if(!$rows){
             $message = Yii::t('examina','test name'). Yii::t('examina',' Did not find');
             $this->addError($attribute,$message);
         }

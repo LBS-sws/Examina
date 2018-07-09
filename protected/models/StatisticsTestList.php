@@ -15,9 +15,7 @@ class StatisticsTestList extends CListPageModel
 			'start_time'=>Yii::t('examina','start time'),
 			'end_time'=>Yii::t('examina','end time'),
 			'exa_num'=>Yii::t('examina','question num'),
-            'city'=>Yii::t('examina','city all'),
-            'city_name'=>Yii::t('examina','City'),
-            'type_name'=>Yii::t('examina','category name'),
+            'bumen_ex'=>Yii::t('examina','department'),
 		);
 	}
 
@@ -44,9 +42,9 @@ class StatisticsTestList extends CListPageModel
 				case 'name':
 					$clause .= General::getSqlConditionClause('a.name',$svalue);
 					break;
-                case 'city_name':
-                    $clause .= ' and a.city in '.TestTopList::getCityCodeSqlLikeName($svalue);
-                    break;
+				case 'bumen_ex':
+					$clause .= General::getSqlConditionClause('a.bumen_ex',$svalue);
+					break;
 			}
 		}
 		$order = "";
@@ -72,9 +70,9 @@ class StatisticsTestList extends CListPageModel
 					'end_time'=>date("Y-m-d",strtotime($record['end_time'])),
 					'name'=>$record['name'],
 					'exa_num'=>$record['exa_num'],
+					'bumen_ex'=>$record['bumen_ex'],
 					'already'=>$list['already'],
 					'correct'=>$list['correct'],
-					'city'=>empty($record['city'])?Yii::t('examina','all city'):CGeneral::getCityName($record["city"]),
 				);
 			}
 		}

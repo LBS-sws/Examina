@@ -16,9 +16,6 @@ class StatisticsViewForm extends CFormModel
     public $start_time;
     public $end_time;
     public $exa_num;
-    public $staff_all;
-    public $staffList;
-    public $city='';
     public $correctList=0;
     public $wrongList=0;
     public $lcd;
@@ -37,9 +34,6 @@ class StatisticsViewForm extends CFormModel
             'start_time'=>Yii::t('examina','start time'),
             'end_time'=>Yii::t('examina','end time'),
             'exa_num'=>Yii::t('examina','question num'),
-            'city'=>Yii::t('examina','city all'),
-            'staff_all'=>Yii::t('examina','staff all'),
-            'staffList'=>Yii::t('examina','staff select'),
             'correct_num'=>Yii::t('examina','correct num'),
             'wrong_num'=>Yii::t('examina','wrong num'),
             'lcd'=>Yii::t('examina','Participate in time'),
@@ -54,14 +48,13 @@ class StatisticsViewForm extends CFormModel
     {
         return array(
             //array('id, position, leave_reason, remarks, email, staff_type, leader','safe'),
-            array('id, name, dis_name, start_time, end_time, quiz_id, exa_num, city, staff_all, staffList','safe'),
+            array('id, name, dis_name, start_time, end_time, quiz_id, exa_num','safe'),
             array('quiz_id','required'),
             array('name','required'),
             array('start_time','required'),
             array('end_time','required'),
             array('exa_num','required'),
             array('name','validateName'),
-            array('staffList','validateStaff'),
             array('exa_num','validateNumber'),
             array('exa_num', 'numerical', 'min'=>1, 'integerOnly'=>true),
         );
@@ -78,15 +71,6 @@ class StatisticsViewForm extends CFormModel
         if(count($rows)>0){
             $message = Yii::t('examina','test name'). Yii::t('examina',' can not repeat');
             $this->addError($attribute,$message);
-        }
-    }
-
-    public function validateStaff($attribute, $params){
-        if($this->staff_all == 0){
-            if(empty($this->staffList)){
-                $message = Yii::t('examina','staff select'). Yii::t('examina',' can not empty');
-                $this->addError($attribute,$message);
-            }
         }
     }
 
@@ -226,9 +210,6 @@ class StatisticsViewForm extends CFormModel
                 $this->start_time = $row['start_time'];
                 $this->end_time = $row['end_time'];
                 $this->exa_num = $row['exa_num'];
-                $this->city = $row['city'];
-                $this->staff_all = $row['staff_all'];
-                $this->staffList = $this->getStaffListToTestId();
                 break;
             }
         }

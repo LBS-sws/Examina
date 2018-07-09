@@ -14,9 +14,6 @@ class TestTopForm extends CFormModel
 	public $start_time;
 	public $end_time;
 	public $exa_num;
-	public $staff_all;
-	public $staffList;
-	public $city='';
 	public $correctList=0;
 	public $wrongList=0;
 	public $lcd;
@@ -36,9 +33,6 @@ class TestTopForm extends CFormModel
             'start_time'=>Yii::t('examina','start time'),
             'end_time'=>Yii::t('examina','end time'),
             'exa_num'=>Yii::t('examina','question num'),
-            'city'=>Yii::t('examina','city all'),
-            'staff_all'=>Yii::t('examina','staff all'),
-            'staffList'=>Yii::t('examina','staff select'),
             'correct_num'=>Yii::t('examina','correct num'),
             'wrong_num'=>Yii::t('examina','wrong num'),
             'lcd'=>Yii::t('examina','Participate in time'),
@@ -54,13 +48,12 @@ class TestTopForm extends CFormModel
 	{
 		return array(
 			//array('id, position, leave_reason, remarks, email, staff_type, leader','safe'),
-            array('id, name, dis_name, start_time, end_time, exa_num, city, staff_all, staffList, bumen, bumen_ex','safe'),
+            array('id, name, dis_name, start_time, end_time, exa_num, bumen, bumen_ex','safe'),
 			array('name','required'),
 			array('start_time','required'),
 			array('end_time','required'),
 			array('exa_num','required'),
 			array('name','validateName'),
-			array('staffList','validateStaff'),
             array('exa_num', 'numerical', 'min'=>1, 'integerOnly'=>true),
 		);
 	}
@@ -76,15 +69,6 @@ class TestTopForm extends CFormModel
         if(count($rows)>0){
             $message = Yii::t('examina','test name'). Yii::t('examina',' can not repeat');
             $this->addError($attribute,$message);
-        }
-    }
-
-	public function validateStaff($attribute, $params){
-	    if($this->staff_all == 0){
-	        if(empty($this->staffList)){
-                $message = Yii::t('examina','staff select'). Yii::t('examina',' can not empty');
-                $this->addError($attribute,$message);
-            }
         }
     }
 
@@ -235,11 +219,8 @@ class TestTopForm extends CFormModel
                 $this->start_time = $row['start_time'];
                 $this->end_time = $row['end_time'];
                 $this->exa_num = $row['exa_num'];
-                $this->city = $row['city'];
                 $this->bumen = $row['bumen'];
                 $this->bumen_ex = $row['bumen_ex'];
-                $this->staff_all = $row['staff_all'];
-                $this->staffList = $this->getStaffListToTestId();
 				break;
 			}
 		}
@@ -273,9 +254,9 @@ class TestTopForm extends CFormModel
 				break;
 			case 'new':
 				$sql = "insert into exa_quiz(
-							dis_name, name, start_time, end_time, exa_num, city, staff_all, bumen_ex, bumen, lcu
+							dis_name, name, start_time, end_time, exa_num, bumen_ex, bumen, lcu
 						) values (
-							:dis_name, :name, :start_time, :end_time, :exa_num, :city, :staff_all, :bumen_ex, :bumen, :lcu
+							:dis_name, :name, :start_time, :end_time, :exa_num, :bumen_ex, :bumen, :lcu
 						)";
 				break;
 			case 'edit':
@@ -285,10 +266,8 @@ class TestTopForm extends CFormModel
 							start_time = :start_time, 
 							end_time = :end_time, 
 							exa_num = :exa_num, 
-							city = :city, 
 							bumen_ex = :bumen_ex, 
-							bumen = :bumen, 
-							staff_all = :staff_all,  
+							bumen = :bumen,  
 							luu = :luu
 						where id = :id
 						";
@@ -308,15 +287,11 @@ class TestTopForm extends CFormModel
 			$command->bindParam(':end_time',$this->end_time,PDO::PARAM_STR);
 		if (strpos($sql,':exa_num')!==false)
 			$command->bindParam(':exa_num',$this->exa_num,PDO::PARAM_INT);
-		if (strpos($sql,':staff_all')!==false)
-			$command->bindParam(':staff_all',$this->staff_all,PDO::PARAM_INT);
         if (strpos($sql,':bumen_ex')!==false)
             $command->bindParam(':bumen_ex',$this->bumen_ex,PDO::PARAM_STR);
         if (strpos($sql,':bumen')!==false)
             $command->bindParam(':bumen',$this->bumen,PDO::PARAM_STR);
 
-        if (strpos($sql,':city')!==false)
-            $command->bindParam(':city',$this->city,PDO::PARAM_STR);
 		if (strpos($sql,':luu')!==false)
 			$command->bindParam(':luu',$uid,PDO::PARAM_STR);
 		if (strpos($sql,':lcu')!==false)
@@ -328,21 +303,7 @@ class TestTopForm extends CFormModel
             $this->id = Yii::app()->db->getLastInsertID();
             $this->setScenario("edit");
         }
-        $this->setStaffList();//員工範圍錄入
         return true;
 	}
 
-	private function setStaffList(){
-        $command = Yii::app()->db->createCommand();
-        $command->delete('exa_quiz_staff', 'quiz_id=:quiz_id', array(':quiz_id'=>$this->id));
-        if($this->staff_all == 0){
-            foreach ($this->staffList as $staff){
-                $command->reset();
-                $command->insert('exa_quiz_staff', array(
-                    'employee_id'=>$staff,
-                    'quiz_id'=>$this->id
-                ));
-            }
-        }
-    }
 }
