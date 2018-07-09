@@ -177,10 +177,10 @@ class TestTopForm extends CFormModel
         $arr = array();
         $sql = "";
         if(!empty($city)){
-            $sql.="and city='$city' ";
+            $sql.="and a.city='$city' ";
         }
         if(!empty($department)){
-            $sql.="and name like '%$department%' ";
+            $sql.="and a.name like '%$department%' ";
         }
         $rows = Yii::app()->db->createCommand()->select("a.*,b.name as city_name")->from("hr$suffix.hr_dept a")
             ->leftjoin("security$suffix.sec_city b","b.code = a.city")
