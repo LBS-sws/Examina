@@ -1,8 +1,9 @@
 <?php
 
-class StatisticsViewList extends CListPageModel
+class StatisticsDetailList extends CListPageModel
 {
     public $examinaName;
+    public $staff;
     public $qui_id;
 	/**
 	 * Declares customized attribute labels.
@@ -21,16 +22,17 @@ class StatisticsViewList extends CListPageModel
 		);
 	}
 
-	public function retrieveDataByPage($index,$pageNum=1)
+	public function retrieveDataByPage($index,$staff,$pageNum=1)
 	{
 	    $this->qui_id = $index;
+	    $this->staff = $staff;
 	    $this->examinaName = TestTopForm::getQuizTitleName($index);
 		$suffix = Yii::app()->params['envSuffix'];
 		$city = Yii::app()->user->city();
         $city_allow = Yii::app()->user->city_allow();
-		$sql1 = "select d.id,d.name AS employee_name,d.city,count(a.employee_id) AS join_num from exa_join a 
+		$sql1 = "select a.id,d.name AS employee_name,d.city,a.lcd from exa_join a 
                 LEFT JOIN hr$suffix.hr_employee d ON a.employee_id = d.id
-                where a.quiz_id = '$index' 
+                where a.quiz_id = '$index' AND a.employee_id = '$staff' 
 			";
         $sql2 = "select count(*) from exa_examina a 
                 where id>0 
@@ -47,7 +49,7 @@ class StatisticsViewList extends CListPageModel
                     break;
 			}
 		}
-		$group = " group by a.employee_id";
+		$group = "";
 
 		$order = "";
 		if (!empty($this->orderField)) {
@@ -68,29 +70,33 @@ class StatisticsViewList extends CListPageModel
 		$records = Yii::app()->db->createCommand($sql)->queryAll();
 
 		$this->attr = array();
+		$add_name = "";
 		if (count($records) > 0) {
 			foreach ($records as $k=>$record) {
+			    if(empty($add_name)){
+			        $add_name = " - ".$record['employee_name'];
+                }
 			    $list = $this->getCorrect($record['id']);
 				$this->attr[] = array(
 					'id'=>$record['id'],
 					'employee_name'=>$record['employee_name'],
 					'city'=>CGeneral::getCityName($record["city"]),
-					'join_num'=>$record['join_num'],
+					'lcd'=>$record['lcd'],
                     'correct'=>$list["correct"],
                     'correctNum'=>$list["correctNum"],
 				);
 			}
 		}
+        $this->examinaName.=$add_name;
 		$session = Yii::app()->session;
-		$session['statisticsView_02'] = $this->getCriteria();
+		$session['statisticsDetail_02'] = $this->getCriteria();
 		return true;
 	}
 
-	public function getCorrect($employee_id){
+	public function getCorrect($join_id){
         $rows = Yii::app()->db->createCommand()->select("b.judge,a.id,a.employee_id")->from("exa_examina a")
-            ->leftJoin("exa_join d","a.join_id = d.id")
             ->leftJoin("exa_title_choose b","a.choose_id = b.id")
-            ->where("d.quiz_id=:quiz_id and a.employee_id=:employee_id", array(':quiz_id'=>$this->qui_id,':employee_id'=>$employee_id))->queryAll();
+            ->where("a.join_id=:join_id", array(':join_id'=>$join_id))->queryAll();
         if($rows){
             $arr = array();
             $num = 0;

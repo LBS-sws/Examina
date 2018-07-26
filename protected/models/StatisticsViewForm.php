@@ -193,7 +193,7 @@ class StatisticsViewForm extends CFormModel
         }
     }
 
-    public function retrieveData($index,$staff)
+    public function retrieveData($index)
     {
         $city = Yii::app()->user->city();
         $city_allow = Yii::app()->user->city_allow();

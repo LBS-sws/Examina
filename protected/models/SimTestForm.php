@@ -8,7 +8,6 @@
 class SimTestForm extends CFormModel
 {
 	/* User Fields */
-	public $exa_num;
 	public $quiz_id;
 	/**
 	 * Declares customized attribute labels.
@@ -18,7 +17,7 @@ class SimTestForm extends CFormModel
 	public function attributeLabels()
 	{
         return array(
-            'exa_num'=>Yii::t('examina','question num'),
+            //'exa_num'=>Yii::t('examina','question num'),
             'quiz_id'=>Yii::t('examina','test name'),
         );
 	}
@@ -30,23 +29,28 @@ class SimTestForm extends CFormModel
 	{
 		return array(
 			//array('id, position, leave_reason, remarks, email, staff_type, leader','safe'),
-            array('quiz_id,exa_num','safe'),
+            array('quiz_id','safe'),
 			array('quiz_id','required'),
-			array('exa_num','required'),
-			array('exa_num','validateNumber'),
-            array('exa_num', 'numerical', 'min'=>1, 'integerOnly'=>true),
 		);
 	}
 
-	public function validateNumber($attribute, $params){
-	    if(is_numeric($this->exa_num)){
-	        if(floatval($this->exa_num) == intval($this->exa_num)){
-                $count = Yii::app()->db->createCommand()->select("count(*)")->from("exa_title")->where("quiz_id=:id",array(":id"=>$this->quiz_id))->queryScalar();
-                if($this->exa_num>$count){
-                    $message = Yii::t('examina','question num'). "不能大于".$count;
-                    $this->addError($attribute,$message);
-                }
-            }
+	public function getQuizIdToJoinID($index){
+        $rows = Yii::app()->db->createCommand()->select("quiz_id")->from("exa_join")
+            ->where("id=:id", array(':id'=>$index))->queryRow();
+        if($rows){
+            return $rows["quiz_id"];
+        }else{
+            return "";
+        }
+    }
+
+	public function getJoinList($index){
+        $rows = Yii::app()->db->createCommand()->select()->from("exa_join")
+            ->where("id=:id", array(':id'=>$index))->queryRow();
+        if($rows){
+            return $rows;
+        }else{
+            return false;
         }
     }
 }

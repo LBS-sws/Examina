@@ -68,7 +68,7 @@ return array(
 
     //沈超添加开始
     'examina'=>'测验',
-    'Simulation test'=>'模拟测验',
+    'Simulation test'=>'进入测验',
     'My test'=>'我的测验',
     'Exam question bank'=>'试题题库',
     'Test list'=>'测验单列表',

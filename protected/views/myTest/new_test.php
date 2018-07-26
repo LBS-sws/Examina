@@ -1,66 +1,70 @@
 <?php
-if ($model->getErrorBool()){
-    $this->redirect(Yii::app()->createUrl('myTest/index'));
+if (empty($model->_testNum)){
+    $this->redirect(Yii::app()->createUrl('mytest/index'));
 }
-$this->pageTitle=Yii::app()->name . ' - myTest Form';
+$this->pageTitle=Yii::app()->name . ' - mytest Form';
 ?>
-<style>
-    #staffDiv .checkbox-inline{width: 100px;}
-    .resultBody_b{padding-left: 20px;}
-</style>
 <?php $form=$this->beginWidget('TbActiveForm', array(
-'id'=>'myTest-form',
-'action'=>Yii::app()->createUrl('myTest/save'),
-'enableClientValidation'=>true,
-'clientOptions'=>array('validateOnSubmit'=>true),
-'layout'=>TbHtml::FORM_LAYOUT_HORIZONTAL,
-    //'htmlOptions'=>array('enctype' => 'multipart/form-data','action' => Yii::app()->createUrl('myTest/save'))
+    'id'=>'mytest-form',
+    'enableClientValidation'=>true,
+    'clientOptions'=>array('validateOnSubmit'=>true),
+    'layout'=>TbHtml::FORM_LAYOUT_HORIZONTAL,
+    'htmlOptions'=>array('enctype' => 'multipart/form-data')
 )); ?>
 
+<style>
+    #staffDiv .checkbox-inline{width: 100px;}
+    .resultDiv.have-error .resultBody_t{color:red;}
+    .resultDiv.have-error .remark{color:red;border-color: red;}
+    .resultBody_b{padding-left: 20px;}
+
+    .radio>label:after{font: normal normal normal 14px/1 FontAwesome;float: left;width: 18px;margin-left: -18px;text-align: center;line-height: 18px;}
+    .radio>label.text-danger:after{content: "\f00d"}
+    .radio>label.text-primary:after{content: "\f00c"}
+</style>
 <section class="content-header">
-	<h1>
-		<strong><?php echo Yii::t('app','My test')." - ".$model->getQuizList()["name"]; ?></strong>
-	</h1>
-<!--
-	<ol class="breadcrumb">
-		<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-		<li><a href="#">Layout</a></li>
-		<li class="active">Top Navigation</li>
-	</ol>
--->
+    <h1>
+        <strong><?php echo Yii::t('examina','test again'); ?></strong>
+    </h1>
+    <!--
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="#">Layout</a></li>
+            <li class="active">Top Navigation</li>
+        </ol>
+    -->
 </section>
 
 <section class="content">
-	<div class="box"><div class="box-body">
-	<div class="btn-group" role="group">
-		<?php
-/*        echo TbHtml::button('<span class="fa fa-reply"></span> '.Yii::t('misc','Back'), array(
-				'submit'=>Yii::app()->createUrl('myTest/index')));*/
-		?>
-        <span style="font-size: 17px;"><?php echo Yii::t('examina','test display')."：".$model->getQuizList()["dis_name"];?></span>
-	</div>
-	</div></div>
+    <div class="box"><div class="box-body">
+            <div class="btn-group" role="group">
+                <?php echo TbHtml::button('<span class="fa fa-reply"></span> '.Yii::t('misc','Back'), array(
+                    'submit'=>Yii::app()->createUrl('mytest/view',array("index"=>$index))));
+                ?>
+            </div>
+        </div></div>
 
-	<div class="box box-info">
-		<div class="box-body">
+    <div class="box box-info">
+        <div class="box-body">
 
             <?php
-            echo TbHtml::hiddenField("quzID",$model->getQuizList()["id"]);
             $resultList = $model->getResultList();
             foreach ($resultList as $key => $result){
                 if($key == 0){
-                    echo "<div class='resultDiv now'>";
+                    echo "<div class='resultDiv now' data-key='".($key+1)."'>";
                 }else{
-                    echo "<div class='resultDiv' style='display: none'>";
+                    echo "<div class='resultDiv' data-key='".($key+1)."' style='display: none'>";
                 }
-                echo TbHtml::hiddenField("examina[$key][titleId]",$result["id"]);
-                echo TbHtml::hiddenField("examina[$key][list]",implode(",",array_column($result["list"],"id")));
                 echo "<h4 class='resultRe text-right'>".($key+1)." / ".count($resultList)."</h4>";
                 echo "<div class='resultBody'>";
                 echo "<h4 class='resultBody_t'><b>".($key+1)."、".$result["name"]."</b></h4>";
                 echo "<div class='resultBody_b'>";
-                $item = array_column($result["list"],"choose_name","id");
-                echo TbHtml::radioButtonList("examina[$key][chooseId]","",$item);
+                foreach ($result["list"] as $item){
+                    echo '<div class="radio">';
+                    echo TbHtml::radioButton("examina[list_choose][$key]","",array('label'=>$item["choose_name"],'data-judge'=>$item["judge"],'class'=>'radioJudge'));
+                    echo '</div>';
+                }
+                echo "<div class='remark' style='padding: 10px;border: 1px solid;display: none;'>".Yii::t("examina","Interpretation")."：".$result["remark"]."</div>";
                 echo "</div>";
                 echo "</div>";
                 echo "</div>";
@@ -72,9 +76,38 @@ $this->pageTitle=Yii::app()->name . ' - myTest Form';
                     'id'=>"resultChange"));
                 ?>
             </div>
-		</div>
-	</div>
+            <div id="simulationResult" style="display: none">
+                <legend><?php echo Yii::t("examina","simulation results");?></legend>
+                <div class="form-group">
+                    <?php echo TbHtml::label(Yii::t("examina","correct num"),"",array('class'=>"col-sm-2 control-label")) ?>
+                    <div class="col-sm-8">
+                        <p class="form-control-static" id="successNum"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <?php echo TbHtml::label(Yii::t("examina","correct title"),"",array('class'=>"col-sm-2 control-label")) ?>
+                    <div class="col-sm-8">
+                        <p class="form-control-static" id="successStr"></p>
+                    </div>
+                </div>
+                <legend></legend>
+                <div class="form-group">
+                    <?php echo TbHtml::label(Yii::t("examina","wrong num"),"",array('class'=>"col-sm-2 control-label")) ?>
+                    <div class="col-sm-8">
+                        <p class="form-control-static" id="errorNum"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <?php echo TbHtml::label(Yii::t("examina","wrong title"),"",array('class'=>"col-sm-2 control-label")) ?>
+                    <div class="col-sm-8">
+                        <p class="form-control-static" id="errorStr"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
+
 <div tabindex="-1" class="modal fade" style="display: none" id="myModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -102,23 +135,61 @@ $('#resultChange').on('click',function(){
         return false;
     };
     var resultDiv = $('.resultDiv.now').next('.resultDiv');
-    if(resultDiv.length == 0){
-        return false;
-    };
     if($('.resultDiv.now').find('input[type=\"radio\"]:checked').length == 0){
         $('#myModal').modal('show');
         return false;
     }
+    if(resultDiv.length == 0){
+        resultTest();
+        return false;
+    };
     $('.resultDiv.now').stop().slideUp(100).removeClass('now');
     resultDiv.stop().slideDown(100).addClass('now');
     if(resultDiv.next('.resultDiv').length == 0){
         $('#resultChange').html('<span class=\"fa fa-upload\"></span>提交');
-        $('#resultChange').attr('type','submit').off('click');
+        //$('#resultChange').off('click').attr('type','submit');
+        return false;
     }
 });
+
+function resultTest(){
+    var sum = $('.resultDiv').length;
+    var success = 0;
+    var error = 0;
+    var successStr = '';
+    var errorStr = '';
+    $('.resultDiv').show();
+    $('.remark').show();
+    $('.resultRe').hide();
+    $('#resultChange').hide();
+    $('.radioJudge').each(function(){
+        if($(this).data('judge') == 1){
+            if($(this).is(':checked')){
+                success++;
+                if(successStr!=''){
+                    successStr+=',';
+                }
+                successStr+=$(this).parents('.resultDiv:first').data('key');
+            }
+            $(this).parent('label').addClass('text-primary');
+        }else if($(this).is(':checked')){
+            error++;
+            if(errorStr!=''){
+                errorStr+=',';
+            }
+            errorStr+=$(this).parents('.resultDiv:first').data('key');
+            $(this).parents('.resultDiv:first').addClass('have-error');
+            $(this).parent('label').addClass('text-danger');
+        }
+    }).hide();
+    $('#successNum').text(success);
+    $('#successStr').text(successStr);
+    $('#errorNum').text(error);
+    $('#errorStr').text(errorStr);
+    $('#simulationResult').show();
+}
 ";
 Yii::app()->clientScript->registerScript('calcFunction',$js,CClientScript::POS_READY);
-
 $js = Script::genReadonlyField();
 Yii::app()->clientScript->registerScript('readonlyClass',$js,CClientScript::POS_READY);
 ?>

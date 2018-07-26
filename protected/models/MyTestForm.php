@@ -8,6 +8,7 @@
 class MyTestForm extends CFormModel
 {
 	/* User Fields */
+	public $join_id;
 	public $id = 0;
 	public $quiz_id;
 	public $employee_id;
@@ -128,19 +129,26 @@ class MyTestForm extends CFormModel
 	
 	public function saveData()
 	{
+        $uid = Yii::app()->user->id;
         $session = Yii::app()->session;
         $list_choose = $this->list_choose;
         $staff_id = Yii::app()->user->staff_id();
         $command = Yii::app()->db->createCommand();
+        $command->insert('exa_join', array(
+            'quiz_id'=>$this->quiz_id,
+            'employee_id'=>$staff_id,
+            'lcu'=>$uid,
+        ));
+        $this->join_id = Yii::app()->db->getLastInsertID();
         foreach ($session["examina_list"] as $key => $examina){
             $command->reset();
             $command->insert('exa_examina', array(
-                'quiz_id'=>$this->quiz_id,
+                'join_id'=>$this->join_id,
                 'employee_id'=>$staff_id,
                 'title_id'=>$examina[0]["title_id"],
                 'choose_id'=>$list_choose[$key],
                 'list_choose'=>implode(",",array_column($examina,"id")),
-                'lcu'=>$staff_id,
+                'lcu'=>$uid,
             ));
         }
 	}

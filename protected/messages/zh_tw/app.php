@@ -72,7 +72,7 @@ return array(
 
     //沈超添加开始
     'examina'=>'測驗',
-    'Simulation test'=>'模擬測驗',
+    'Simulation test'=>'進入測驗',
     'My test'=>'我的測驗',
     'Exam question bank'=>'試題題庫',
     'Test list'=>'測驗單列表',

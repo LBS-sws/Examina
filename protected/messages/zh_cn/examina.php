@@ -53,6 +53,7 @@ return array(
     'next title' => '下一题',
 
     'test results' => '测试结果',
+    'test time' => '测试时间',
     'Detail' => '详情',
     'Interpretation' => '讲解',
     'Participate in time' => '参与时间',
@@ -78,5 +79,7 @@ return array(
     'select'=>'选择',
     'Success Num：'=>'正确数量：',
     'Error Num：'=>'错误数量：',
+    'test again'=>'再次答题',
+    'join num'=>'参与次数',
 );
 ?>

@@ -8,6 +8,7 @@
 class TestTopForm extends CFormModel
 {
 	/* User Fields */
+	public $join_id = 0;//我的測試id
 	public $id = 0;
 	public $dis_name;
 	public $name;
@@ -136,11 +137,12 @@ class TestTopForm extends CFormModel
 
     //獲取正確數量
     public function getCorrectNum(){
-        $staff_id = Yii::app()->user->staff_id();
-        $rows = Yii::app()->db->createCommand()->select("a.*,b.judge,c.name as title_name,c.remark")->from("exa_examina a")
+        //$staff_id = Yii::app()->user->staff_id();
+        $rows = Yii::app()->db->createCommand()->select("a.*,b.judge,c.name as title_name,c.remark")->from("exa_join d")
+            ->leftJoin("exa_examina a","a.join_id = d.id")
             ->leftJoin("exa_title c","a.title_id = c.id")
             ->leftJoin("exa_title_choose b","a.choose_id = b.id")
-            ->where("a.quiz_id=:quiz_id and a.employee_id=:employee_id", array(':quiz_id'=>$this->id,':employee_id'=>$staff_id))->queryAll();
+            ->where("d.id=:join_id", array(':join_id'=>$this->join_id))->queryAll();
         if($rows){
             $this->lcd = $rows[0]["lcd"];
             $this->correctList = array();

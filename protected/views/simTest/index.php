@@ -38,29 +38,12 @@ $this->pageTitle=Yii::app()->name . ' - simTest Form';
         <div class="box-body">
 
             <div class="form-group">
-                <div class="col-sm-8 col-sm-offset-2 text-primary">
-                    <p class="form-control-static">
-                        <?php echo Yii::t("examina","The results of the simulation test are not included in the test results, only for personal reference."); ?>
-                    </p>
-                </div>
-            </div>
-
-            <div class="form-group">
                 <?php echo $form->labelEx($model,'quiz_id',array('class'=>"col-sm-2 control-label")); ?>
                 <div class="col-sm-3">
                     <?php echo $form->dropDownList($model, 'quiz_id',TestTopForm::getAllTestListOnly(),
                         array('readonly'=>(false))
                     );
                     ?>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model,'exa_num',array('class'=>"col-sm-2 control-label")); ?>
-                <div class="col-sm-3">
-                    <?php echo $form->numberField($model, 'exa_num',
-                        array('readonly'=>(false),'min'=>1)
-                    ); ?>
                 </div>
             </div>
         </div>

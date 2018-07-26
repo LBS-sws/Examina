@@ -28,7 +28,7 @@ class SimTestController extends Controller
     {
         return array(
             array('allow',
-                'actions'=>array('index','save'),
+                'actions'=>array('index','save','audit'),
                 'expression'=>array('SimTestController','allowReadOnly'),
             ),
             array('deny',  // deny all users
@@ -57,19 +57,33 @@ class SimTestController extends Controller
     public function actionSave()
     {
         if (isset($_POST['SimTestForm'])) {
-            $model = new SimTestForm("save");
-            $model->attributes = $_POST['SimTestForm'];
+            $index = $_POST['SimTestForm']["quiz_id"];
+            $quizModel = new Examina($index);
+            if(!$quizModel->getErrorBool()){
+                $this->render('new',array('model'=>$quizModel,));
+                //var_dump($quizModel->getResultList());
+            }else{
+                throw new CHttpException(403,'該測驗單沒有試題無法開始測驗，請聯繫管理員.');
+            }
+        }
+    }
+
+    public function actionAudit()
+    {
+        if (isset($_POST['examina'])) {
+            $model = new MyTestForm('new');
+            $model->attributes = $_POST['examina'];
             if ($model->validate()) {
-                $quizModel = new Examina(-1);
-                $quizModel->_testNum = $model->exa_num;
-                $quizModel->_quizId = $model->quiz_id;
-                $quizModel->roundList();
-                $this->render('form',array('model'=>$quizModel,));
+                $model->saveData();
+                Dialog::message(Yii::t('dialog','Information'), Yii::t('dialog','Save Done'));
+                $this->redirect(Yii::app()->createUrl('myTest/view',array('index'=>$model->join_id)));
             } else {
                 $message = CHtml::errorSummary($model);
                 Dialog::message(Yii::t('dialog','Validation Message'), $message);
-                $this->render('index',array('model'=>$model,));
+                $this->redirect(Yii::app()->createUrl('simTest/index'));
             }
+        }else{
+            throw new CHttpException(404,'The requested page does not exist.');
         }
     }
 }

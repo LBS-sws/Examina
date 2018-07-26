@@ -11,7 +11,7 @@
         ?>
     </th>
     <th>
-        <?php echo TbHtml::link($this->getLabelName('lcd').$this->drawOrderArrow('lcd'),'#',$this->createOrderLink('statisticsView-list','lcd'))
+        <?php echo TbHtml::link($this->getLabelName('join_num').$this->drawOrderArrow('join_num'),'#',$this->createOrderLink('statisticsView-list','join_num'))
         ;
         ?>
     </th>

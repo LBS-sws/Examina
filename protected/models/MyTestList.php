@@ -14,6 +14,7 @@ class MyTestList extends CListPageModel
 			'name'=>Yii::t('examina','test name'),
 			'start_time'=>Yii::t('examina','start time'),
 			'end_time'=>Yii::t('examina','end time'),
+			'lcd'=>Yii::t('examina','test time'),
 			'exa_num'=>Yii::t('examina','question num'),
             'city'=>Yii::t('examina','city all'),
             'city_name'=>Yii::t('examina','City'),
@@ -29,12 +30,17 @@ class MyTestList extends CListPageModel
 		$suffix = Yii::app()->params['envSuffix'];
 		$city = Yii::app()->user->city();
         $city_allow = Yii::app()->user->city_allow();
-        $bumen = Yii::app()->user->bumen();
-		$sql1 = "select a.* from exa_quiz a 
-                where (a.bumen=''||a.bumen LIKE '%,$bumen,%') 
+        $staff_id = Yii::app()->user->staff_id();
+		$sql1 = "select a.name,a.bumen_ex,a.exa_num,b.id,b.lcd from exa_join b
+                LEFT JOIN exa_quiz a ON b.quiz_id = a.id
+                where (b.employee_id = '$staff_id') 
 			";
-		$sql2 = "select COUNT(a.id) from exa_quiz a 
-                where (a.bumen=''||a.bumen LIKE '%,$bumen,%')  
+/*		$sql1 = "select a.* from exa_quiz a
+                where (a.bumen=''||a.bumen LIKE '%,$bumen,%') 
+			";*/
+        $sql2 = "select count(b.id) from exa_join b
+                LEFT JOIN exa_quiz a ON b.quiz_id = a.id
+                where (b.employee_id = '$staff_id')  
 			";
 		$clause = "";
 		if (!empty($this->searchField) && !empty($this->searchValue)) {
@@ -54,20 +60,18 @@ class MyTestList extends CListPageModel
 			}
 		}
 
-        $group=" GROUP BY a.id ";
-
 		$order = "";
 		if (!empty($this->orderField)) {
 			$order .= " order by ".$this->orderField." ";
 			if ($this->orderType=='D') $order .= "desc ";
 		} else{
-            $order = " order by a.id desc";
+            $order = " order by b.id desc";
         }
 
 		$sql = $sql2.$clause;
         $this->totalRow = Yii::app()->db->createCommand($sql)->queryScalar();
 		
-		$sql = $sql1.$clause.$group.$order;
+		$sql = $sql1.$clause.$order;
 		$sql = $this->sqlWithPageCriteria($sql, $this->pageNum);
 		$records = Yii::app()->db->createCommand($sql)->queryAll();
 
@@ -77,16 +81,13 @@ class MyTestList extends CListPageModel
 			    $list = $this->judgeStaffTest($record);
 				$this->attr[] = array(
 					'id'=>$record['id'],
-					'start_time'=>date("Y-m-d",strtotime($record['start_time'])),
-					'end_time'=>date("Y-m-d",strtotime($record['end_time'])),
+					'lcd'=>date("Y-m-d",strtotime($record['lcd'])),
 					'name'=>$record['name'],
 					'exa_num'=>$record['exa_num'],
 					'bumen_ex'=>$record['bumen_ex'],
-					'color'=>$list['color'],
-					'correct'=>empty($list['string'])?$list['correct']:$list['string'],
-					'correct_num'=>empty($list['string'])?$list['correct_num']:$list['string'],
-					'wrong_num'=>empty($list['string'])?($record['exa_num'] - $list['correct_num']):$list['string'],
-                    'bool'=>$list['bool'],
+					'correct'=>$list['correct'],
+					'correct_num'=>$list['correct_num'],
+					'wrong_num'=>$list['wrong_num'],
 				);
 			}
 		}
@@ -95,64 +96,33 @@ class MyTestList extends CListPageModel
 		return true;
 	}
 
-	//判斷員工能否參加考試  true:允許參加  false：不允許參加
-	public function judeStaff($quz_id,$staff_id){
-	    $model = new TestTopForm();
-        $model->retrieveData($quz_id);
-        $record = $model->getAttributes();
-        $list = MyTestList::judgeStaffTest($record,$staff_id);
-        if($list["bool"]===false){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-	//判斷員工是否參與測驗
+	//獲取試題的正確率
 	private function judgeStaffTest($record,$staff_id=""){
 	    if(empty($staff_id)){
             $staff_id = Yii::app()->user->staff_id();
         }
-        $count = Yii::app()->db->createCommand()->select("b.judge,a.id")->from("exa_examina a")
+        $count = Yii::app()->db->createCommand()->select("a.*,b.judge,c.name as title_name,c.remark")->from("exa_join d")
+            ->leftJoin("exa_examina a","a.join_id = d.id")
+            ->leftJoin("exa_title c","a.title_id = c.id")
             ->leftJoin("exa_title_choose b","a.choose_id = b.id")
-            ->where("a.quiz_id=:quiz_id and a.employee_id=:employee_id", array(':quiz_id'=>$record["id"],':employee_id'=>$staff_id))->queryAll();
-	    if(!$count){
-            $date = date("Y-m-d");
-            if($date>=date("Y-m-d",strtotime($record['start_time'])) && $date<=date("Y-m-d",strtotime($record['end_time']))){
-                return array(
-                    "bool"=>false,
-                    "string"=>Yii::t("examina","not involved"),
-                    "color"=>" text-primary",
-                ); //沒有參與
-            }else{
-                if($date<date("Y-m-d",strtotime($record['start_time']))){
-                    return array(
-                        "bool"=>true,
-                        "string"=>Yii::t("examina","Not started"),
-                        "color"=>" text-muted",
-                    ); //沒有開始
+            ->where("d.id=:join_id and a.employee_id=:employee_id", array(':join_id'=>$record["id"],':employee_id'=>$staff_id))->queryAll();
+        $correct_num = 0;
+        $wrong_num = 0;
+        if($count){
+            foreach ($count as $row){
+                if ($row["judge"] == 1){
+                    $correct_num++;
                 }else{
-                    return array(
-                        "bool"=>true,
-                        "string"=>Yii::t("examina","expired"),
-                        "color"=>" text-danger",
-                    ); //已過期
+                    $wrong_num++;
                 }
             }
         }else{
-	        $num = 0;
-	        foreach ($count as $row){
-                if($row["judge"] == 1){
-                    $num++;
-                }
-            }
-            return array(
-                "bool"=>true,
-                "string"=>'',
-                "color"=>"",
-                "correct"=>sprintf("%.2f",($num/count($count)*100))."%",
-                "correct_num"=>$num,
-            ); //已經參與測驗
+            $count = array();
         }
+        return array(
+            "correct"=>sprintf("%.2f",($correct_num/count($count)*100))."%",
+            "correct_num"=>$correct_num,
+            "wrong_num"=>$wrong_num,
+        );
     }
 }

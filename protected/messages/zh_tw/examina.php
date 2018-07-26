@@ -53,6 +53,7 @@ return array(
     'next title' => '下一題',
 
     'test results' => '測驗結果',
+    'test time' => '測試時間',
     'Detail' => '詳情',
     'Interpretation' => '講解',
     'Participate in time' => '參與時間',
@@ -78,5 +79,7 @@ return array(
     'select'=>'選擇',
     'Success Num：'=>'正確數量：',
     'Error Num：'=>'錯誤數量：',
+    'test again'=>'再次答題',
+    'join num'=>'參與次數',
 );
 ?>

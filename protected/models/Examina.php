@@ -16,7 +16,7 @@ class Examina{
     private $_command;
     private $_errorBool = false;//是否有異常 true：數據異常
 
-    public function __construct($index,$bool=true){
+    public function __construct($index,$bool=true,$join_id=""){
         $this->_quizId = $index;
         $this->_bool = $bool;
         $staff_id = Yii::app()->user->staff_id();//當前員工
@@ -39,13 +39,15 @@ class Examina{
                 $command->reset();
                 $rows = $command->select("a.*,b.title_code,b.name,b.remark")->from("exa_examina a")
                     ->leftJoin("exa_title b","a.title_id=b.id")
-                    ->where("a.quiz_id=:quiz_id and a.employee_id=:employee_id", array(':quiz_id'=>$index,':employee_id'=>$staff_id))->queryAll();
+                    ->where("a.join_id=:join_id and a.employee_id=:employee_id", array(':join_id'=>$join_id,':employee_id'=>$staff_id))->queryAll();
                 if($rows){
+                    shuffle($rows);//打亂
                     foreach ($rows as $row){
                         $list = $row;
                         $chooseList = explode(",",$list["list_choose"]);
+                        shuffle($chooseList);//打亂
                         foreach ($chooseList as $choose){
-                            $list["list"][] = $this->getChooseList($choose);
+                            $list["list"][] = $this->getChooseList($command,$choose);
                         }
                         $this->_resultList[] =$list;
                     }

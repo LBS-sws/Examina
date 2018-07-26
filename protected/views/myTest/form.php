@@ -34,15 +34,11 @@ $this->pageTitle=Yii::app()->name . ' - myTest Form';
 		<?php echo TbHtml::button('<span class="fa fa-reply"></span> '.Yii::t('misc','Back'), array(
 				'submit'=>Yii::app()->createUrl('myTest/index')));
 		?>
+		<?php echo TbHtml::button('<span class="fa fa-superpowers"></span> '.Yii::t('examina','test again'), array(
+				'submit'=>Yii::app()->createUrl('myTest/Again',array("index"=>$model->join_id))));
+		?>
 	</div>
-	<div class="btn-group pull-right" role="group">
-        <?php
-        if(MyTestList::judeStaff($model->id,'')){
-            echo TbHtml::button('<span class="fa fa-gamepad"></span> '.Yii::t('examina','start test'), array(
-                'submit'=>Yii::app()->createUrl('myTest/new',array("index"=>$model->id))));
-        }
-        ?>
-	</div>
+
 	</div></div>
 
 	<div class="box box-info">

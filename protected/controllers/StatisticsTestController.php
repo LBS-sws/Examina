@@ -28,7 +28,7 @@ class StatisticsTestController extends Controller
     {
         return array(
             array('allow',
-                'actions'=>array('index','view','detail'),
+                'actions'=>array('index','view','detail','detailStaff'),
                 'expression'=>array('StatisticsTestController','allowReadOnly'),
             ),
             array('deny',  // deny all users
@@ -76,13 +76,42 @@ class StatisticsTestController extends Controller
         }
     }
 
-    public function actionDetail($index,$staff)
+    public function actionDetailStaff($index,$staff,$pageNum=0)
     {
-        $model = new StatisticsViewForm('view');
-        if (!$model->retrieveData($index,$staff)) {
+        if(!empty($index)&&is_numeric($index)&&!empty($staff)&&is_numeric($staff)){
+            $model = new StatisticsDetailList;
+            if (isset($_POST['StatisticsDetailList'])) {
+                $model->attributes = $_POST['StatisticsDetailList'];
+            } else {
+                $session = Yii::app()->session;
+                if (isset($session['statisticsDetail_02']) && !empty($session['statisticsDetail_02'])) {
+                    $criteria = $session['statisticsDetail_02'];
+                    $model->setCriteria($criteria);
+                }
+            }
+            $model->determinePageNum($pageNum);
+            $model->retrieveDataByPage($index,$staff,$model->pageNum);
+            $this->render('detail',array('model'=>$model));
+        }
+    }
+
+    public function actionDetail($index)
+    {
+/*        $model = new StatisticsViewForm('view');
+        if (!$model->retrieveData($index)) {
             throw new CHttpException(404,'The requested page does not exist.');
         } else {
             $this->render('form',array('model'=>$model,));
+        }*/
+        $model = new TestTopForm('view');
+        $model->join_id = $index;
+        $list = SimTestForm::getJoinList($index);
+        $quiz_id = $list["quiz_id"];
+        $staff = $list["employee_id"];
+        if (!$model->retrieveData($quiz_id)) {
+            throw new CHttpException(404,'The requested page does not exist.');
+        } else {
+            $this->render('form',array('model'=>$model,'staff'=>$staff,));
         }
     }
 

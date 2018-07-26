@@ -28,7 +28,7 @@ class MyTestController extends Controller
     {
         return array(
             array('allow',
-                'actions'=>array('new','save'),
+                'actions'=>array('again'),
                 'expression'=>array('MyTestController','allowReadWrite'),
             ),
             array('allow',
@@ -46,7 +46,7 @@ class MyTestController extends Controller
     }
 
     public static function allowReadOnly() {
-        return Yii::app()->user->validFunction('EM01');
+        return Yii::app()->user->validFunction('EM01')||Yii::app()->user->validFunction('EM02');
     }
     public function actionIndex($pageNum=0){
         $model = new MyTestList;
@@ -65,17 +65,18 @@ class MyTestController extends Controller
     }
 
 
-    //開始測驗
-    public function actionNew($index)
+    //再次答題（不計入數據庫）
+    public function actionAgain($index)
     {
 /*        $model = new MyTestForm('new');
         $this->render('form',array('model'=>$model,));*/
-        $quizModel = new Examina($index);
+        $quiz_id = SimTestForm::getQuizIdToJoinID($index);
+        $quizModel = new Examina($quiz_id,false,$index);
         if(!$quizModel->getErrorBool()){
-            $this->render('new',array('model'=>$quizModel,));
+            $this->render('new_test',array('model'=>$quizModel,'index'=>$index,));
             //var_dump($quizModel->getResultList());
         }else{
-            throw new CHttpException(403,'該測驗單沒有試題無法開始測驗，請聯繫管理員.');
+            throw new CHttpException(403,'沒有找到試題');
         }
     }
 
@@ -83,7 +84,9 @@ class MyTestController extends Controller
     public function actionView($index)
     {
         $model = new TestTopForm('view');
-        if (!$model->retrieveData($index)) {
+        $model->join_id = $index;
+        $quiz_id = SimTestForm::getQuizIdToJoinID($index);
+        if (!$model->retrieveData($quiz_id)) {
             throw new CHttpException(404,'The requested page does not exist.');
         } else {
             $this->render('form',array('model'=>$model,));
@@ -91,40 +94,40 @@ class MyTestController extends Controller
     }
 
 
-    //保存測試結果
-    public function actionSave()
-    {
-        //var_dump($_POST);die();
-        if (isset($_POST['examina'])) {
-            $model = new MyTestForm('new');
-            $model->attributes = $_POST['examina'];
-            if ($model->validate()) {
-                $model->saveData();
-                Dialog::message(Yii::t('dialog','Information'), Yii::t('dialog','Save Done'));
-                $this->redirect(Yii::app()->createUrl('myTest/view',array('index'=>$model->quiz_id)));
-            } else {
-                $message = CHtml::errorSummary($model);
-                Dialog::message(Yii::t('dialog','Validation Message'), $message);
-                $this->redirect(Yii::app()->createUrl('myTest/new',array('index'=>$model->quiz_id)));
-            }
-        }else{
-            throw new CHttpException(404,'The requested page does not exist.');
-        }
-    }
+    /*
+      //保存測試結果
+      public function actionSave()
+      {
+          //var_dump($_POST);die();
+          if (isset($_POST['examina'])) {
+              $model = new MyTestForm('new');
+              $model->attributes = $_POST['examina'];
+              if ($model->validate()) {
+                  $model->saveData();
+                  Dialog::message(Yii::t('dialog','Information'), Yii::t('dialog','Save Done'));
+                  $this->redirect(Yii::app()->createUrl('myTest/view',array('index'=>$model->quiz_id)));
+              } else {
+                  $message = CHtml::errorSummary($model);
+                  Dialog::message(Yii::t('dialog','Validation Message'), $message);
+                  $this->redirect(Yii::app()->createUrl('myTest/new',array('index'=>$model->quiz_id)));
+              }
+          }else{
+              throw new CHttpException(404,'The requested page does not exist.');
+          }
+      }
 
-  /*
-    public function actionDelete(){
-        $model = new MyTestForm('delete');
-        if (isset($_POST['MyTestForm'])) {
-            $model->attributes = $_POST['MyTestForm'];
-            if($model->validateDelete()){
-                $model->saveData();
-                Dialog::message(Yii::t('dialog','Information'), Yii::t('dialog','Record Deleted'));
-            }else{
-                Dialog::message(Yii::t('dialog','Information'), Yii::t('dialog','This record is used by some user records'));
-                $this->redirect(Yii::app()->createUrl('myTest/edit',array('index'=>$model->id)));
-            }
-        }
-        $this->redirect(Yii::app()->createUrl('myTest/index'));
-    }*/
+      public function actionDelete(){
+          $model = new MyTestForm('delete');
+          if (isset($_POST['MyTestForm'])) {
+              $model->attributes = $_POST['MyTestForm'];
+              if($model->validateDelete()){
+                  $model->saveData();
+                  Dialog::message(Yii::t('dialog','Information'), Yii::t('dialog','Record Deleted'));
+              }else{
+                  Dialog::message(Yii::t('dialog','Information'), Yii::t('dialog','This record is used by some user records'));
+                  $this->redirect(Yii::app()->createUrl('myTest/edit',array('index'=>$model->id)));
+              }
+          }
+          $this->redirect(Yii::app()->createUrl('myTest/index'));
+      }*/
 }

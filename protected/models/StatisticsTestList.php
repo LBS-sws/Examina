@@ -83,8 +83,9 @@ class StatisticsTestList extends CListPageModel
 
 	public function getCorrect($que_id){
         $rows = Yii::app()->db->createCommand()->select("b.judge,a.id,a.employee_id")->from("exa_examina a")
+            ->leftJoin("exa_join c","c.id = a.join_id")
             ->leftJoin("exa_title_choose b","a.choose_id = b.id")
-            ->where("a.quiz_id=:quiz_id", array(':quiz_id'=>$que_id))->queryAll();
+            ->where("c.quiz_id=:quiz_id", array(':quiz_id'=>$que_id))->queryAll();
         if($rows){
             $arr = array();
             $num = 0;

@@ -11,20 +11,15 @@
         ?>
     </th>
 	<th>
-		<?php echo TbHtml::link($this->getLabelName('start_time').$this->drawOrderArrow('a.start_time'),'#',$this->createOrderLink('myTest-list','a.start_time'))
-			;
-		?>
-	</th>
-	<th>
-		<?php echo TbHtml::link($this->getLabelName('end_time').$this->drawOrderArrow('a.end_time'),'#',$this->createOrderLink('myTest-list','a.end_time'))
-			;
-		?>
-	</th>
-	<th>
 		<?php echo TbHtml::link($this->getLabelName('exa_num').$this->drawOrderArrow('a.exa_num'),'#',$this->createOrderLink('myTest-list','a.exa_num'))
 			;
 		?>
 	</th>
+    <th>
+        <?php echo TbHtml::link($this->getLabelName('lcd').$this->drawOrderArrow('b.lcd'),'#',$this->createOrderLink('myTest-list','b.lcd'))
+        ;
+        ?>
+    </th>
     <th>
         <?php echo "<a href='#'>".Yii::t("examina","correct")."</a>";?>
     </th>
@@ -33,7 +28,5 @@
     </th>
     <th>
         <?php echo "<a href='#'>".Yii::t("examina","wrong num")."</a>";?>
-    </th>
-    <th>
     </th>
 </tr>

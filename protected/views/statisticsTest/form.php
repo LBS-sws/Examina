@@ -1,6 +1,6 @@
 <?php
 if (empty($model->id)&&$model->scenario == "edit"){
-    $this->redirect(Yii::app()->createUrl('statisticsTest/view',array("index"=>$model->id)));
+    $this->redirect(Yii::app()->createUrl('statisticsTest/index'));
 }
 $this->pageTitle=Yii::app()->name . ' - statisticsTest Form';
 ?>
@@ -17,7 +17,7 @@ $this->pageTitle=Yii::app()->name . ' - statisticsTest Form';
 
 <section class="content-header">
     <h1>
-        <strong><?php echo Yii::t('examina','test results')." - ".$model->getEmployeeNameToId($model->employee_id); ?></strong>
+        <strong><?php echo Yii::t('app','Test results statistics'); ?></strong>
     </h1>
     <!--
         <ol class="breadcrumb">
@@ -32,9 +32,10 @@ $this->pageTitle=Yii::app()->name . ' - statisticsTest Form';
     <div class="box"><div class="box-body">
             <div class="btn-group" role="group">
                 <?php echo TbHtml::button('<span class="fa fa-reply"></span> '.Yii::t('misc','Back'), array(
-                    'submit'=>Yii::app()->createUrl('statisticsTest/view',array("index"=>$model->id))));
+                    'submit'=>Yii::app()->createUrl('statisticsTest/detailStaff',array("index"=>$model->id,"staff"=>$staff))));
                 ?>
             </div>
+
         </div></div>
 
     <div class="box box-info">
@@ -46,10 +47,9 @@ $this->pageTitle=Yii::app()->name . ' - statisticsTest Form';
             $this->renderPartial('//site/testTopForm',array(
                 'form'=>$form,
                 'model'=>$model,
-                'readonly'=>(true),
+                'readonly'=>($model->scenario=='view'),
             ));
             ?>
-
             <?php
             $testBool = $model->getCorrectNum();
             if ($testBool): ?>
