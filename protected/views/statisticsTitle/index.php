@@ -28,6 +28,9 @@ $this->pageTitle=Yii::app()->name . ' - statisticsTitle';
         'title_code',
         'name',
     );
+    $modelName = get_class($model);
+    $search_add_html = TbHtml::dropDownList($modelName.'[searchTitle]',$model->searchTitle,$model->getAllTestTopList(),
+        array('size'=>15,'placeholder'=>Yii::t('misc','Start Date'),"class"=>"form-control","id"=>"searchTitle"));
    $this->widget('ext.layout.ListPageWidget', array(
         'title'=>Yii::t('app','Title results statistics'),
         'model'=>$model,
@@ -35,6 +38,7 @@ $this->pageTitle=Yii::app()->name . ' - statisticsTitle';
         'viewdtl'=>'//statisticsTitle/_listdtl',
         'gridsize'=>'24',
         'height'=>'600',
+       'search_add_html'=>$search_add_html,
         'search'=>$search,
     ));
     ?>

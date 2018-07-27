@@ -60,7 +60,13 @@ class SimTestController extends Controller
             $index = $_POST['SimTestForm']["quiz_id"];
             $quizModel = new Examina($index);
             if(!$quizModel->getErrorBool()){
-                $this->render('new',array('model'=>$quizModel,));
+                if($quizModel->validateTime()){
+                    $this->render('new',array('model'=>$quizModel,));
+                }else{
+                    $message = Yii::t("examina","The test list has expired");
+                    Dialog::message(Yii::t('dialog','Validation Message'), $message);
+                    $this->redirect(Yii::app()->createUrl('simTest/index'));
+                }
                 //var_dump($quizModel->getResultList());
             }else{
                 throw new CHttpException(403,'該測驗單沒有試題無法開始測驗，請聯繫管理員.');

@@ -124,9 +124,12 @@ class TestTopForm extends CFormModel
 
     //獲取測驗單列表（僅能使用的）
     public function getAllTestListOnly(){
+        $date = date("Y-m-d");
         $bumen = Yii::app()->user->bumen();
         $arr= array(""=>"");
-        $rows = Yii::app()->db->createCommand()->select("id,name")->from("exa_quiz")->where("bumen LIKE '%,$bumen,%' or bumen=''")->queryAll();
+        $rows = Yii::app()->db->createCommand()->select("id,name")->from("exa_quiz")
+            ->where("(bumen LIKE '%,$bumen,%' or bumen='') and date_format(start_time,'%Y-%m-%d')<='$date' and date_format(end_time,'%Y-%m-%d')>='$date'")
+            ->queryAll();
         if($rows){
             foreach ($rows as $row){
                 $arr[$row["id"]] = $row["name"];

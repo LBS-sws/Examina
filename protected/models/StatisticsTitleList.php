@@ -2,8 +2,7 @@
 
 class StatisticsTitleList extends CListPageModel
 {
-    public $examinaName;
-    public $qui_id;
+    public $searchTitle;//測驗單id
 	/**
 	 * Declares customized attribute labels.
 	 * If not declared here, an attribute would have a label that is
@@ -20,12 +19,20 @@ class StatisticsTitleList extends CListPageModel
 		);
 	}
 
+    public function rules()
+    {
+        return array(
+            array('attr, pageNum, noOfItem, totalRow, searchField, searchValue, orderField, orderType, searchTitle','safe',),
+        );
+    }
+
 	public function retrieveDataByPage($pageNum=1)
 	{
 		$suffix = Yii::app()->params['envSuffix'];
 		$city = Yii::app()->user->city();
         $city_allow = Yii::app()->user->city_allow();
 		$sql1 = "select d.* from exa_examina a 
+                LEFT JOIN exa_join b ON b.id = a.join_id
                 LEFT JOIN exa_title d ON a.title_id = d.id
                 where a.id > 0  
 			";
@@ -44,6 +51,10 @@ class StatisticsTitleList extends CListPageModel
 					break;
 			}
 		}
+        if (!empty($this->searchTitle) && !empty($this->searchTitle)) {
+            $svalue = str_replace("'","\'",$this->searchTitle);
+            $clause .= " and b.quiz_id ='$svalue' ";
+        }
 		$group = " group by a.title_id";
 
 		$order = "";
@@ -106,5 +117,17 @@ class StatisticsTitleList extends CListPageModel
                 'occurrences'=>0,//出現次數
             );
         }
+    }
+
+    //獲取測驗單列表
+    public function getAllTestTopList(){
+	    $arr = array(""=>Yii::t("examina","Selection test sheet"));
+        $rows = Yii::app()->db->createCommand()->select("id,name")->from("exa_quiz")->queryAll();
+        if($rows){
+            foreach ($rows as $row){
+                $arr[$row["id"]] = $row["name"];
+            }
+        }
+        return $arr;
     }
 }

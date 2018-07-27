@@ -81,5 +81,7 @@ return array(
     'Error Num：'=>'錯誤數量：',
     'test again'=>'再次答題',
     'join num'=>'參與次數',
+    'Selection test sheet'=>'選擇測驗單',
+    'The test list has expired'=>'测验单已过期',
 );
 ?>

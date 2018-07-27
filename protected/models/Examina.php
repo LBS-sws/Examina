@@ -142,6 +142,19 @@ class Examina{
         }
     }
 
+    //驗證測驗單的時間是否過期
+    public function validateTime(){
+        $date = date("Y-m-d");
+        $quizList = $this->_quizList;
+        $startDate = date("Y-m-d",strtotime($quizList["start_time"]));
+        $endDate = date("Y-m-d",strtotime($quizList["end_time"]));
+        if($date<=$startDate||$date>=$endDate){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     public function getResultList(){
         return $this->_resultList;
     }
