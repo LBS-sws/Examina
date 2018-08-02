@@ -76,8 +76,9 @@ class TestTopForm extends CFormModel
 
     //刪除验证
 	public function validateDelete(){
-        $rows = Yii::app()->db->createCommand()->select()->from("exa_examina")
-            ->where('quiz_id=:quiz_id', array(':quiz_id'=>$this->id))->queryAll();
+        $rows = Yii::app()->db->createCommand()->select()->from("exa_examina a")
+            ->leftJoin("exa_join b","a.join_id = b.id")
+            ->where('b.quiz_id=:quiz_id', array(':quiz_id'=>$this->id))->queryAll();
         if ($rows){
             return false;
         }
