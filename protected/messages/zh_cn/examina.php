@@ -83,5 +83,7 @@ return array(
     'join num'=>'参与次数',
     'Selection test sheet'=>'选择测验单',
     'The test list has expired'=>'测验单已过期',
+    'shortcuts'=>'快捷操作',
+    'against'=>'反选',
 );
 ?>

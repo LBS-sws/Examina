@@ -36,11 +36,29 @@ $this->beginWidget('bootstrap.widgets.TbModal', array(
     </div>
 </div>
 
+<div class="form-group" style="margin-bottom: 0px;border-top:1px solid #e5e5e5">
+    <div class="col-sm-12">
+        <span class="control-label"><?php echo Yii::t("examina","shortcuts");?>：</span>
+        <div class="checkbox"><label><?php echo TbHtml::checkBox("short_all","",array("id","short_all")).Yii::t("examina","all");?></label></div>
+        <div class="checkbox"><label><?php echo TbHtml::checkBox("short_aga","",array("id","short_aga")).Yii::t("examina","against");?></label></div>
+    </div>
+</div>
+
 <?php
 $this->endWidget();
 ?>
 <script>
     $(function () {
+        $("#short_all").on("click",function () {
+            if($(this).is(":checked")){
+                $("#departmentDiv .check_dev:not(:checked)").trigger("click");
+            }else{
+                $("#departmentDiv .check_dev:checked").trigger("click");
+            }
+        });
+        $("#short_aga").on("click",function () {
+            $("#departmentDiv .check_dev").trigger("click");
+        });
         var ajaxBool = true;
         $("#search").on("click",function () {
             if(ajaxBool){
