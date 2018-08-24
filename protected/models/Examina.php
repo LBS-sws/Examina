@@ -148,7 +148,7 @@ class Examina{
         $quizList = $this->_quizList;
         $startDate = date("Y-m-d",strtotime($quizList["start_time"]));
         $endDate = date("Y-m-d",strtotime($quizList["end_time"]));
-        if($date<=$startDate||$date>=$endDate){
+        if($date<$startDate||$date>$endDate){
             return false;
         }else{
             return true;
