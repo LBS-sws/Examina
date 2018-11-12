@@ -164,9 +164,8 @@ class TestTopController extends Controller
     //部門的異步請求
     public function actionAjaxDepartment(){
         if(Yii::app()->request->isAjaxRequest) {//是否ajax请求
-            $city = $_POST['city'];
             $department = $_POST['department'];
-            $arr = TestTopForm::searchDepartment($city,$department);
+            $arr = TestTopForm::searchDepartment($department);
             echo CJSON::encode($arr);
         }else{
             echo "Error:404";

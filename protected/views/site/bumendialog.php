@@ -1,5 +1,5 @@
 <style>
-    .checkbox{margin-right: 10px;display: inline-block !important;}
+    .checkbox{padding-left: 10px;}
 </style>
 <?php
 $ftrbtn = array();
@@ -14,33 +14,23 @@ $this->beginWidget('bootstrap.widgets.TbModal', array(
 ?>
 
 <div class="form-group">
-    <label class="col-sm-2 control-label">
-        <?php
-        echo Yii::t("examina","City");
-        ?>
-    </label>
-    <div class="col-sm-3">
-        <?php echo TbHtml::dropDownList('city',"",TestTopForm::getAllCityList(),array("id"=>"select_city")); ?>
-    </div>
-    <label class="col-sm-2 control-label"><?php echo Yii::t("examina","department");?></label>
-    <div class="col-sm-3">
-        <?php echo TbHtml::textField('department',"",array("class"=>"form-control","id"=>"department")); ?>
-    </div>
-    <div class="col-sm-2">
-        <?php echo TbHtml::button(Yii::t('misc','Search'), array('id'=>'search','color'=>TbHtml::BUTTON_COLOR_PRIMARY)); ?>
-    </div>
-</div>
+    <div class="col-lg-12">
+        <div class="input-group">
+            <?php echo TbHtml::textField('department',"",array("class"=>"form-control","id"=>"department")); ?>
+            <span class="input-group-btn">
+                <?php echo TbHtml::button(Yii::t('misc','Search'), array('id'=>'search','color'=>TbHtml::BUTTON_COLOR_DEFAULT)); ?>
+            </span>
+        </div>
+        <div id="departmentDiv" style="border: 1px solid #d2d6de;height: 200px;overflow-x: hidden;overflow-y: scroll">
 
-<div class="form-group">
-    <div class="col-sm-12" id="departmentDiv">
+        </div>
     </div>
 </div>
 
 <div class="form-group" style="margin-bottom: 0px;border-top:1px solid #e5e5e5">
     <div class="col-sm-12">
         <span class="control-label"><?php echo Yii::t("examina","shortcuts");?>：</span>
-        <div class="checkbox"><label><?php echo TbHtml::checkBox("short_all","",array("id","short_all")).Yii::t("examina","all");?></label></div>
-        <div class="checkbox"><label><?php echo TbHtml::checkBox("short_aga","",array("id","short_aga")).Yii::t("examina","against");?></label></div>
+        <div class="checkbox-inline" style=""><label><?php echo TbHtml::checkBox("short_all","",array("id","short_all")).Yii::t("examina","all");?></label></div>
     </div>
 </div>
 
@@ -68,7 +58,6 @@ $this->endWidget();
                     url: "<?php echo Yii::app()->createUrl('testTop/ajaxDepartment');?>",
                     dataType: "json",
                     data: {
-                        "city":$("#select_city").val(),
                         "department":$("#department").val()
                     },
                     success: function(msg){

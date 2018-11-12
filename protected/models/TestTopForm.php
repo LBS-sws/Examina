@@ -178,15 +178,12 @@ class TestTopForm extends CFormModel
     }
 
     //部門查詢
-    public function searchDepartment($city,$department){
+    public function searchDepartment($department){
         $suffix = Yii::app()->params['envSuffix'];
         $arr = array();
         $sql = "";
-        if(!empty($city)){
-            $sql.="and a.city='$city' ";
-        }
         if(!empty($department)){
-            $sql.="and a.name like '%$department%' ";
+            $sql.="and (a.name like '%$department%' or b.name like '%$department%') ";
         }
         $rows = Yii::app()->db->createCommand()->select("a.*,b.name as city_name")->from("hr$suffix.hr_dept a")
             ->leftjoin("security$suffix.sec_city b","b.code = a.city")
