@@ -11,7 +11,9 @@ return array(
 	'Operation'=>'营运系统',
 	'Personnel'=>'人事系统',
     'Integral'=>'学分系统',
-    'Examina'=>'测验系统',
+    'Examina'=>'培训测验系统',
+    'Quiz'=>'培训测验系统',
+    'Academic Credit'=>'学分系统',
 
 	'Data Entry'=>'数据输入',
 	'Misc'=>'其他',
