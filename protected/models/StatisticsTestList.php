@@ -63,6 +63,11 @@ class StatisticsTestList extends CListPageModel
 		$this->attr = array();
 		if (count($records) > 0) {
 			foreach ($records as $k=>$record) {
+                $bumenList = explode(",",$record['bumen_ex']);
+                if(count($bumenList)>3){
+                    $bumenList = array_slice($bumenList,0,2);
+                    $record['bumen_ex'] = implode(",",$bumenList).".....";
+                }
 			    $list = $this->getCorrect($record['id']);
 				$this->attr[] = array(
 					'id'=>$record['id'],
