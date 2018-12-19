@@ -1,11 +1,11 @@
 <?php
 if (empty($model->_testNum)){
-    $this->redirect(Yii::app()->createUrl('mytest/index'));
+    $this->redirect(Yii::app()->createUrl('myTest/index'));
 }
-$this->pageTitle=Yii::app()->name . ' - mytest Form';
+$this->pageTitle=Yii::app()->name . ' - myTest Form';
 ?>
 <?php $form=$this->beginWidget('TbActiveForm', array(
-    'id'=>'mytest-form',
+    'id'=>'myTest-form',
     'enableClientValidation'=>true,
     'clientOptions'=>array('validateOnSubmit'=>true),
     'layout'=>TbHtml::FORM_LAYOUT_HORIZONTAL,
@@ -39,7 +39,7 @@ $this->pageTitle=Yii::app()->name . ' - mytest Form';
     <div class="box"><div class="box-body">
             <div class="btn-group" role="group">
                 <?php echo TbHtml::button('<span class="fa fa-reply"></span> '.Yii::t('misc','Back'), array(
-                    'submit'=>Yii::app()->createUrl('mytest/view',array("index"=>$index))));
+                    'submit'=>Yii::app()->createUrl('myTest/view',array("index"=>$index))));
                 ?>
             </div>
         </div></div>

@@ -3,6 +3,7 @@
 class StatisticsTitleList extends CListPageModel
 {
     public $searchTitle;//測驗單id
+    public $searchCity;//城市
 	/**
 	 * Declares customized attribute labels.
 	 * If not declared here, an attribute would have a label that is
@@ -22,22 +23,38 @@ class StatisticsTitleList extends CListPageModel
     public function rules()
     {
         return array(
-            array('attr, pageNum, noOfItem, totalRow, searchField, searchValue, orderField, orderType, searchTitle','safe',),
+            array('attr, pageNum, noOfItem, totalRow, searchField, searchValue, orderField, orderType, searchTitle, searchCity','safe',),
         );
+    }
+
+    public function getThisUserCityList(){
+	    $arr=array();
+        $city_allow = Yii::app()->user->city_allow();
+        $city_list = explode(",",str_replace("'","",$city_allow));
+        foreach ($city_list as $city){
+            $arr[$city] = CGeneral::getCityName($city);
+        }
+        return $arr;
     }
 
 	public function retrieveDataByPage($pageNum=1)
 	{
 		$suffix = Yii::app()->params['envSuffix'];
-		$city = Yii::app()->user->city();
         $city_allow = Yii::app()->user->city_allow();
-		$sql1 = "select d.* from exa_examina a 
+        $city_list = explode(",",str_replace("'","",$city_allow));
+        $city = $this->searchCity;
+		if(empty($city)||!in_array($city,$city_list)){
+            $city = Yii::app()->user->city();
+        }
+        $this->searchCity = $city;
+		$sql1 = "select d.*,e.city from exa_examina a 
                 LEFT JOIN exa_join b ON b.id = a.join_id
+                LEFT JOIN hr$suffix.hr_employee e ON e.id = a.employee_id
                 LEFT JOIN exa_title d ON a.title_id = d.id
-                where a.id > 0  
+                where e.city = '$city' 
 			";
         $sql2 = "select count(*) from exa_examina a 
-                where id>0 
+                where e.city = '$city' 
 			";
 		$clause = "";
 		if (!empty($this->searchField) && !empty($this->searchValue)) {
@@ -78,11 +95,12 @@ class StatisticsTitleList extends CListPageModel
 		$this->attr = array();
 		if (count($records) > 0) {
 			foreach ($records as $k=>$record) {
-			    $list = $this->getCorrect($record['id']);
+			    $list = $this->getCorrect($record['id'],$record['city']);
 				$this->attr[] = array(
 					'id'=>$record['id'],
 					'title_code'=>$record['title_code'],
 					'name'=>$record['name'],
+					'city'=>CGeneral::getCityName($record['city']),
                     'correct'=>$list["correct"],
                     'correctNum'=>$list["correctNum"],
                     'occurrences'=>$list["occurrences"],
@@ -94,10 +112,12 @@ class StatisticsTitleList extends CListPageModel
 		return true;
 	}
 
-	public function getCorrect($title_id){
+	public function getCorrect($title_id,$city){
+        $suffix = Yii::app()->params['envSuffix'];
         $rows = Yii::app()->db->createCommand()->select("b.judge")->from("exa_examina a")
+            ->leftJoin("hr$suffix.hr_employee e","e.id = a.employee_id")
             ->leftJoin("exa_title_choose b","a.choose_id = b.id")
-            ->where("a.title_id=:title_id", array(':title_id'=>$title_id))->queryAll();
+            ->where("a.title_id=:title_id and e.city=:city", array(':title_id'=>$title_id,':city'=>$city))->queryAll();
         if($rows){
             $num = 0;
             foreach ($rows as $row){

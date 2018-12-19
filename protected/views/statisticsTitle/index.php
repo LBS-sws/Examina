@@ -29,7 +29,12 @@ $this->pageTitle=Yii::app()->name . ' - statisticsTitle';
         'name',
     );
     $modelName = get_class($model);
-    $search_add_html = TbHtml::dropDownList($modelName.'[searchTitle]',$model->searchTitle,$model->getAllTestTopList(),
+    $search_add_html="";
+    if(!Yii::app()->user->isSingleCity()){
+        $search_add_html = TbHtml::dropDownList($modelName.'[searchCity]',$model->searchCity,$model->getThisUserCityList(),
+            array('size'=>15,'placeholder'=>Yii::t('misc','Start Date'),"class"=>"form-control","id"=>"searchCity"));
+    }
+    $search_add_html .= TbHtml::dropDownList($modelName.'[searchTitle]',$model->searchTitle,$model->getAllTestTopList(),
         array('size'=>15,'placeholder'=>Yii::t('misc','Start Date'),"class"=>"form-control","id"=>"searchTitle"));
    $this->widget('ext.layout.ListPageWidget', array(
         'title'=>Yii::t('app','Title results statistics'),

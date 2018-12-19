@@ -25,10 +25,10 @@ class StatisticsStaffList extends CListPageModel
         $city_allow = Yii::app()->user->city_allow();
 		$sql1 = "select d.id,d.name AS employee_name,d.city from exa_examina a 
                 LEFT JOIN hr$suffix.hr_employee d ON a.employee_id = d.id
-                where a.id > 0  
+                where d.city in ($city_allow)  
 			";
         $sql2 = "select count(*) from exa_examina a 
-                where id>0 
+                where d.city in ($city_allow)  
 			";
 		$clause = "";
 		if (!empty($this->searchField) && !empty($this->searchValue)) {
