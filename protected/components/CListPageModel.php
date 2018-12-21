@@ -76,13 +76,24 @@ class CListPageModel extends CFormModel
 	}
 	
 	public function getCriteria() {
-		return array(
-			'searchField'=>$this->searchField,
-			'searchValue'=>$this->searchValue,
-			'orderField'=>$this->orderField,
-			'orderType'=>$this->orderType,
-			'noOfItem'=>$this->noOfItem,
-			'pageNum'=>$this->pageNum,
-		);
+	    $criteriaList= array();
+	    $list = $this->attributes;
+	    $notList = array("attr","totalRow");
+	    foreach ($list as $key=> $value){
+            if(!is_array($value)&&!in_array($key,$notList)){
+                $criteriaList[$key]=$value;
+            }
+        }
+        if(empty($criteriaList)){
+            $criteriaList = array(
+                'searchField'=>$this->searchField,
+                'searchValue'=>$this->searchValue,
+                'orderField'=>$this->orderField,
+                'orderType'=>$this->orderType,
+                'noOfItem'=>$this->noOfItem,
+                'pageNum'=>$this->pageNum,
+            );
+        }
+        return $criteriaList;
 	}
 }
