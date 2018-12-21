@@ -50,10 +50,9 @@ class QuestionController extends Controller
     }
     public function actionIndex($pageNum=0,$index = 0){
         $model = new QuestionList;
-        if(!is_numeric($index)){
+        if(!is_numeric($index)||empty($index)){
             throw new CHttpException(404,'The requested page does not exist.');
         }
-        $model->index = $index;
         if (isset($_POST['QuestionList'])) {
             $model->attributes = $_POST['QuestionList'];
         } else {
@@ -63,6 +62,7 @@ class QuestionController extends Controller
                 $model->setCriteria($criteria);
             }
         }
+        $model->index = $index;
         $model->determinePageNum($pageNum);
         $model->retrieveDataByPage($model->pageNum);
         $this->render('index',array('model'=>$model));
