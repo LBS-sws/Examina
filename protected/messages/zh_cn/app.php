@@ -14,8 +14,13 @@ return array(
     'Examina'=>'培训测验系统',
     'Quiz'=>'培训测验系统',
     'Academic Credit'=>'学分系统',
-	'Sales'=>'销售系统',
-	
+'Sales'=>'销售系统',
+	'Online Library'=>'网上文库',
+
+
+	'System Use'=>'系统使用',
+
+
 	'Data Entry'=>'数据输入',
 	'Misc'=>'其他',
 

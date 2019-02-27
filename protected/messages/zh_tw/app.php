@@ -14,7 +14,10 @@ return array(
     'Examina'=>'測驗系統',
 'Quiz'=>'培訓測驗系統',
     'Academic Credit'=>'學分系統',
+'Online Library'=>'網上文庫',
 'Sales'=>'銷售系統',
+
+'System Use'=>'系統使用',
 
 'Data Entry'=>'數據輸入',
 

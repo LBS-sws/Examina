@@ -1,26 +1,23 @@
 <?php
 
 // uncomment the following to define a path alias
-//Yii::setPathOfAlias('local','path/to/local-folder');
+// Yii::setPathOfAlias('local','path/to/local-folder');
 
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return array(
-	'id'=>'swoper',
+	'id'=>'swoperuat',
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'charset'=>'UTF-8',
-	'name'=>'LBS Daily Management - UAT',
+	'name'=>'LBS Daily Management',
 	'timeZone'=>'Asia/Hong_Kong',
 	'sourceLanguage'=> 'en',
 	'language'=>'zh_cn',
-
 	'aliases'=>array(
 		'bootstrap'=>realpath(__DIR__.'/../extensions/bootstrap'),
 		),
-
 	// preloading 'log' component
 	'preload'=>array('log'),
-
 	// autoloading model and component classes
 	'import'=>array(
 		'application.models.*',
@@ -41,9 +38,6 @@ return array(
 //			'ipFilters'=>array('192.168.1.104','::1'),
 //
 //		),
-//		'gii'=>array(
-//			'generatorPaths'=>array('bootstrap.gii'),
-//		),
 	),
 
 	// application components
@@ -55,6 +49,11 @@ return array(
 		),
 		// uncomment the following to enable URLs in path-format
 
+		'file'=>array(
+			'class' => 'application.components.File',
+			'key' => 'file',
+			'name'=>uniqid(),
+		),
 		'urlManager'=>array(
 			'urlFormat'=>'path',
 //			'showScriptName'=>false,
@@ -73,11 +72,11 @@ return array(
 
 		// uncomment the following to use a MySQL database
 		'db'=>array(
-            'connectionString' => 'mysql:host=localhost;dbname=examinadev',
-            'emulatePrepare' => true,
-            'username' => 'root',
-            'password' => 'swisher168',
-            'charset' => 'utf8',
+			'connectionString' => 'mysql:host=localhost;dbname=quizuat',
+			'emulatePrepare' => true,
+			'username' => 'swuser',
+			'password' => 'Swisher@168',
+			'charset' => 'utf8',
 		),
 		
 		'errorHandler'=>array(
@@ -93,12 +92,12 @@ return array(
 					'levels'=>'error, warning',
 				),
 				// uncomment the following to show log messages on web pages
-				array(
-					'class'=>'CWebLogRoute',
+			//	array(
+			//		'class'=>'CWebLogRoute',
 				//	'levels'=>'trace',
-				//	'categories'=>'vardump',
-				//	'showInFireBug'=>true
-				),
+			//		'categories'=>'vardump',
+			//		'showInFireBug'=>true
+			//	),
 			),
 		),
 		
@@ -106,7 +105,7 @@ return array(
 			'class'=>'CHttpSession',
 			'cookieMode'=>'allow',
 			'cookieParams'=>array(
-                'domain'=>'192.168.1.5',
+				'domain'=>'118.89.46.224',
 			),
 		),
 		
@@ -128,51 +127,62 @@ return array(
 	// application-level parameters that can be accessed
 	// using Yii::app()->params['paramName']
 	'params'=>array(
-		'adminEmail'=>'it@lbsgroup.com.hk',
+		'adminEmail'=>'cit@lbsgroup.om.hk',
 		'checkStation'=>false,
 		'validRegDuration'=>'3 hours',
 //		'cookieDomain'=>'swoper',
 //		'cookiePath'=>'/',
 		'concurrentLogin'=>false,
 		'noOfLoginRetry'=>5,
+		'jsonTableName'=>'uat',
 		'sessionIdleTime'=>'1 hour',
-		'feedbackCcBoss'=>array('boss1','boss2'),
-		'bossEmail'=>array('kcleepercy@gmail.com','kcleepercy@yahoo.com.hk'),
+		'feedbackCcBoss'=>array('flam','JoeY','DorisC'),
+		'bossEmail'=>array('dorischan@lbsgroup.com.hk'),
 		'version'=>'1.0.0',
-		'docmanPath'=>'/docman/dev',
-		'systemId'=>'exa',
-		'envSuffix'=>'dev',
+		'docmanPath'=>'/docman/uat',
+		'systemId'=>'quiz',
+		'envSuffix'=>'uat',
+/*
 		'systemMapping'=>array(
-            'drs'=>array(
-                'webroot'=>'http://192.168.1.5/swoper',
-                'name'=>'Daily Report',
-                'icon'=>'fa fa-pencil-square-o',
-            ),
-            'acct'=>array(
-                'webroot'=>'http://192.168.1.5/acct',
-                'name'=>'Accounting',
-                'icon'=>'fa fa-money',
-            ),
-            'ops'=>array(
-                'webroot'=>'http://192.168.1.5/operation',
-                'name'=>'Operation',
-                'icon'=>'fa fa-gears',
-            ),
-            'hr'=>array(
-                'webroot'=>'http://192.168.1.5/hr',
-                'name'=>'Personnel',
-                'icon'=>'fa fa-users',
-            ),
-            'gr'=>array(
-                'webroot'=>'http://192.168.1.5/integral',
-                'name'=>'Integral',
-                'icon'=>'fa fa-cubes',
-            ),
-            'exa'=>array(
-                'webroot'=>'http://192.168.1.5/examina',
-                'name'=>'Examina',
-                'icon'=>'fa fa-leaf',
-            ),
-        ),
+				'drs'=>array(
+						'webroot'=>'http://118.89.46.224/dr-uat',
+						'name'=>'Daily Report',
+						'icon'=>'fa fa-pencil-square-o',
+					),	
+				'acct'=>array(
+						'webroot'=>'http://118.89.46.224/ac-uat',
+						'name'=>'Accounting',
+						'icon'=>'fa fa-money',
+					),
+                                'ops'=>array(
+                                                'webroot'=>'http://118.89.46.224/op-uat',
+                                                'name'=>'Operation',
+                                                'icon'=>'fa fa-gears',
+                                        ),
+				'hr'=>array(
+						'webroot'=>'http://118.89.46.224/hr-uat',
+						'name'=>'Personnel',
+						'icon'=>'fa fa-users',
+					),
+                                'sal'=>array(
+                                        'webroot'=>'http://118.89.46.224/sa-uat',
+                                        'name'=>'Sales',
+                                        'icon'=>'fa fa-suitcase',
+                                ),
+
+				'quiz'=>array(
+					'webroot'=>'http://118.89.46.224/qz-uat',
+					'name'=>'Quiz',
+					'icon'=>'fa fa-pencil',
+				),
+                                'sp'=>array(
+
+                                               'webroot'=>'http://118.89.46.224/sp-uat',
+                                                'name'=>'Academic Credit',
+                                                'icon'=>'fa fa-cube',
+                                ),
+
+			),
+*/
 	),
 );
