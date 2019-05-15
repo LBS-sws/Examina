@@ -8,6 +8,7 @@
  */
 class StatisticsTestController extends Controller
 {
+	public $function_id='SC01';
 
     public function filters()
     {

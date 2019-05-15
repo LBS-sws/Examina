@@ -8,6 +8,7 @@
  */
 class MyTestController extends Controller
 {
+	public $function_id='EM01';
 
     public function filters()
     {

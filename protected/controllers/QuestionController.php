@@ -8,6 +8,7 @@
  */
 class QuestionController extends Controller
 {
+	public $function_id='SS02';
 
     public function filters()
     {

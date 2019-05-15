@@ -3,6 +3,7 @@
 return array(
     'examina'=>array(
         'access'=>'EM',
+		'icon'=>'fa-pencil',
         'items'=>array(
             'My test'=>array(
                 'access'=>'EM01',
@@ -16,6 +17,7 @@ return array(
     ),
     'System Setting'=>array(
         'access'=>'SS',
+		'icon'=>'fa-gear',
         'items'=>array(
             'Test list'=>array(
                 'access'=>'SS02',
@@ -25,6 +27,7 @@ return array(
     ),
     'statistical'=>array(
         'access'=>'SC',
+		'icon'=>'fa-bar-chart',
         'items'=>array(
             'Test results statistics'=>array(
                 'access'=>'SC01',

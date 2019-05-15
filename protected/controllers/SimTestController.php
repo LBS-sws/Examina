@@ -8,6 +8,7 @@
  */
 class SimTestController extends Controller
 {
+	public $function_id='EM02';
 
     public function filters()
     {

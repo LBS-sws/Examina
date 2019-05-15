@@ -4,36 +4,35 @@ return array(
 'Daily Report System - UAT'=>'日報表系統 - 測試版',
 'LBS Daily Management'=>'LBS 日常管理',
 'LBS Daily Management - UAT'=>'LBS 日常管理 - 測試版',
+'LBS DMS (UAT)'=>'LBS 日常管理 (測試)',
+'LBS DMS'=>'LBS 日常管理',
+'MAIN NAVIGATION'=>'系統菜單',
+'Region'=>'地區',
+'Last Update Date '=>'更新日期 ',
 
 'System Change'=>'系統切換',
 'Daily Report'=>'日報表系統',
 'Accounting'=>'會計系統',
-    'Operation'=>'營運系統',
-    'Personnel'=>'人事系統',
-    'Integral'=>'學分系統',
-    'Examina'=>'測驗系統',
-'Quiz'=>'培訓測驗系統',
+'Operation'=>'營運系統',
+'Personnel'=>'人事系統',
+    'Integral'=>'學分系統',
+    'Examina'=>'培訓測驗系統',
+    'Quiz'=>'培訓測驗系統',
     'Academic Credit'=>'學分系統',
-'Online Library'=>'網上文庫',
 'Sales'=>'銷售系統',
+'Online Library'=>'網上文庫',
+
 
 'System Use'=>'系統使用',
 
+
 'Data Entry'=>'數據輸入',
+'Misc'=>'其他',
 
-    'Department'=>'工作部門',
-    'Leader'=>'工作職位',
-'Payment Request'=>'付款申請',
-'Request Approval'=>'申請審核',
-'Payment Realization'=>'付款清賬',
-'Signature'=>'簽字',
-
-'Transaction'=>'交易記錄',
-'Transaction(In)'=>'收款記錄',
-'Transaction(Out)'=>'付款記錄',
-'Transaction Enquiry'=>'交易查詢',
-'Cash Received Audit'=>'現金收款審計',
-'Approver'=>'審核人員',
+'Staff Info'=>'員工資料',
+'Employer'=>'雇主資料',
+'Department'=>'工作部門',
+'Leader'=>'工作職位',
 
 'Report'=>'報表',
 'Report Manager'=>'報表管理員',
@@ -44,6 +43,10 @@ return array(
 
 'Change Password' => '更改密碼',
 'Languages' => '語言',
+
+'Checker Right'=>'會計對賬權限',
+'Transaction Adjustment'=>'交易調整權限',
+    'Modify Restrict'=>'修改文檔限制',
 
 'User'=>'帳戶',
 'Group'=>'群組',
@@ -76,17 +79,17 @@ return array(
 'Transaction Type'=>'交易類別',
 'Account'=>'賬戶',
 
-    //沈超添加开始
-    'examina'=>'測驗',
-    'Simulation test'=>'進入測驗',
-    'My test'=>'我的測驗',
-    'Exam question bank'=>'試題題庫',
-    'Test list'=>'測驗單列表',
-    'statistical'=>'統計',
-    'Test results statistics'=>'測驗單結果統計',
-    'Title results statistics'=>'試題結果統計',
-    'Staff results statistics'=>'員工結果統計',
-    'Test categories'=>'測驗類別',
-    //沈超添加结束
+    //沈超添加開始
+    'examina'=>'測驗',
+    'Simulation test'=>'進入測驗',
+    'My test'=>'我的測驗',
+    'Exam question bank'=>'試題題庫',
+    'Test list'=>'測驗單列表',
+    'statistical'=>'統計',
+    'Test results statistics'=>'測驗單結果統計',
+    'Title results statistics'=>'試題結果統計',
+    'Staff results statistics'=>'員工結果統計',
+    'Test categories'=>'測驗類別',
+    //沈超添加結束
 );
 ?>
