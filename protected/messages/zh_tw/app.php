@@ -15,10 +15,10 @@ return array(
 'Accounting'=>'會計系統',
 'Operation'=>'營運系統',
 'Personnel'=>'人事系統',
-    'Integral'=>'學分系統',
-    'Examina'=>'培訓測驗系統',
-    'Quiz'=>'培訓測驗系統',
-    'Academic Credit'=>'學分系統',
+'Integral'=>'學分系統',
+'Examina'=>'培訓測驗系統',
+'Quiz'=>'培訓測驗系統',
+'Academic Credit'=>'學分系統',
 'Sales'=>'銷售系統',
 'Online Library'=>'網上文庫',
 
@@ -46,7 +46,7 @@ return array(
 
 'Checker Right'=>'會計對賬權限',
 'Transaction Adjustment'=>'交易調整權限',
-    'Modify Restrict'=>'修改文檔限制',
+'Modify Restrict'=>'修改文檔限制',
 
 'User'=>'帳戶',
 'Group'=>'群組',
@@ -79,17 +79,17 @@ return array(
 'Transaction Type'=>'交易類別',
 'Account'=>'賬戶',
 
-    //沈超添加開始
-    'examina'=>'測驗',
-    'Simulation test'=>'進入測驗',
-    'My test'=>'我的測驗',
-    'Exam question bank'=>'試題題庫',
-    'Test list'=>'測驗單列表',
-    'statistical'=>'統計',
-    'Test results statistics'=>'測驗單結果統計',
-    'Title results statistics'=>'試題結果統計',
-    'Staff results statistics'=>'員工結果統計',
-    'Test categories'=>'測驗類別',
-    //沈超添加結束
+//沈超添加開始
+'examina'=>'測驗',
+'Simulation test'=>'進入測驗',
+'My test'=>'我的測驗',
+'Exam question bank'=>'試題題庫',
+'Test list'=>'測驗單列表',
+'statistical'=>'統計',
+'Test results statistics'=>'測驗單結果統計',
+'Title results statistics'=>'試題結果統計',
+'Staff results statistics'=>'員工結果統計',
+'Test categories'=>'測驗類別',
+//沈超添加結束
 );
 ?>
