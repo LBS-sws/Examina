@@ -21,6 +21,7 @@ return array(
 'Academic Credit'=>'學分系統',
 'Sales'=>'銷售系統',
 'Online Library'=>'網上文庫',
+'Charitable Credit'=>'慈善分系統',
 
 
 'System Use'=>'系統使用',
