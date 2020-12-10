@@ -16,12 +16,18 @@ class SysBlock {
 				$result = call_user_func('self::'.$value['validation']);
 				$sysblock[$key] = $result;
 				$session['sysblock'] = $sysblock;
-				
+				//function設置為空時，只提示一次，不限制行為(start)
+				if($value['function']===""){
+				    return false;
+                }
+                //function設置為空時，只提示一次，不限制行為(end)
 				if (!$result) {
 					$url = '';
 					$systems = General::systemMapping();
 					if ($sysId==$value['system']) {
-						if ($controllerId!='site' && $functionId!=$value['function']) $url = $systems[$value['system']]['webroot'];
+						if ($controllerId!='site' && $functionId!=$value['function']){
+						    $url = $systems[$value['system']]['webroot'];
+                        }
 					} else {
 						$url = $systems[$value['system']]['webroot'];
 					}
@@ -200,6 +206,37 @@ class SysBlock {
 			";
 		$row = Yii::app()->db->createCommand($sql)->queryRow();
 		return ($row===false);
+	}
+    /**
+    檢查上月的質檢平均分是否低於75分，如果低於75分，需要提示用戶去培訓系統進行測試
+     **/
+	public function validateExamination() {
+        $uid = Yii::app()->user->id;
+        $suffix = Yii::app()->params['envSuffix'];
+        $row = Yii::app()->db->createCommand()->select("b.id,b.code,b.name")->from("hr$suffix.hr_binding a")
+            ->leftJoin("hr$suffix.hr_employee b","a.employee_id=b.id")
+            ->leftJoin("security$suffix.sec_user_access e","a.user_id=e.username")
+            ->where("a.user_id=:user_id and a_read_write like'%EM02%'",array(":user_id"=>$uid))->queryRow();
+        if($row){
+            $date = date("Y-m",strtotime("-1 month"));
+            $username=$row['name']." (".$row["code"].")";
+            $result = Yii::app()->db->createCommand()->select("avg(qc_result) as result")->from("swoper$suffix.swo_qc")
+                ->where("date_format(qc_dt,'%Y-%m')=:date and job_staff=:job_staff",array(":date"=>$date,":job_staff"=>$username))->queryScalar();
+
+            if($result!==null){
+                $result=floatval($result);
+                if($result<75){ //上月的質檢平均分低於75分
+                    $nowMonth = date("Y-m");
+                    $title = Yii::app()->db->createCommand()->select("MAX(title_num/title_sum)")->from("exa_join")
+                        ->where("employee_id=:employee_id and date_format(lcd,'%Y-%m')=:date",array(":employee_id"=>$row['id'],":date"=>$nowMonth))->queryScalar();
+                    $title = $title===null?0:$title;
+                    if($title<0.85){//測驗後的正確率小於85%
+                        return false;
+                    }
+                }
+            }
+        }
+		return true;
 	}
 
 	public function test() {

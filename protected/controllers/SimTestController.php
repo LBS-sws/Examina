@@ -82,7 +82,11 @@ class SimTestController extends Controller
             $model->attributes = $_POST['examina'];
             if ($model->validate()) {
                 $model->saveData();
-                Dialog::message(Yii::t('dialog','Information'), Yii::t('dialog','Save Done'));
+                if($model->title_num/$model->title_sum<0.85){
+                    Dialog::message(Yii::t('dialog','Warning'), Yii::t('block','validateExamination'));
+                }else{
+                    Dialog::message(Yii::t('dialog','Information'), Yii::t('dialog','Save Done'));
+                }
                 $this->redirect(Yii::app()->createUrl('myTest/view',array('index'=>$model->join_id)));
             } else {
                 $message = CHtml::errorSummary($model);

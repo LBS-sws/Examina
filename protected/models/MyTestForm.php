@@ -16,6 +16,9 @@ class MyTestForm extends CFormModel
 	public $choose_id;
 	public $list_choose;
 	public $lcd;
+
+	public $title_sum=1;
+	public $title_num=0;
 	/**
 	 * Declares customized attribute labels.
 	 * If not declared here, an attribute would have a label that is
@@ -139,8 +142,17 @@ class MyTestForm extends CFormModel
             'employee_id'=>$staff_id,
             'lcu'=>$uid,
         ));
+        $title_sum=count($session["examina_list"]);
+        $title_sum = $title_sum<1?1:$title_sum;
+        $title_num=0;
         $this->join_id = Yii::app()->db->getLastInsertID();
         foreach ($session["examina_list"] as $key => $examina){
+            $bool = Yii::app()->db->createCommand()->select("count(id)")->from("exa_title_choose")
+                ->where("judge=1 and id=:id and title_id=:title_id",
+                    array(":title_id"=>$examina[0]["title_id"],":id"=>$list_choose[$key]))->queryScalar();
+            if($bool == 1){
+                $title_num++;
+            }
             $command->reset();
             $command->insert('exa_examina', array(
                 'join_id'=>$this->join_id,
@@ -151,5 +163,36 @@ class MyTestForm extends CFormModel
                 'lcu'=>$uid,
             ));
         }
+        $command->reset();
+        $command->update('exa_join', array(
+            "title_sum"=>$title_sum,
+            "title_num"=>$title_num
+        ),"id='$this->join_id'");
+        $this->title_sum=$title_sum;
+        $this->title_num=$title_num;
 	}
+
+	//重置以前的測驗單
+    public function resetOldTest(){
+        $rows = Yii::app()->db->createCommand()->select("id")->from("exa_join")->queryAll();
+        if($rows){
+            foreach ($rows as $row){
+                $list = Yii::app()->db->createCommand()->select("title_id,choose_id")->from("exa_examina")->where("join_id='".$row['id']."'")->queryAll();
+                $title_sum=count($list);
+                $title_num=0;
+                foreach ($list as $item){
+                    $bool = Yii::app()->db->createCommand()->select("count(id)")->from("exa_title_choose")
+                        ->where("judge=1 and id=:id and title_id=:title_id",
+                            array(":title_id"=>$item["title_id"],":id"=>$item["choose_id"]))->queryScalar();
+                    if($bool == 1){
+                        $title_num++;
+                    }
+                }
+                Yii::app()->db->createCommand()->update('exa_join', array(
+                    "title_sum"=>$title_sum,
+                    "title_num"=>$title_num
+                ),"id='".$row["id"]."'");
+            }
+        }
+    }
 }

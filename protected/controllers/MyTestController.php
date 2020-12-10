@@ -33,7 +33,7 @@ class MyTestController extends Controller
                 'expression'=>array('MyTestController','allowReadWrite'),
             ),
             array('allow',
-                'actions'=>array('index','view'),
+                'actions'=>array('index','view','test'),
                 'expression'=>array('MyTestController','allowReadOnly'),
             ),
             array('deny',  // deny all users
@@ -92,6 +92,11 @@ class MyTestController extends Controller
         } else {
             $this->render('form',array('model'=>$model,));
         }
+    }
+
+    public function actionTest(){
+        $model = new MyTestForm();
+        $model->resetOldTest();
     }
 
 

@@ -24,7 +24,7 @@ $this->pageTitle=Yii::app()->name . ' - myTest Form';
 </style>
 <section class="content-header">
     <h1>
-        <strong><?php echo Yii::t('examina','test again'); ?></strong>
+        <strong><?php echo Yii::t('examina','Simulation test'); ?></strong>
     </h1>
     <!--
         <ol class="breadcrumb">

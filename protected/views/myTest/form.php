@@ -34,8 +34,13 @@ $this->pageTitle=Yii::app()->name . ' - myTest Form';
 		<?php echo TbHtml::button('<span class="fa fa-reply"></span> '.Yii::t('misc','Back'), array(
 				'submit'=>Yii::app()->createUrl('myTest/index')));
 		?>
-		<?php echo TbHtml::button('<span class="fa fa-superpowers"></span> '.Yii::t('examina','test again'), array(
+		<?php echo TbHtml::button('<span class="fa fa-asterisk"></span> '.Yii::t('examina','Simulation test'), array(
 				'submit'=>Yii::app()->createUrl('myTest/Again',array("index"=>$model->join_id))));
+		?>
+	</div>
+	<div class="btn-group pull-right" role="group">
+		<?php echo TbHtml::button('<span class="fa fa-superpowers"></span> '.Yii::t('examina','test again'), array(
+				'submit'=>Yii::app()->createUrl('simTest/save')));
 		?>
 	</div>
 
@@ -45,6 +50,15 @@ $this->pageTitle=Yii::app()->name . ' - myTest Form';
 		<div class="box-body">
 			<?php echo $form->hiddenField($model, 'scenario'); ?>
 			<?php echo $form->hiddenField($model, 'id'); ?>
+			<?php echo TbHtml::hiddenField("SimTestForm[quiz_id]",$model->id); ?>
+            <div class="form-group">
+                <div class="col-sm-8 col-sm-offset-2 text-warning">
+                    <div class="form-control-static ">
+                        <p><?php echo Yii::t('examina','Simulation test');?>：<?php echo Yii::t('examina','Not counted in statistics');?></p>
+                        <p><?php echo Yii::t('examina','test again');?>：<?php echo Yii::t('examina','Participate in the statistics');?></p>
+                    </div>
+                </div>
+            </div>
 
             <?php
             $this->renderPartial('//site/testTopForm',array(

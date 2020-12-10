@@ -85,5 +85,9 @@ return array(
     'The test list has expired'=>'测验单已过期',
     'shortcuts'=>'快捷操作',
     'against'=>'反选',
+    //2020-12-10
+    'Simulation test'=>'模拟测试',
+    'Participate in the statistics'=>'参与统计（会生成记录）',
+    'Not counted in statistics'=>'不计入统计（不生成记录）',
 );
 ?>
