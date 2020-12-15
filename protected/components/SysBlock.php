@@ -16,18 +16,12 @@ class SysBlock {
 				$result = call_user_func('self::'.$value['validation']);
 				$sysblock[$key] = $result;
 				$session['sysblock'] = $sysblock;
-				//function設置為空時，只提示一次，不限制行為(start)
-				if($value['function']===""){
-				    return false;
-                }
-                //function設置為空時，只提示一次，不限制行為(end)
+				
 				if (!$result) {
 					$url = '';
 					$systems = General::systemMapping();
 					if ($sysId==$value['system']) {
-						if ($controllerId!='site' && $functionId!=$value['function']){
-						    $url = $systems[$value['system']]['webroot'];
-                        }
+						if ($controllerId!='site' && $functionId!=$value['function']) $url = $systems[$value['system']]['webroot'];
 					} else {
 						$url = $systems[$value['system']]['webroot'];
 					}
@@ -207,6 +201,45 @@ class SysBlock {
 		$row = Yii::app()->db->createCommand($sql)->queryRow();
 		return ($row===false);
 	}
+
+
+    /**
+    每月3日, 驗證 用户有月报表分析权限为读写的权限的未及时发送邮件, false: 未处理
+     **/
+    public function isMonthDispatch () {
+        $uid = Yii::app()->user->id;
+        $city = Yii::app()->user->city();
+        $suffix = Yii::app()->params['envSuffix'];
+        $email=Yii::app()->user->email();
+        $lastdate = date('d')<3 ? date('Y-m-d',strtotime('-3 months')) : date('Y-m-d',strtotime('-2 months'));
+        $year = date("Y", strtotime($lastdate));
+        $month = date("n", strtotime($lastdate));
+        $sql = "select a_control from security$suffix.sec_user_access 
+				where username='$uid' and system_id='drs' and a_read_write like '%H01%'
+			";
+        $row = Yii::app()->db->createCommand($sql)->queryRow();
+        if ($row===false) return true;
+        $subject="月报表总汇-" .$year.'/'.$month;
+        if($month==1){
+            $months=12;
+            $years=$year-1;
+       }else{
+            $months=$month-1;
+            $years=$year;
+        }
+        $subjectlast="月报表总汇-" .$years.'/'.$months;
+        $sql = "select id from swoper$suffix.swo_month_email               
+                where city='$city' and  request_dt<= '$lastdate' and subject='$subject' 	
+			";
+        $row = Yii::app()->db->createCommand($sql)->queryAll();
+       // print_r(count($row));exit();
+       if(count($row)==1){
+           return true;
+       }else{
+           return false;
+       }
+    }
+
     /**
     檢查上月的質檢平均分是否低於75分，如果低於75分，需要提示用戶去培訓系統進行測試
      **/
