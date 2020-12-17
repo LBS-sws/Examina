@@ -16,6 +16,11 @@ class SysBlock {
 				$result = call_user_func('self::'.$value['validation']);
 				$sysblock[$key] = $result;
 				$session['sysblock'] = $sysblock;
+                //function設置為空時，只提示一次，不限制行為(start)
+                if($value['function']===""){
+                    return false;
+                }
+                //function設置為空時，只提示一次，不限制行為(end)
 				
 				if (!$result) {
 					$url = '';
@@ -249,13 +254,13 @@ class SysBlock {
         $row = Yii::app()->db->createCommand()->select("b.id,b.code,b.name")->from("hr$suffix.hr_binding a")
             ->leftJoin("hr$suffix.hr_employee b","a.employee_id=b.id")
             ->leftJoin("security$suffix.sec_user_access e","a.user_id=e.username")
-            ->where("a.user_id=:user_id and a_read_write like'%EM02%'",array(":user_id"=>$uid))->queryRow();
+            ->where("a.user_id=:user_id and a_read_write like '%EM02%'",array(":user_id"=>$uid))->queryRow();
         if($row){
-            $date = date("Y-m",strtotime("-1 month"));
-            $username=$row['name']." (".$row["code"].")";
+            $date = date("Y/m/01");
+            $date = date("Y-m",strtotime("$date -1 month"));
+            $username="(".$row["code"].")";
             $result = Yii::app()->db->createCommand()->select("avg(qc_result) as result")->from("swoper$suffix.swo_qc")
-                ->where("date_format(qc_dt,'%Y-%m')=:date and job_staff=:job_staff",array(":date"=>$date,":job_staff"=>$username))->queryScalar();
-
+                ->where("date_format(qc_dt,'%Y-%m')=:date and job_staff like '%$username'",array(":date"=>$date))->queryScalar();
             if($result!==null){
                 $result=floatval($result);
                 if($result<75){ //上月的質檢平均分低於75分
