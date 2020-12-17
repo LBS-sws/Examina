@@ -43,6 +43,11 @@ class SysBlock {
 		if (isset($session['sysblock'])) {
 			foreach ($session['sysblock'] as $key=>$value) {
 				if (!$value && isset($this->checkItems[$key])) {
+                    //function設置為空時，只提示一次，不限制行為(start)
+                    if($this->checkItems[$key]['function']===""){
+                        return $this->checkItems[$key]['message'];
+                    }
+                    //function設置為空時，只提示一次，不限制行為(end)
 					if ($this->checkItems[$key]['system']==$systemId) return $this->checkItems[$key]['message'];
 				}
 			}
@@ -265,9 +270,9 @@ class SysBlock {
                 $result=floatval($result);
                 if($result<75){ //上月的質檢平均分低於75分
                     $nowMonth = date("Y-m");
-                    $title = Yii::app()->db->createCommand()->select("MAX(title_num/title_sum)")->from("exa_join")
+                    $title = Yii::app()->db->createCommand()->select("MAX(title_num/title_sum)")->from("quiz$suffix.exa_join")
                         ->where("employee_id=:employee_id and date_format(lcd,'%Y-%m')=:date",array(":employee_id"=>$row['id'],":date"=>$nowMonth))->queryScalar();
-                    $title = $title===null?0:$title;
+                    $title = $title===null?0:floatval($title);
                     if($title<0.85){//測驗後的正確率小於85%
                         return false;
                     }
