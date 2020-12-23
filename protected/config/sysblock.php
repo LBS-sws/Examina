@@ -19,11 +19,18 @@ return array(
 			'message'=>Yii::t('block','Please complete Personnel System - Appraisial before using other functions.'),
 		),
 
-	'dev.EM02' => array( //台灣地區需要此驗證（其它版本可以刪除)
-			'validation'=>'validateExamination',
-			'system'=>'exa',
-			'function'=>'',
-			'message'=>Yii::t('block','validateExamination'),
-		),
+
+    'dev.EM02' => array( //台灣地區需要此驗證（其它版本可以刪除)
+        'validation'=>'validateNewStaff',
+        'system'=>'quiz',
+        'function'=>array('EM02','EM01'),
+        'message'=>Yii::t('block','validateNewStaff'),
+    ),
+	'dev.EM03' => array( //台灣地區需要此驗證（其它版本可以刪除)
+        'validation'=>'validateExamination',
+        'system'=>'quiz',
+        'function'=>array('EM02','EM01'),
+        'message'=>Yii::t('block','validateExamination'),
+    ),
 );
 ?>

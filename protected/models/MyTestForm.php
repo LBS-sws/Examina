@@ -16,6 +16,7 @@ class MyTestForm extends CFormModel
 	public $choose_id;
 	public $list_choose;
 	public $lcd;
+	private $staffList;
 
 	public $title_sum=1;
 	public $title_num=0;
@@ -48,9 +49,26 @@ class MyTestForm extends CFormModel
 			array('quiz_id','required'),
 			array('quiz_id','validateName','on'=>'new'),
 			array('list_choose','required'),
+			array('employee_id','validateStaff'),
 			array('list_choose','validateChoose','on'=>'new'),
 		);
 	}
+
+	public function validateStaff($attribute, $params){
+        $uid = Yii::app()->user->id;
+        $suffix = Yii::app()->params['envSuffix'];
+        //position:職位  department：部門
+        $rs = Yii::app()->db->createCommand()->select("b.id,b.name,b.code,b.department,b.position,b.entry_time,f.technician")->from("hr$suffix.hr_binding a")
+            ->leftJoin("hr$suffix.hr_employee b","a.employee_id = b.id")
+            ->leftJoin("hr$suffix.hr_dept f","b.position=f.id")
+            ->where("a.user_id ='$uid'")->queryRow();
+        if($rs){
+            $this->staffList = $rs;
+        }else{
+            $message = "该账号未绑定员工，请与管理员联系";
+            $this->addError($attribute,$message);
+        }
+    }
 
 	public function validateChoose($attribute, $params){
         $session = Yii::app()->session;
@@ -133,9 +151,10 @@ class MyTestForm extends CFormModel
 	public function saveData()
 	{
         $uid = Yii::app()->user->id;
+        $suffix = Yii::app()->params['envSuffix'];
         $session = Yii::app()->session;
         $list_choose = $this->list_choose;
-        $staff_id = Yii::app()->user->staff_id();
+        $staff_id = $this->staffList["id"];
         $command = Yii::app()->db->createCommand();
         $command->insert('exa_join', array(
             'quiz_id'=>$this->quiz_id,
@@ -170,6 +189,19 @@ class MyTestForm extends CFormModel
         ),"id='$this->join_id'");
         $this->title_sum=$title_sum;
         $this->title_num=$title_num;
+        if(($title_num/$title_sum<0.85)&&$this->staffList["technician"]==1){
+            $startDate = date("Y/m/d");
+            $date = date("Y/m/01");
+            $endDate = date("Y-m",strtotime("$date -3 month"));
+            $date = date("Y/m/d",strtotime($this->staffList["entry_time"]));
+            if($date<=$startDate&&$date>=$endDate){
+                Dialog::message(Yii::t('dialog','Warning'), Yii::t('block','validateNewStaff'));
+            }else{
+                Dialog::message(Yii::t('dialog','Warning'), Yii::t('block','validateExamination'));
+            }
+        }else{
+            Dialog::message(Yii::t('dialog','Information'), Yii::t('dialog','Save Done'));
+        }
 	}
 
 	//重置以前的測驗單

@@ -26,7 +26,12 @@ class SysBlock {
 					$url = '';
 					$systems = General::systemMapping();
 					if ($sysId==$value['system']) {
-						if ($controllerId!='site' && $functionId!=$value['function']) $url = $systems[$value['system']]['webroot'];
+					    if(is_array($value['function'])){
+                            $bool = !in_array($functionId,$value['function']);
+                        }else{
+                            $bool = $functionId!=$value['function'];
+                        }
+						if ($controllerId!='site' && $bool) $url = $systems[$value['system']]['webroot'];
 					} else {
 						$url = $systems[$value['system']]['webroot'];
 					}
@@ -258,8 +263,9 @@ class SysBlock {
         $suffix = Yii::app()->params['envSuffix'];
         $row = Yii::app()->db->createCommand()->select("b.id,b.code,b.name")->from("hr$suffix.hr_binding a")
             ->leftJoin("hr$suffix.hr_employee b","a.employee_id=b.id")
+            ->leftJoin("hr$suffix.hr_dept f","b.position=f.id")
             ->leftJoin("security$suffix.sec_user_access e","a.user_id=e.username")
-            ->where("a.user_id=:user_id and a_read_write like '%EM02%'",array(":user_id"=>$uid))->queryRow();
+            ->where("a.user_id=:user_id and e.system_id='quiz' and e.a_read_write like '%EM02%' and f.technician=1",array(":user_id"=>$uid))->queryRow();
         if($row){
             $date = date("Y/m/01");
             $date = date("Y-m",strtotime("$date -1 month"));
@@ -277,6 +283,32 @@ class SysBlock {
                         return false;
                     }
                 }
+            }
+        }
+		return true;
+	}
+
+    /**
+    新同事（入职未满3个月）每次登陆系统提醒（与QC未达75分一样弹出方框）
+     **/
+	public function validateNewStaff() {
+        $uid = Yii::app()->user->id;
+        $suffix = Yii::app()->params['envSuffix'];
+        $startDate = date("Y/m/d");
+        $date = date("Y/m/01");
+        $endDate = date("Y-m",strtotime("$date -3 month"));
+        $row = Yii::app()->db->createCommand()->select("b.id,b.code,b.name")->from("hr$suffix.hr_binding a")
+            ->leftJoin("hr$suffix.hr_employee b","a.employee_id=b.id")
+            ->leftJoin("hr$suffix.hr_dept f","b.position=f.id")
+            ->leftJoin("security$suffix.sec_user_access e","a.user_id=e.username")
+            ->where("replace(b.entry_time,'/', '-')>=:endDate and replace(b.entry_time,'/', '-')<=:startDate and a.user_id=:user_id and e.system_id='quiz' and e.a_read_write like '%EM02%' and b.staff_status=0 and f.technician=1",
+                array(":user_id"=>$uid,":endDate"=>$endDate,":startDate"=>$startDate))->queryRow();
+        if($row){
+            $title = Yii::app()->db->createCommand()->select("MAX(title_num/title_sum)")->from("quiz$suffix.exa_join")
+                ->where("employee_id=:employee_id",array(":employee_id"=>$row['id']))->queryScalar();
+            $title = $title===null?0:floatval($title);
+            if($title<0.85){//測驗後的正確率小於85%
+                return false;
             }
         }
 		return true;

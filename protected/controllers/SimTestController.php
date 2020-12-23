@@ -70,7 +70,8 @@ class SimTestController extends Controller
                 }
                 //var_dump($quizModel->getResultList());
             }else{
-                throw new CHttpException(403,'該測驗單沒有試題無法開始測驗，請聯繫管理員.');
+                Dialog::message(Yii::t('dialog','Validation Message'), '該測驗單沒有試題無法開始測驗，請聯繫管理員.');
+                $this->redirect(Yii::app()->createUrl('simTest/index'));
             }
         }
     }
@@ -82,11 +83,6 @@ class SimTestController extends Controller
             $model->attributes = $_POST['examina'];
             if ($model->validate()) {
                 $model->saveData();
-                if($model->title_num/$model->title_sum<0.85){
-                    Dialog::message(Yii::t('dialog','Warning'), Yii::t('block','validateExamination'));
-                }else{
-                    Dialog::message(Yii::t('dialog','Information'), Yii::t('dialog','Save Done'));
-                }
                 $this->redirect(Yii::app()->createUrl('myTest/view',array('index'=>$model->join_id)));
             } else {
                 $message = CHtml::errorSummary($model);
