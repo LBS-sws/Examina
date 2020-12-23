@@ -41,6 +41,10 @@ return array(
                 'access'=>'SC03',
                 'url'=>'/statisticsStaff/index',
             ),
+            'Quiz results statistics'=>array(
+                'access'=>'SC04',
+                'url'=>'/statisticsQuiz/index',
+            ),
         ),
     ),
 );

@@ -91,6 +91,7 @@ return array(
 'Title results statistics'=>'試題結果統計',
 'Staff results statistics'=>'員工結果統計',
 'Test categories'=>'測驗類別',
+'Quiz results statistics'=>'應測試人員統計',
 //沈超添加結束
 );
 ?>

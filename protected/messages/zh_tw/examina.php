@@ -89,5 +89,10 @@ return array(
     'Simulation test'=>'模擬測試',
     'Participate in the statistics'=>'參與統計（會生成記錄）',
     'Not counted in statistics'=>'不計入統計（不生成記錄）',
+    //2020-12-23
+    'Quiz cause'=>'測試原因',
+    'Quiz end date'=>'測試截止日',
+    'Quiz join date'=>'答題時間',
+    'entry time'=>'入職日期',
 );
 ?>
