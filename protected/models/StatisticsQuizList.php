@@ -102,16 +102,16 @@ class StatisticsQuizList extends CListPageModel
                 $row["endDate"] = date("Y-m-d",strtotime("$entry_time + 4 month - 1 day"));
             }
 
-            $titleList = Yii::app()->db->createCommand()->select("lcd,title_num,title_sum,MAX(title_num/title_sum) as score")->from("exa_join")
-                ->where("employee_id=:employee_id",array(":employee_id"=>$row['id']))->queryRow();
+            $titleList = Yii::app()->db->createCommand()->select("lcd,title_num,title_sum,(title_num/title_sum) as score")->from("exa_join")
+                ->where("employee_id=:employee_id",array(":employee_id"=>$row['id']))->order("score desc")->queryRow();
         }else{//未达标
             $entry_time = date("Y-m-01");
             $row["question"] = date("m",strtotime("-1 month"))."月QC未达标";
             $row["endDate"] = date("Y-m-d",strtotime("$entry_time + 1 month - 1 day"));
 
             $nowMonth = date("Y-m");
-            $titleList = Yii::app()->db->createCommand()->select("lcd,title_num,title_sum,MAX(title_num/title_sum) as score")->from("exa_join")
-                ->where("employee_id=:employee_id and date_format(lcd,'%Y-%m')=:date",array(":employee_id"=>$row['id'],":date"=>$nowMonth))->queryRow();
+            $titleList = Yii::app()->db->createCommand()->select("lcd,title_num,title_sum,(title_num/title_sum) as score")->from("exa_join")
+                ->where("employee_id=:employee_id and date_format(lcd,'%Y-%m')=:date",array(":employee_id"=>$row['id'],":date"=>$nowMonth))->order("score desc")->queryRow();
         }
         if($titleList&&$titleList["score"]!==null){
             $title = floatval($titleList["score"]);

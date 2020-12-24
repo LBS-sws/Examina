@@ -68,6 +68,10 @@ $this->pageTitle=Yii::app()->name . ' - myTest Form';
             ?>
             <div class="text-center" style="padding-top: 20px;">
                 <?php
+                echo TbHtml::button('<span class="fa fa-mail-reply"></span> '.Yii::t('examina','before title'), array(
+                    'id'=>"resultPre"));
+                ?>
+                <?php
                 echo TbHtml::button('<span class="fa fa-mail-forward"></span> '.Yii::t('examina','next title'), array(
                     'id'=>"resultChange"));
                 ?>
@@ -97,6 +101,24 @@ $this->pageTitle=Yii::app()->name . ' - myTest Form';
 </div>
 <?php
 $js = "
+$('#resultPre').on('click',function(){
+    if($('.resultDiv.now').length == 0){
+        return false;
+    };
+    var resultDiv = $('.resultDiv.now').prev('.resultDiv');
+    if(resultDiv.length == 0){
+        return false;
+    };
+    $('.resultDiv.now').stop().slideUp(100).removeClass('now');
+    resultDiv.stop().slideDown(100).addClass('now');
+    if(resultDiv.next('.resultDiv').length == 0){
+        $('#resultChange').html('<span class=\"fa fa-upload\"></span>".Yii::t('misc','Submit')."');
+        //$('#resultChange').off('click').attr('type','submit');
+        return false;
+    }else{
+        $('#resultChange').html('<span class=\"fa fa-mail-forward\"></span>".Yii::t('examina','next title')."');
+    }
+});
 $('#resultChange').on('click',function(){
     if($('.resultDiv.now').length == 0){
         return false;
@@ -107,15 +129,17 @@ $('#resultChange').on('click',function(){
         return false;
     }
     if(resultDiv.length == 0){
-        $('#myTest-form').submit();
+        $('#simTest-form').submit();
         return false;
     };
     $('.resultDiv.now').stop().slideUp(100).removeClass('now');
     resultDiv.stop().slideDown(100).addClass('now');
     if(resultDiv.next('.resultDiv').length == 0){
-        $('#resultChange').html('<span class=\"fa fa-upload\"></span>提交');
+        $('#resultChange').html('<span class=\"fa fa-upload\"></span>".Yii::t('misc','Submit')."');
         //$('#resultChange').off('click').attr('type','submit');
         return false;
+    }else{
+        $('#resultChange').html('<span class=\"fa fa-mail-forward\"></span>".Yii::t('examina','next title')."');
     }
 });
 ";

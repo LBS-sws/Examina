@@ -94,5 +94,6 @@ return array(
     'Quiz end date'=>'测试截止日',
     'Quiz join date'=>'答题时间',
     'entry time'=>'入职日期',
+    'before title'=>'上一题',
 );
 ?>
