@@ -1,21 +1,23 @@
 <tr>
     <th>
-        <?php echo TbHtml::link($this->getLabelName('employee_name').$this->drawOrderArrow('b.name'),'#',$this->createOrderLink('statisticsQuiz-list','b.name'))
+        <?php echo TbHtml::link($this->getLabelName('employee_name').$this->drawOrderArrow('m.job_staff'),'#',$this->createOrderLink('statisticsQuiz-list','m.job_staff'))
         ;
         ?>
     </th>
     <th>
-        <?php echo TbHtml::link($this->getLabelName('city').$this->drawOrderArrow('b.city'),'#',$this->createOrderLink('statisticsQuiz-list','b.city'))
+        <?php echo TbHtml::link($this->getLabelName('city').$this->drawOrderArrow('m.city'),'#',$this->createOrderLink('statisticsQuiz-list','m.city'))
         ;
         ?>
     </th>
     <th>
-        <?php echo TbHtml::link($this->getLabelName('entry_time').$this->drawOrderArrow('b.entry_time'),'#',$this->createOrderLink('statisticsQuiz-list','b.entry_time'))
+        <?php echo TbHtml::link($this->getLabelName('entry_time').$this->drawOrderArrow('m.entry_time'),'#',$this->createOrderLink('statisticsQuiz-list','m.entry_time'))
         ;
         ?>
     </th>
     <th>
-        <?php echo "<a href='#'>".Yii::t("examina","Quiz cause")."</a>";?>
+        <?php echo TbHtml::link($this->getLabelName('question').$this->drawOrderArrow('m.qc_date'),'#',$this->createOrderLink('statisticsQuiz-list','m.qc_date'))
+        ;
+        ?>
     </th>
     <th>
         <?php echo "<a href='#'>".Yii::t("examina","Quiz end date")."</a>";?>

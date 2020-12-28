@@ -20,16 +20,28 @@ return array(
 		),
 
 
-    'dev.EM02' => array( //台灣地區需要此驗證（其它版本可以刪除)
+    'dev.EM02' => array( //台灣地區需要此驗證(新用戶三個月後限制用戶行為)（其它版本可以刪除)
         'validation'=>'validateNewStaff',
         'system'=>'quiz',
         'function'=>array('EM02','EM01'),
         'message'=>Yii::t('block','validateNewStaff'),
     ),
-	'dev.EM03' => array( //台灣地區需要此驗證（其它版本可以刪除)
+	'dev.EM03' => array( //台灣地區需要此驗證(不達標一個月後限制用戶行為)（其它版本可以刪除)
         'validation'=>'validateExamination',
         'system'=>'quiz',
         'function'=>array('EM02','EM01'),
+        'message'=>Yii::t('block','validateExamination'),
+    ),
+    'dev.EM02.hint' => array( //台灣地區需要此驗證(新用戶三個月內只提示)（其它版本可以刪除)
+        'validation'=>'validateNewStaffHint',
+        'system'=>'quiz',
+        'function'=>'',
+        'message'=>Yii::t('block','validateNewStaff'),
+    ),
+    'dev.EM03.hint' => array( //台灣地區需要此驗證(不達標一個月內只提示)（其它版本可以刪除)
+        'validation'=>'validateExaminationHint',
+        'system'=>'quiz',
+        'function'=>'',
         'message'=>Yii::t('block','validateExamination'),
     ),
 );
