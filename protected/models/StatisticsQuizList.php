@@ -80,7 +80,7 @@ class StatisticsQuizList extends CListPageModel
             ->getText();
 
         $sql = "select a.job_staff,date_format(a.qc_dt,'%Y-%m') as qc_date,avg(a.qc_result) as result,b.city,b.entry_time from swoper$suffix.swo_qc a 
-            LEFT JOIN hrdev.hr_employee b ON a.job_staff = concat(' ',b.name,' (',b.code,')')
+            LEFT JOIN hr$suffix.hr_employee b ON a.job_staff = concat(' ',b.name,' (',b.code,')')
             WHERE 
             $qc_dt_sql $clause 
             group by a.job_staff,b.city,b.entry_time,qc_date";
