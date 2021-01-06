@@ -31,7 +31,7 @@ class StatisticsQuizList extends CListPageModel
         $endDate = date("Y-m",strtotime("$date -3 month"));
         $clause = "";
         $newListClause = " and replace(a.entry_time,'/', '-')>='".date("Y-m-d",strtotime($this->startDate))."' ";
-        $qc_dt_sql="date_format(a.qc_dt,'%Y-%m')>='".date("Y-m",strtotime($this->startDate))."'";
+        $qc_dt_sql="date_format(a.qc_dt,'%Y-%m')>='".date("Y-m",strtotime($this->startDate))."' and b.city in($city_allow)";
         if (!empty($this->searchField) && !empty($this->searchValue)) {
             $svalue = str_replace("'","\'",$this->searchValue);
             switch ($this->searchField) {
