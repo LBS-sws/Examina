@@ -20,7 +20,9 @@
         ?>
     </th>
     <th>
-        <?php echo "<a href='#'>".Yii::t("examina","Quiz end date")."</a>";?>
+        <?php echo TbHtml::link($this->getLabelName('endDate').$this->drawOrderArrow('m.order_end'),'#',$this->createOrderLink('statisticsQuiz-list','m.order_end'))
+        ;
+        ?>
     </th>
     <th>
         <?php echo "<a href='#'>".Yii::t("examina","Quiz join date")."</a>";?>

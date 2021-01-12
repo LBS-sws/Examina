@@ -69,17 +69,17 @@ class StatisticsQuizList extends CListPageModel
             if ($this->orderType=='D') $order .= "desc ";
         }
         if(!empty($order)){
-            $order.=",qc_date desc";
+            $order.=",m.qc_date desc";
         }
         //新同事
         $newList = Yii::app()->db->createCommand()
-            ->select("concat(' ',a.name,' (',a.code,')') as job_staff,'new' as qc_date,'new' as result,a.city,a.entry_time")
+            ->select("concat(' ',a.name,' (',a.code,')') as job_staff,date_add(a.entry_time,interval 3 month) as order_end,'new' as qc_date,'new' as result,a.city,a.entry_time")
             ->from("hr$suffix.hr_employee a")
             ->leftJoin("hr$suffix.hr_dept b","a.position=b.id")
             ->where("a.staff_status=0 and b.technician=1 and a.city in($city_allow) $newListClause")
             ->getText();
 
-        $sql = "select a.job_staff,date_format(a.qc_dt,'%Y-%m') as qc_date,avg(a.qc_result) as result,b.city,b.entry_time from swoper$suffix.swo_qc a 
+        $sql = "select a.job_staff,date_add(a.qc_dt,interval 1 month) as order_end,date_format(a.qc_dt,'%Y-%m') as qc_date,avg(a.qc_result) as result,b.city,b.entry_time from swoper$suffix.swo_qc a 
             LEFT JOIN hr$suffix.hr_employee b ON a.job_staff = concat(' ',b.name,' (',b.code,')')
             WHERE 
             $qc_dt_sql $clause 
@@ -89,14 +89,14 @@ class StatisticsQuizList extends CListPageModel
             ->where("a.result<75")//檢查分數是否低於75分
             ->union($newList)
             ->getText();
-        $staffList = Yii::app()->db->createCommand()->select("m.job_staff,m.qc_date,m.result,m.city,m.entry_time")->from("($staffListSql) m")
+        $staffList = Yii::app()->db->createCommand()->select("m.job_staff,m.qc_date,m.result,m.city,m.entry_time,m.order_end")->from("($staffListSql) m")
             ->queryAll();
         if($staffList){
             $this->totalRow = count($staffList);
         }else{
             $this->totalRow = 0;
         }
-        $sql = "select m.job_staff,m.qc_date,m.result,m.city,m.entry_time from ($staffListSql) m $order ";
+        $sql = "select m.job_staff,m.qc_date,m.result,m.city,m.entry_time,m.order_end from ($staffListSql) m $order ";
         $sql = $this->sqlWithPageCriteria($sql, $this->pageNum);
         $staffList = Yii::app()->db->createCommand($sql)->queryAll();
         if($staffList){
@@ -107,7 +107,7 @@ class StatisticsQuizList extends CListPageModel
                     ->where("code='$staffCode'")->queryRow();
                 if($row){
                     $row["qc_dt"] = $staff["qc_date"];
-                    $this->resetRow($row,$row["qc_dt"]=="new");
+                    $this->resetRow($row,$staff["result"]=="new");
                     $this->attr[] = array(
                         'id'=>$row['id'],
                         'employee_id'=>$row['id'],
