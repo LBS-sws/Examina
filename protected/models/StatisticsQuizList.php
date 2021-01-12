@@ -83,7 +83,7 @@ class StatisticsQuizList extends CListPageModel
             LEFT JOIN hr$suffix.hr_employee b ON a.job_staff = concat(' ',b.name,' (',b.code,')')
             WHERE 
             $qc_dt_sql $clause 
-            group by a.job_staff,b.city,b.entry_time,qc_date";
+            group by a.job_staff,b.city,b.entry_time,qc_date,order_end";
         $staffListSql = Yii::app()->db->createCommand()->select("*")
             ->from("($sql) a")
             ->where("a.result<75")//檢查分數是否低於75分
