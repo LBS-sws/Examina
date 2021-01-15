@@ -1,5 +1,5 @@
 <?php
 
 return array(
-//	'Application for credit'=>array('access'=>'ZR01',),//代申請學分
+    'All Quiz results statistics'=>array('access'=>'QZ01',),//应测试人员统计
 );

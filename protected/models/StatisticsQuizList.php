@@ -26,23 +26,25 @@ class StatisticsQuizList extends CListPageModel
 	{
         $city_allow = Yii::app()->user->city_allow();
         $suffix = Yii::app()->params['envSuffix'];
-        $startDate = date("Y-m-d");
-        $date = date("Y/m/01");
-        $endDate = date("Y-m",strtotime("$date -3 month"));
+        $authSql = "";
         $clause = "";
-        $newListClause = " and replace(a.entry_time,'/', '-')>='".date("Y-m-d",strtotime($this->startDate))."' ";
+        if(!Yii::app()->user->validFunction('QZ01')){
+            $staff_id = Yii::app()->user->staff_id();
+            $authSql = " and b.id = '$staff_id'";
+        }
+        $newListClause = " and replace(b.entry_time,'/', '-')>='".date("Y-m-d",strtotime($this->startDate))."' ";
         $qc_dt_sql="date_format(a.qc_dt,'%Y-%m')>='".date("Y-m",strtotime($this->startDate))."' and b.city in($city_allow)";
         if (!empty($this->searchField) && !empty($this->searchValue)) {
             $svalue = str_replace("'","\'",$this->searchValue);
             switch ($this->searchField) {
                 case 'employee_name':
                     $clause .= ' and a.job_staff like "%'.$svalue.'%" ';
-                    $newListClause.=" and ( a.code like '%".$svalue."%' or  a.name like '%".$svalue."%')";
+                    $newListClause.=" and ( b.code like '%".$svalue."%' or  b.name like '%".$svalue."%')";
                     break;
                 case 'endDate':
                     if(is_numeric($svalue)){
                         $qc_dt_sql="a.qc_dt like '%$svalue%'";
-                        $newListClause.=" and a.entry_time like '%$svalue%'";
+                        $newListClause.=" and b.entry_time like '%$svalue%'";
                     }else{
                         $qcDt=date("Y-m-01",strtotime($svalue));
                         $qcDt = date("Y-m",strtotime("$qcDt -1 day"));
@@ -50,14 +52,14 @@ class StatisticsQuizList extends CListPageModel
 
                         $qcDt=date("Y-m-01",strtotime($svalue));
                         $qcDt = date("Y-m",strtotime("$qcDt -3 month"));
-                        $newListClause.=" and replace(a.entry_time,'/', '-') like '$qcDt%'";
+                        $newListClause.=" and replace(b.entry_time,'/', '-') like '$qcDt%'";
                     }
                     break;
                 case 'question':
                     if (strpos("新同事",$svalue)!==false){
                         $clause .=" and a.id <0";
                     }else{
-                        $newListClause.=" and a.id <0";
+                        $newListClause.=" and b.id <0";
                         $clause .=" and date_format(a.qc_dt,'%Y年%m月QC未达标') like '%$svalue%'";
                     }
                     break;
@@ -70,33 +72,42 @@ class StatisticsQuizList extends CListPageModel
         }
         if(!empty($order)){
             $order.=",m.qc_date desc";
+        }else{
+            $order.=" order by order_quiz asc,m.order_end desc";
         }
         //新同事
         $newList = Yii::app()->db->createCommand()
-            ->select("concat(' ',a.name,' (',a.code,')') as job_staff,date_add(a.entry_time,interval 3 month) as order_end,'new' as qc_date,'new' as result,a.city,a.entry_time")
-            ->from("hr$suffix.hr_employee a")
-            ->leftJoin("hr$suffix.hr_dept b","a.position=b.id")
-            ->where("a.staff_status=0 and b.technician=1 and a.city in($city_allow) $newListClause")
+            ->select("b.id as employee_id,concat(' ',b.name,' (',b.code,')') as job_staff,date_add(b.entry_time,interval 3 month) as order_end,date_add(b.entry_time,interval 1 second) as order_start,'new' as qc_date,'new' as result,b.city,b.entry_time")
+            ->from("hr$suffix.hr_employee b")
+            ->leftJoin("hr$suffix.hr_dept p","b.position=p.id")
+            ->where("b.staff_status=0 and p.technician=1 and b.city in($city_allow) $newListClause $authSql")
             ->getText();
 
-        $sql = "select a.job_staff,date_add(a.qc_dt,interval 1 month) as order_end,date_format(a.qc_dt,'%Y-%m') as qc_date,avg(a.qc_result) as result,b.city,b.entry_time from swoper$suffix.swo_qc a 
+        $sql = "select b.id as employee_id,a.job_staff,date_add(a.qc_dt,interval 1 month) as order_end,date_add(a.qc_dt,interval 1 month) as order_start,date_format(a.qc_dt,'%Y-%m') as qc_date,avg(a.qc_result) as result,b.city,b.entry_time from swoper$suffix.swo_qc a 
             LEFT JOIN hr$suffix.hr_employee b ON a.job_staff = concat(' ',b.name,' (',b.code,')')
-            WHERE 
-            $qc_dt_sql $clause 
-            group by a.job_staff,b.city,b.entry_time,qc_date,order_end";
+            WHERE b.id is not NULL AND 
+            $qc_dt_sql $clause $authSql 
+            group by employee_id,a.job_staff,b.city,b.entry_time,qc_date,order_end,order_start";
         $staffListSql = Yii::app()->db->createCommand()->select("*")
             ->from("($sql) a")
             ->where("a.result<75")//檢查分數是否低於75分
             ->union($newList)
             ->getText();
-        $staffList = Yii::app()->db->createCommand()->select("m.job_staff,m.qc_date,m.result,m.city,m.entry_time,m.order_end")->from("($staffListSql) m")
+        $staffList = Yii::app()->db->createCommand()->select("m.job_staff,m.qc_date,m.result,m.city,m.entry_time,m.order_end,m.order_start")->from("($staffListSql) m")
             ->queryAll();
         if($staffList){
             $this->totalRow = count($staffList);
         }else{
             $this->totalRow = 0;
         }
-        $sql = "select m.job_staff,m.qc_date,m.result,m.city,m.entry_time,m.order_end from ($staffListSql) m $order ";
+        $quizSql = Yii::app()->db->createCommand()->select("employee_id,max(lcd) as quizDate")->from("exa_join")
+            ->where("(title_num/title_sum)>=0.85")->group("employee_id")->getText();
+
+        $sql = "select m.job_staff,m.qc_date,m.result,m.city,m.entry_time,m.order_end,m.order_start,quiz.quizDate,
+        CASE WHEN date_format(quiz.quizDate,'%Y-%m')>=date_format(m.order_start,'%Y-%m') THEN 1 ELSE 0 END AS order_quiz 
+        from ($staffListSql) m 
+        LEFT JOIN ($quizSql) quiz ON m.employee_id = quiz.employee_id
+        $order ";
         $sql = $this->sqlWithPageCriteria($sql, $this->pageNum);
         $staffList = Yii::app()->db->createCommand($sql)->queryAll();
         if($staffList){
@@ -155,13 +166,26 @@ class StatisticsQuizList extends CListPageModel
             $titleList = Yii::app()->db->createCommand()->select("lcd,title_num,title_sum,(title_num/title_sum) as score")->from("exa_join")
                 ->where("employee_id=:employee_id and date_format(lcd,'%Y-%m')>=:date and (title_num/title_sum)>=0.85",array(":employee_id"=>$row['id'],":date"=>$nowMonth))
                 ->order("lcd asc")->queryRow();
+            if(!$titleList){
+                $titleList = Yii::app()->db->createCommand()->select("lcd,title_num,title_sum,(title_num/title_sum) as score")->from("exa_join")
+                    ->where("employee_id=:employee_id and date_format(lcd,'%Y-%m')>=:date and (title_num/title_sum)<0.85",array(":employee_id"=>$row['id'],":date"=>$nowMonth))
+                    ->order("lcd desc")->queryRow();
+            }
         }
-        if($titleList&&$titleList["score"]!==null){
-            $title = floatval($titleList["score"]);
-            $row["testDate"] = date("Y-m-d",strtotime($titleList["lcd"]));
-            $row["correctNum"] = ($title*100)."%";
-            $row["correct"] = $titleList["title_num"];
-            $row["style"] = " ";
+        if($titleList){
+	        if(floatval($titleList["score"])>0.85){
+                $title = floatval($titleList["score"]);
+                $row["testDate"] = date("Y-m-d",strtotime($titleList["lcd"]));
+                $row["correctNum"] = ($title*100)."%";
+                $row["correct"] = $titleList["title_num"];
+                $row["style"] = " ";
+            }else{
+                $title = floatval($titleList["score"]);
+                $row["testDate"] = date("Y-m-d",strtotime($titleList["lcd"]));
+                $row["correctNum"] = ($title*100)."%";
+                $row["correct"] = $titleList["title_num"];
+                $row["style"] = " text-danger";
+            }
         }else{
             $row["testDate"] = "-";
             $row["correctNum"] = "-";

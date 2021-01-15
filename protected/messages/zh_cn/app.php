@@ -92,6 +92,7 @@ return array(
     'Staff results statistics'=>'员工结果统计',
     'Test categories'=>'测验类别',
     'Quiz results statistics'=>'应测试人员统计',
+    'All Quiz results statistics'=>'所有应测试人员统计',
     //沈超添加结束
 );
 ?>

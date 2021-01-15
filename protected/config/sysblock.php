@@ -23,13 +23,13 @@ return array(
     'dev.EM02' => array( //台灣地區需要此驗證(新用戶三個月後限制用戶行為)（其它版本可以刪除)
         'validation'=>'validateNewStaff',
         'system'=>'quiz',
-        'function'=>array('EM02','EM01'),
+        'function'=>array('EM02','EM01','SC04'),
         'message'=>Yii::t('block','validateNewStaff'),
     ),
 	'dev.EM03' => array( //台灣地區需要此驗證(不達標一個月後限制用戶行為)（其它版本可以刪除)
         'validation'=>'validateExamination',
         'system'=>'quiz',
-        'function'=>array('EM02','EM01'),
+        'function'=>array('EM02','EM01','SC04'),
         'message'=>Yii::t('block','validateExamination'),
     ),
     'dev.EM02.hint' => array( //台灣地區需要此驗證(新用戶三個月內只提示)（其它版本可以刪除)
