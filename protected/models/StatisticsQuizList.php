@@ -2,7 +2,7 @@
 
 class StatisticsQuizList extends CListPageModel
 {
-    protected $startDate = "2000/01/01";//
+    protected $startDate = "2021/01/01";//
 	/**
 	 * Declares customized attribute labels.
 	 * If not declared here, an attribute would have a label that is
