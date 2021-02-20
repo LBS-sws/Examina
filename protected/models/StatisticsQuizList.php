@@ -77,15 +77,16 @@ class StatisticsQuizList extends CListPageModel
         }
         //新同事
         $newList = Yii::app()->db->createCommand()
-            ->select("b.id as employee_id,concat(' ',b.name,' (',b.code,')') as job_staff,date_add(b.entry_time,interval 3 month) as order_end,date_add(b.entry_time,interval 1 second) as order_start,'new' as qc_date,'new' as result,b.city,b.entry_time")
+            ->select("b.id as employee_id,concat(' ',b.name,' (',b.code,')') as job_staff,date_format(date_add(b.entry_time,interval 3 month),'%Y-%m') as order_end,date_format(date_add(b.entry_time,interval 1 second),'%Y-%m') as order_start,'new' as qc_date,'new' as result,b.city,b.entry_time")
             ->from("hr$suffix.hr_employee b")
             ->leftJoin("hr$suffix.hr_dept p","b.position=p.id")
             ->where("b.staff_status=0 and p.technician=1 and b.city in($city_allow) $newListClause $authSql")
             ->getText();
-
-        $sql = "select b.id as employee_id,a.job_staff,date_add(a.qc_dt,interval 1 month) as order_end,date_add(a.qc_dt,interval 1 month) as order_start,date_format(a.qc_dt,'%Y-%m') as qc_date,avg(a.qc_result) as result,b.city,b.entry_time from swoper$suffix.swo_qc a 
+        $overDate = date("Y-m");//只顯示上個月以前的，本月不顯示
+        $sql = "select b.id as employee_id,a.job_staff,date_format(date_add(a.qc_dt,interval 1 month),'%Y-%m') as order_end,date_format(date_add(a.qc_dt,interval 1 month),'%Y-%m') as order_start,date_format(a.qc_dt,'%Y-%m') as qc_date,avg(a.qc_result) as result,b.city,b.entry_time 
+            from swoper$suffix.swo_qc a 
             LEFT JOIN hr$suffix.hr_employee b ON a.job_staff = concat(' ',b.name,' (',b.code,')')
-            WHERE b.id is not NULL AND 
+            WHERE b.id is not NULL AND date_format(a.qc_dt,'%Y-%m')<'$overDate' AND 
             $qc_dt_sql $clause $authSql 
             group by employee_id,a.job_staff,b.city,b.entry_time,qc_date,order_end,order_start";
         $staffListSql = Yii::app()->db->createCommand()->select("*")
