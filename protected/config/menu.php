@@ -47,4 +47,34 @@ return array(
             ),
         ),
     ),
+    'training process'=>array(
+        'access'=>'TP',
+		'icon'=>'fa-superpowers',
+        'items'=>array(
+            'Enterprise situation'=>array(
+                'access'=>'TP01',
+                'url'=>'/enterprise/index',
+            ),
+            'Operation study'=>array(
+                'access'=>'TP02',
+                'url'=>'/practice/index',
+            ),
+            'Theoretical knowledge'=>array(
+                'access'=>'TP03',
+                'url'=>'/Theory/index',
+            ),
+            'Communication answer'=>array(
+                'access'=>'TP04',
+                'url'=>'/answer/index',
+            ),
+            'exam(Theory + practice)'=>array(
+                'access'=>'TP05',
+                'url'=>'/examTheory/index',
+            ),
+            'System exam(In previous)'=>array(
+                'access'=>'TP06',
+                'url'=>'/examPrevious/index',
+            ),
+        ),
+    ),
 );

@@ -93,6 +93,14 @@ return array(
     'Test categories'=>'测验类别',
     'Quiz results statistics'=>'应测试人员统计',
     'All Quiz results statistics'=>'所有应测试人员统计',
+
+    'training process'=>'技术员培训流程',
+    'Enterprise situation'=>'第一步：初步了解企业情况',
+    'Operation study'=>'第二步：服务实际操作学习',
+    'Theoretical knowledge'=>'第三步：理论知识学习',
+    'Communication answer'=>'第四步：沟通对答学习',
+    'exam(Theory + practice)'=>'考试（理论+实操）',
+    'System exam(In previous)'=>'系统操作培训（独立做单前）',
     //沈超添加结束
 );
 ?>

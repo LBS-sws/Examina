@@ -95,5 +95,15 @@ return array(
     'Quiz join date'=>'答题时间',
     'entry time'=>'入职日期',
     'before title'=>'上一题',
+    //2020-03-09
+    'Browse mode'=>'浏览模式',
+    'click for movie'=>'点击观看视频',
+    'click for photo'=>'点击观看图片',
+    'look for photo'=>'观看图片',
+    'upload'=>'上传',
+    'upload for photo'=>'上传图片',
+    'flow code'=>'修改位置',
+    'flow name'=>'内容',
+    'down excel'=>'试题下载',
 );
 ?>
