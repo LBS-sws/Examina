@@ -65,6 +65,20 @@ class FlowTitleForm extends CFormModel
 	public $flow_photo;//圖片
 	public $flow_name;//圖片說明
 	public $z_index;//圖片層級
+
+
+
+    public $no_of_attm = array(
+        'flowth'=>0
+    );
+    public $docType = 'FLOWTH';
+    public $docMasterId = array(
+        'flowth'=>0
+    );
+    public $files;
+    public $removeFileId = array(
+        'flowth'=>0
+    );
 	/**
 	 * Declares customized attribute labels.
 	 * If not declared here, an attribute would have a label that is
@@ -91,7 +105,9 @@ class FlowTitleForm extends CFormModel
             array('flow_code','required'),
             array('flow_title','required','on'=>array('edit')),
             array('flow_code','validateName','on'=>array('edit')),
-            array('flow_photo', 'file', 'types'=>'png,jpg,jpe,jpeg,gif', 'allowEmpty'=>false, 'maxFiles'=>1,'on'=>array('photo'))
+            array('flow_photo', 'file', 'types'=>'png,jpg,jpe,jpeg,gif', 'allowEmpty'=>false, 'maxFiles'=>1,'on'=>array('photo')),
+
+            array('files, removeFileId, docMasterId, no_of_attm','safe')
         );
 	}
 
@@ -152,10 +168,10 @@ class FlowTitleForm extends CFormModel
         }
 	}
 
-	public function getFlowTitle($flow_code="",$bool=true){
+    public function getFlowTitle($flow_code="",$bool=true){
         $flow_code = empty($flow_code)?$this->flow_code:$flow_code;
         $flow_title = "";
-	    if(key_exists($flow_code,self::$title)){
+        if(key_exists($flow_code,self::$title)){
             $row = Yii::app()->db->createCommand()->select("flow_title")->from("exa_flow_title")
                 ->where("flow_code=:flow_code", array(':flow_code'=>$flow_code))->queryRow();
             if($row&&!empty($row["flow_title"])){
@@ -170,7 +186,27 @@ class FlowTitleForm extends CFormModel
         }else{
             return $flow_title;
         }
-	}
+    }
+
+    public function getFlowPhoto($flow_code=""){
+        $flow_code = empty($flow_code)?$this->flow_code:$flow_code;
+        $html = "";
+        if(key_exists($flow_code,self::$title)){
+            $rows = Yii::app()->db->createCommand()->select("id,flow_name,flow_photo")->from("exa_flow_photo")
+                ->where("flow_code=:flow_code", array(':flow_code'=>$flow_code))->order("z_index asc,id asc")->queryAll();
+            if($rows){
+                $html="<ul class='viewerUl hide' data-code='$flow_code'>";
+                foreach ($rows as $row){
+                    $imgSrc = Yii::app()->createUrl('flowTitle/printImage',array('id'=>$row["id"]));
+                    $html.="<li>";
+                    $html.=TbHtml::image($imgSrc,$row["flow_name"],array("data-original"=>$imgSrc));
+                    $html.="</li>";
+                }
+                $html.="</ul>";
+            }
+        }
+        return $html;
+    }
 
 	public function getUpdateLink($flow_code="",$bool=false){
         $flow_code = empty($flow_code)?$this->flow_code:$flow_code;
@@ -220,6 +256,17 @@ class FlowTitleForm extends CFormModel
 			throw new CHttpException(404,'Cannot update.');
 		}
 	}
+
+    //获取文档数量
+    public function getFilesNumber(){
+        //docman$suffix.countdoc('CYRAL',a.id) as cyraldoc
+        $suffix = Yii::app()->params['envSuffix'];
+        $row = Yii::app()->db->createCommand()->select("docman$suffix.countdoc('FLOWTH',1) as cyraldoc")
+            ->queryScalar();
+        if($row){
+            $this->no_of_attm['flowth'] = $row;
+        }
+    }
 
 	public function savePhoto()
 	{

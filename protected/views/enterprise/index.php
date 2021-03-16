@@ -72,8 +72,8 @@ $this->pageTitle=Yii::app()->name . ' - Question';
             <div class="form-group">
                 <div class="col-lg-8">
                     <div class="form-control-static">
-                        <?php echo TbHtml::link(Yii::t('examina','click for photo'),"",array(
-                                'class'=>'btn btn-link link-red','data-toggle'=>'modal','data-target'=>'#clickphoto_code1_2',)
+                        <?php echo TbHtml::button(Yii::t('examina','click for photo'),array(
+                                'class'=>'btn btn-link link-red',"id"=>"viewer_code1_2")
                         );
                         ?>
                         <?php if ($flowTitleModel->scenario=='edit'): ?>

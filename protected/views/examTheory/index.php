@@ -54,13 +54,33 @@ $this->pageTitle=Yii::app()->name . ' - Question';
             <div class="form-group">
                 <div class="col-lg-8">
                     <div class="form-control-static">
-                        <a class="link-red"><?php echo Yii::t('examina','down excel');?></a>
+
+                        <?php
+                        $counter = ($flowTitleModel->no_of_attm['flowth'] > 0) ? ' <span id="docflowth" class="label label-info">'.$flowTitleModel->no_of_attm['flowth'].'</span>' : ' <span id="docflowth"></span>';
+                        echo TbHtml::button('<span class="fa  fa-file-text-o"></span> '.Yii::t('examina','down excel').$counter, array(
+                                'name'=>'btnFile','id'=>'btnFile','data-toggle'=>'modal','data-target'=>'#fileuploadflowth',)
+                        );
+                        ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<?php
+$flowTitleModel->id = 1;
+$this->renderPartial('//site/fileupload',array('model'=>$flowTitleModel,
+    'form'=>$form,
+    'doctype'=>'FLOWTH',
+    //'maxSize'=>1024*500,
+    'header'=>Yii::t('examina','down excel'),
+    'ronly'=>(!Yii::app()->user->validRWFunction('TP05')),
+));
+?>
+<?php
+
+Script::genFileUpload($flowTitleModel,$form->id,'FLOWTH');
+?>
 <?php $this->endWidget(); ?>
 
 

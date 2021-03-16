@@ -54,13 +54,29 @@ $this->pageTitle=Yii::app()->name . ' - Question';
             <div class="form-group">
                 <div class="col-lg-8">
                     <div class="form-control-static">
-                        <a class="link-red"><?php echo Yii::t('examina','click for photo');?></a>
+
+                        <?php echo TbHtml::button(Yii::t('examina','click for photo'),array(
+                                'class'=>'btn btn-link link-red',"id"=>"viewer_code4_1")
+                        );
+                        ?>
+                        <?php if ($flowTitleModel->scenario=='edit'): ?>
+                            <?php
+                            echo TbHtml::link(Yii::t('examina',"upload for photo"),
+                                Yii::app()->createUrl('flowTitle/uploadPhoto',array('code'=>"code4_1")),
+                                array('class'=>'link-red'));
+                            ?>
+                        <?php endif ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<?php
+$this->renderPartial('//site/clickphoto',array(
+    'flow_code'=>"code4_1"
+));
+?>
 <?php $this->endWidget(); ?>
 
 
