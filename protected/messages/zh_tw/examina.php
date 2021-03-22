@@ -95,5 +95,7 @@ return array(
     'Quiz join date'=>'答題時間',
     'entry time'=>'入職日期',
     'before title'=>'上一題',
+    'Clean the class'=>'清潔類',
+    'Extermination class'=>'滅蟲類',
 );
 ?>

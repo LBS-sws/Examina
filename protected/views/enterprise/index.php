@@ -54,7 +54,7 @@ $this->pageTitle=Yii::app()->name . ' - Question';
             <div class="form-group">
                 <div class="col-lg-8">
                     <div class="form-control-static">
-                        <a class="btn btn-link disabled"><?php echo Yii::t('examina','click for movie');?></a>
+                        <a class="btn btn-link disabled hide"><?php echo Yii::t('examina','click for movie');?></a>
                     </div>
                 </div>
             </div>

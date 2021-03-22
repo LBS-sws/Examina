@@ -56,13 +56,16 @@ $this->pageTitle=Yii::app()->name . ' - Question';
                     <div class="form-control-static">
 
                         <?php echo TbHtml::button(Yii::t('examina','click for photo'),array(
-                                'class'=>'btn btn-link link-red',"id"=>"viewer_code3_1")
+                                'class'=>'btn btn-link link-red','data-toggle'=>'modal','data-target'=>'#classifydialog')
                         );
                         ?>
                         <?php if ($flowTitleModel->scenario=='edit'): ?>
                             <?php
-                            echo TbHtml::link(Yii::t('examina',"upload for photo"),
-                                Yii::app()->createUrl('flowTitle/uploadPhoto',array('code'=>"code3_1")),
+                            echo TbHtml::link(Yii::t('examina',"upload for photo")."(".Yii::t('examina',"Clean the class").")",
+                                Yii::app()->createUrl('flowTitle/uploadPhoto',array('code'=>"info3_1")),
+                                array('class'=>'link-red'));
+                            echo TbHtml::link(Yii::t('examina',"upload for photo")."(".Yii::t('examina',"Extermination class").")",
+                                Yii::app()->createUrl('flowTitle/uploadPhoto',array('code'=>"info3_2")),
                                 array('class'=>'link-red'));
                             ?>
                         <?php endif ?>
@@ -83,18 +86,52 @@ $this->pageTitle=Yii::app()->name . ' - Question';
             <div class="form-group">
                 <div class="col-lg-8">
                     <div class="form-control-static">
-                        <a class="link-red"><?php echo Yii::t('examina','click for movie');?></a>
+                        <a class="btn btn-link disabled hide"><?php echo Yii::t('examina','click for movie');?></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
 <?php
 $this->renderPartial('//site/clickphoto',array(
-    'flow_code'=>"code3_1"
+    'flow_code'=>"info3_1"
+));
+?>
+<?php
+$this->renderPartial('//site/clickphoto',array(
+    'flow_code'=>"info3_2"
 ));
 ?>
 <?php $this->endWidget(); ?>
+
+<?php
+$this->beginWidget('bootstrap.widgets.TbModal', array(
+    'id'=>'classifydialog',
+    'header'=>"类别",
+    'show'=>false,
+));
+?>
+<div class="form-group">
+    <div class="text-center">
+        <?php echo TbHtml::button(Yii::t('examina','Clean the class'),array(
+                'class'=>'btn','id'=>"viewer_info3_1")
+        );
+        ?>
+    </div>
+</div>
+<div class="form-group">
+    <div class="text-center">
+        <?php echo TbHtml::button(Yii::t('examina','Extermination class'),array(
+                'class'=>'btn','id'=>"viewer_info3_2")
+        );
+        ?>
+    </div>
+</div>
+
+<?php
+$this->endWidget();
+?>
 
 

@@ -105,5 +105,7 @@ return array(
     'flow code'=>'修改位置',
     'flow name'=>'内容',
     'down excel'=>'试题下载',
+    'Clean the class'=>'清洁类',
+    'Extermination class'=>'灭虫类',
 );
 ?>
