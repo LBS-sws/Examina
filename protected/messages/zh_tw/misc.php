@@ -84,6 +84,7 @@ return array(
 'Mark Read'=>'標記已讀',
 'Go Top'=>'往頁頂',
 'Announcement'=>'公告',
+'Your ranking is:'=>'你當前的段位為:',
 );
 
 ?>
