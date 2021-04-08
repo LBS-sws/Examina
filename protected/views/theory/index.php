@@ -86,6 +86,23 @@ $this->pageTitle=Yii::app()->name . ' - Question';
             <div class="form-group">
                 <div class="col-lg-8">
                     <div class="form-control-static">
+                        <?php echo TbHtml::button(Yii::t('examina','click for photo'),array(
+                                'class'=>'btn btn-link link-red',"id"=>"viewer_code3_2")
+                        );
+                        ?>
+                        <?php if ($flowTitleModel->scenario=='edit'): ?>
+                            <?php
+                            echo TbHtml::link(Yii::t('examina',"upload for photo"),
+                                Yii::app()->createUrl('flowTitle/uploadPhoto',array('code'=>"code3_2")),
+                                array('class'=>'link-red'));
+                            ?>
+                        <?php endif ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-8">
+                    <div class="form-control-static">
                         <a class="btn btn-link disabled hide"><?php echo Yii::t('examina','click for movie');?></a>
                     </div>
                 </div>
@@ -102,6 +119,11 @@ $this->renderPartial('//site/clickphoto',array(
 <?php
 $this->renderPartial('//site/clickphoto',array(
     'flow_code'=>"info3_2"
+));
+?>
+<?php
+$this->renderPartial('//site/clickphoto',array(
+    'flow_code'=>"code3_2"
 ));
 ?>
 <?php $this->endWidget(); ?>
