@@ -103,7 +103,7 @@ class FlowTitleController extends Controller
             $this->function_id = $flowTitleModel->getFunctionId();
             Yii::app()->session['active_func'] = $this->function_id;
             if ($flowTitleModel->validate()) {
-                $flowTitleModel->savePhoto();
+                $flowTitleModel->savePhoto($_POST['test']);
                 Dialog::message(Yii::t('dialog','Information'), Yii::t('dialog','Save Done'));
                 $this->redirect(Yii::app()->createUrl('flowTitle/uploadPhoto',array('code'=>$flowTitleModel->flow_code)));
             } else {

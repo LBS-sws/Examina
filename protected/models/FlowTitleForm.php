@@ -117,7 +117,7 @@ class FlowTitleForm extends CFormModel
             array('flow_code','required'),
             array('flow_title','required','on'=>array('edit')),
             array('flow_code','validateName','on'=>array('edit')),
-            array('flow_photo', 'file', 'types'=>'png,jpg,jpe,jpeg,gif', 'allowEmpty'=>false, 'maxFiles'=>1,'on'=>array('photo')),
+            array('flow_photo', 'file', 'types'=>'png,jpg,jpe,jpeg,gif', 'allowEmpty'=>true, 'maxFiles'=>10,'on'=>array('photo')),
 
             array('files, removeFileId, docMasterId, no_of_attm','safe')
         );
@@ -241,11 +241,14 @@ class FlowTitleForm extends CFormModel
                     $id = $row["id"];
                     $html.="<tr>";
                     $html.="<td class='text-center'>".TbHtml::image(Yii::app()->createUrl('flowTitle/printImage',array('id'=>$row["id"])),'',array('height'=>"100px"))."</td>";
-                    $html.="<td>".TbHtml::textArea("test[$id][textarea]",$row["flow_name"],array('class'=>'textarea','row'=>2))."</td>";
-                    $html.="<td>".TbHtml::textField("test[$id][number]",$row["z_index"],array('class'=>'number'))."</td>";
                     $html.="<td>";
-                    $html.=TbHtml::button(Yii::t("misc","Amend"),array('class'=>'amend','submit'=>Yii::app()->createUrl('flowTitle/photoEdit',array('id'=>$row["id"]))));
-                    $html.=TbHtml::button(Yii::t("misc","Delete"),array('class'=>'delete','submit'=>Yii::app()->createUrl('flowTitle/photoDel',array('id'=>$row["id"]))));
+                    $html.=TbHtml::hiddenField("test[update][id][]",$row["id"]);
+                    $html.=TbHtml::textArea("test[update][textarea][]",$row["flow_name"],array('class'=>'textarea','row'=>2));
+                    $html.="</td>";
+                    $html.="<td>".TbHtml::textField("test[update][number][]",$row["z_index"],array('class'=>'number'))."</td>";
+                    $html.="<td>";
+                    //$html.=TbHtml::button(Yii::t("misc","Amend"),array('class'=>'amend','submit'=>Yii::app()->createUrl('flowTitle/photoEdit',array('id'=>$row["id"]))));
+                    $html.=TbHtml::button(Yii::t("misc","Delete"),array('class'=>'deleteNow','data-id'=>$row["id"]));
                     $html.="</td>";
                     $html.="</tr>";
                 }
@@ -280,24 +283,55 @@ class FlowTitleForm extends CFormModel
         }
     }
 
-	public function savePhoto()
-	{
+	public function savePhoto($data){
+        //var_dump($data);die();
 	    $this->z_index = empty($this->z_index)?0:$this->z_index;
         $url = Yii::app()->basePath."/../upload/".$this->flow_code;
         if(!is_dir($url)){
             mkdir($url);
         }
-        $img = CUploadedFile::getInstance($this,'flow_photo');
-        $flow_photo = "upload/".$this->flow_code."/".date("YmdHsi").".".$img->getExtensionName();
-        $img->saveAs($flow_photo);
-        Yii::app()->db->createCommand()->insert("exa_flow_photo",array(
-            "flow_code"=>$this->flow_code,
-            "flow_name"=>$this->flow_name,
-            "flow_photo"=>$flow_photo,
-            "z_index"=>$this->z_index,
-            "lcu"=>Yii::app()->user->id,
-        ));
+        if(key_exists("add",$data)){ //增加
+            $imgList = CUploadedFile::getInstances($this,'flow_photo');
+            foreach ($imgList as $key=>$img){
+                $flow_photo = "upload/".$this->flow_code."/$key".date("YmdHsi").".".$img->getExtensionName();
+                $img->saveAs($flow_photo);
+                Yii::app()->db->createCommand()->insert("exa_flow_photo",array(
+                    "flow_code"=>$this->flow_code,
+                    "flow_name"=>$this->getStrToArr($data["add"],"textarea",$key),
+                    "flow_photo"=>$flow_photo,
+                    "z_index"=>$this->getStrToArr($data["add"],"number",$key,true),
+                    "lcu"=>Yii::app()->user->id,
+                ));
+            }
+        }
+        if(key_exists("update",$data)){ //修改
+            if(key_exists("id",$data["update"])){
+                foreach ($data["update"]["id"] as $key=>$item){
+                    Yii::app()->db->createCommand()->update("exa_flow_photo",array(
+                        "flow_name"=>$this->getStrToArr($data["update"],"textarea",$key),
+                        "z_index"=>$this->getStrToArr($data["update"],"number",$key,true),
+                        "luu"=>Yii::app()->user->id,
+                    ),"id=:id",array(":id"=>$item));
+                }
+            }
+        }
+        if(key_exists("delete",$data)){ //刪除
+            foreach ($data["delete"] as $item){
+                $this->photoDel($item);
+            }
+        }
 	}
+
+	protected function getStrToArr($list,$name,$key,$number=false){
+	    if(key_exists($name,$list)&&key_exists($key,$list[$name])){
+            return $list[$name][$key];
+        }
+        if($number){
+            return 0;
+        }else{
+            return "";
+        }
+    }
 
     public function photoEdit($data,$id)
     {

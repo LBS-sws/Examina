@@ -29,6 +29,9 @@ $this->pageTitle=Yii::app()->name . ' - flowTitle Form';
 		<?php echo TbHtml::button('<span class="fa fa-reply"></span> '.Yii::t('misc','Back'), array(
 				'submit'=>Yii::app()->createUrl($model->getFlowBackUrl())));
 		?>
+        <?php echo TbHtml::button('<span class="fa fa-upload"></span> '.Yii::t('misc','Save'), array(
+            'submit'=>Yii::app()->createUrl('flowTitle/photoSave')));
+        ?>
 	</div>
 	</div></div>
 
@@ -63,24 +66,9 @@ $this->pageTitle=Yii::app()->name . ' - flowTitle Form';
                         </tbody>
                         <tfoot>
                         <tr>
-                            <td>
+                            <td colspan="4">
                                 <?php
-                                echo $form->fileField($model,"flow_photo");
-                                ?>
-                            </td>
-                            <td>
-                                <?php
-                                echo $form->textArea($model,"flow_name",array('row'=>2));
-                                ?>
-                            </td>
-                            <td>
-                                <?php
-                                echo $form->numberField($model,"z_index");
-                                ?>
-                            </td>
-                            <td>
-                                <?php echo TbHtml::button('<span class="fa fa-upload"></span> '.Yii::t('examina','upload'), array(
-                                    'submit'=>Yii::app()->createUrl("flowTitle/photoSave")));
+                                echo $form->fileField($model,"flow_photo[]",array('class'=>'uploadImage'));
                                 ?>
                             </td>
                         </tr>
@@ -101,8 +89,58 @@ $this->pageTitle=Yii::app()->name . ' - flowTitle Form';
 
 <?php
 
-$js = "
-";
+$js = <<<EOF
+num = 0;
+//刪除圖片
+$('#table_photo').delegate('.deleteNow','click',function(){
+    var data_num = $(this).data('num');
+    var data_id = $(this).data('id');
+    if(!isNaN(data_num)&&data_num>=0){
+        $(this).parents('tr:first').remove();
+        $('.uploadImage[num="'+data_num+'"]').remove();
+    }else{
+        $(this).parents('tr:first').remove();
+        $('#table_photo').before('<input name="test[delete][]" type="hidden" value="'+data_id+'">');
+    }
+});
+//添加圖片
+$('#table_photo').delegate('.uploadImage','change',function(){
+    if($('.add_span').length >=9){
+        $(this).val('');
+        alert('一次最多添加9個，請分開上傳');
+        return;
+    }
+    var files = !!this.files ? this.files : [];
+    var name = $(this).attr('name');
+    if (!files.length || !window.FileReader) return;
+    if (/^image/.test( files[0].type)){
+        var fileName = files[0].name;
+        $(this).attr('num',num);
+        $(this).hide();
+        $(this).after('<input name="'+name+'" class="uploadImage" type="file">');
+        var reader = new FileReader();
+        reader.readAsDataURL(files[0]);
+        reader.onloadend = function(){
+            //this.result
+            var html ='';
+            html+='<tr>';
+            html+='<td class="text-center">';
+            html+='<img height="100px" src="'+this.result+'"><br/>';
+            html+='<span class="add_span">'+fileName+'</span>';
+            html+='</td>';
+            html+='<td><textarea class="textarea form-control" row="2" name="test[add][textarea][]"></textarea></td>';
+            html+='<td><input class="number form-control" type="text" value="0" name="test[add][number][]"></td>';
+            html+='<td><button class="deleteNow btn btn-default" type="button" data-num="'+num+'">删除</button></td>';
+            html+='</tr>';
+            $('#table_photo').append(html);
+            num++;
+        };
+    }else{
+        $(this).val('');
+        alert('請選擇圖片格式的文件');
+    }
+});
+EOF;
 Yii::app()->clientScript->registerScript('calcFunction',$js,CClientScript::POS_READY);
 
 $js = Script::genReadonlyField();
