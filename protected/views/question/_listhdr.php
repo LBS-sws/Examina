@@ -10,4 +10,9 @@
 			;
 		?>
 	</th>
+	<th>
+		<?php echo TbHtml::link($this->getLabelName('show_int').$this->drawOrderArrow('a.show_int'),'#',$this->createOrderLink('question-list','a.show_int'))
+			;
+		?>
+	</th>
 </tr>

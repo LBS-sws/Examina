@@ -17,6 +17,7 @@ class QuestionList extends CListPageModel
             'city'=>Yii::t('examina','City'),
             'city_name'=>Yii::t('examina','City'),
             'type_name'=>Yii::t('examina','category name'),
+            'show_int'=>Yii::t('examina','show bool'),
 		);
 	}
 
@@ -68,6 +69,7 @@ class QuestionList extends CListPageModel
 					'id'=>$record['id'],
 					'title_code'=>$record['title_code'],
 					'name'=>$record['name'],
+					'show_int'=>empty($record['show_int'])?Yii::t("examina","none"):Yii::t("examina","show"),
 				);
 			}
 		}

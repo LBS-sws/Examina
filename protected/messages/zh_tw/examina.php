@@ -88,7 +88,7 @@ return array(
     //2020-12-10
     'Simulation test'=>'模擬測試',
     'Participate in the statistics'=>'參與統計（會生成記錄）',
-    'Not counted in statistics'=>'不計入統計（不生成記錄）',
+    'Not counted in statistics'=>'不計入統計（不生成記錄）- 僅出現已回答過的問題',
     //2020-12-23
     'Quiz cause'=>'測試原因',
     'Quiz end date'=>'測試截止日',
@@ -97,5 +97,8 @@ return array(
     'before title'=>'上一題',
     'Clean the class'=>'清潔類',
     'Extermination class'=>'滅蟲類',
+    'show bool'=>'是否顯示',
+    'show'=>'顯示',
+    'none'=>'不顯示',
 );
 ?>

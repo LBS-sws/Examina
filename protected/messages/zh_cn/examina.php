@@ -88,7 +88,7 @@ return array(
     //2020-12-10
     'Simulation test'=>'模拟测试',
     'Participate in the statistics'=>'参与统计（会生成记录）',
-    'Not counted in statistics'=>'不计入统计（不生成记录）',
+    'Not counted in statistics'=>'不计入统计（不生成记录）- 仅出现已回答过的问题',
     //2020-12-23
     'Quiz cause'=>'测试原因',
     'Quiz end date'=>'测试截止日',
@@ -107,5 +107,8 @@ return array(
     'down excel'=>'试题下载',
     'Clean the class'=>'清洁类',
     'Extermination class'=>'灭虫类',
+    'show bool'=>'是否显示',
+    'show'=>'显示',
+    'none'=>'不显示',
 );
 ?>

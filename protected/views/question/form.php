@@ -130,6 +130,14 @@ $this->pageTitle=Yii::app()->name . ' - question Form';
                     ); ?>
                 </div>
 			</div>
+			<div class="form-group">
+				<?php echo $form->labelEx($model,'show_int',array('class'=>"col-sm-2 control-label")); ?>
+                <div class="col-sm-5">
+                    <?php echo $form->radioButtonList($model, 'show_int',array("1"=>Yii::t("examina","show"),"0"=>Yii::t("examina","none")),
+                        array('readonly'=>($model->scenario=='view'),'inline'=>true)
+                    ); ?>
+                </div>
+			</div>
 
 		</div>
 	</div>

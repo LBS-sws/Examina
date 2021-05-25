@@ -40,6 +40,7 @@ class Examina{
                 $rows = $command->select("a.*,b.title_code,b.name,b.remark")->from("exa_examina a")
                     ->leftJoin("exa_title b","a.title_id=b.id")
                     ->where("a.join_id=:join_id and a.employee_id=:employee_id", array(':join_id'=>$join_id,':employee_id'=>$staff_id))->queryAll();
+                //var_dump($rows);die();
                 if($rows){
                     shuffle($rows);//打亂
                     foreach ($rows as $row){
@@ -64,7 +65,7 @@ class Examina{
         $staff_id = Yii::app()->user->staff_id();//當前員工
         $command = Yii::app()->db->createCommand();
         $command->reset();
-        $rows = $command->select()->from("exa_title")->where("quiz_id=:id",array(":id"=>$this->_quizId))->queryAll();
+        $rows = $command->select()->from("exa_title")->where("quiz_id=:id and show_int=1",array(":id"=>$this->_quizId))->queryAll();
         if($rows){
             $this->_testNum = $this->_testNum>count($rows)?count($rows):$this->_testNum; //測驗單題目數量不能大於試題數量
             foreach ($rows as $row){

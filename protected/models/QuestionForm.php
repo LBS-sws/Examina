@@ -14,6 +14,7 @@ class QuestionForm extends CFormModel
 	public $quiz_id;
 	public $remark;
 	public $city;
+	public $show_int=1;
 	public $answerList=array(
 	    array("id"=>"","choose"=>""),
 	    array("id"=>"","choose"=>""),
@@ -39,6 +40,7 @@ class QuestionForm extends CFormModel
             'answer_a'=>Yii::t('examina','wrong answer A'),
             'answer_b'=>Yii::t('examina','wrong answer B'),
             'answer_c'=>Yii::t('examina','wrong answer C'),
+            'show_int'=>Yii::t('examina','show bool'),
         );
 	}
 
@@ -49,7 +51,7 @@ class QuestionForm extends CFormModel
 	{
 		return array(
 			//array('id, position, leave_reason, remarks, email, staff_type, leader','safe'),
-            array('id, title_code, name, remark, quiz_id, answerList','safe'),
+            array('id, title_code, name, remark, quiz_id, answerList,show_int','safe'),
 			array('name','required'),
 			array('quiz_id','required'),
             array('quiz_id', 'numerical', 'integerOnly'=>true),
@@ -128,6 +130,7 @@ class QuestionForm extends CFormModel
 				$this->title_code = $row['title_code'];
 				$this->remark = $row['remark'];
                 $this->name = $row['name'];
+                $this->show_int = $row['show_int'];
                 $this->answerList = $this->getChooseToId();
 				break;
 			}
@@ -174,15 +177,16 @@ class QuestionForm extends CFormModel
 				break;
 			case 'new':
 				$sql = "insert into exa_title(
-							remark, name, quiz_id, city, lcu
+							remark, name, quiz_id, city, lcu, show_int
 						) values (
-							:remark, :name, :quiz_id, :city, :lcu
+							:remark, :name, :quiz_id, :city, :lcu, :show_int
 						)";
 				break;
 			case 'edit':
 				$sql = "update exa_title set
 							remark = :remark, 
 							name = :name, 
+							show_int = :show_int, 
 							luu = :luu
 						where id = :id
 						";
@@ -198,6 +202,8 @@ class QuestionForm extends CFormModel
 			$command->bindParam(':name',$this->name,PDO::PARAM_STR);
 		if (strpos($sql,':quiz_id')!==false)
 			$command->bindParam(':quiz_id',$this->quiz_id,PDO::PARAM_INT);
+		if (strpos($sql,':show_int')!==false)
+			$command->bindParam(':show_int',$this->show_int,PDO::PARAM_INT);
 
         if (strpos($sql,':city')!==false)
             $command->bindParam(':city',$city,PDO::PARAM_STR);
