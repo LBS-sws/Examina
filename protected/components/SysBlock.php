@@ -1,9 +1,12 @@
 <?php
 class SysBlock {
 	protected $checkItems;
+
+	protected $systemIsCN=0;//0：大陸。 1：台灣。2：新加坡。 3：吉隆坡
 	
 	public function __construct() {
 		$this->checkItems = require(Yii::app()->basePath.'/config/sysblock.php');
+		$this->systemIsCN = General::SystemIsCN();
 	}
 	
 	public function blockNRoute($controllerId, $functionId) {
@@ -13,7 +16,7 @@ class SysBlock {
 		
 		foreach ($this->checkItems as $key=>$value) {
 			if (!isset($sysblock[$key]) || $sysblock[$key]==false) {
-				$result = call_user_func('self::'.$value['validation']);
+				$result = call_user_func_array('self::'.$value['validation'],array($key,&$value));
 				$sysblock[$key] = $result;
 				$session['sysblock'] = $sysblock;
                 //function設置為空時，只提示一次，不限制行為(start)
@@ -259,6 +262,9 @@ class SysBlock {
     檢查一月內的質檢平均分是否低於75分，如果低於75分，需要提示用戶去培訓系統進行測試
      **/
 	public function validateExaminationHint() {
+	    if($this->systemIsCN!=1){
+	        return true;
+        }
         $dateSql = " and replace(b.entry_time,'/', '-')>='2021-01-01' ";//起始日期設置為2021-01-01
         $uid = Yii::app()->user->id;
         $suffix = Yii::app()->params['envSuffix'];
@@ -293,6 +299,9 @@ class SysBlock {
     檢查上月的質檢平均分是否低於75分，如果低於75分，用戶必须去培訓系統進行測試
      **/
 	public function validateExamination() {
+        if($this->systemIsCN!=1){
+            return true;
+        }
         $uid = Yii::app()->user->id;
         $dateSql = " and replace(b.entry_time,'/', '-')>='2021-01-01' ";//起始日期設置為2021-01-01
         $suffix = Yii::app()->params['envSuffix'];
@@ -330,57 +339,87 @@ class SysBlock {
 	}
 
     /**
-    新同事（入职未满3个月）每次登陆系统提醒（与QC未达75分一样弹出方框）
+    新同事每次登陆系统限制（三個月以內提示測驗，三個月以後限制使用）
      **/
-	public function validateNewStaffHint() {
-        $dateSql = " and replace(b.entry_time,'/', '-')>='2021-01-01' ";//起始日期設置為2021-01-01
-        $uid = Yii::app()->user->id;
-        $suffix = Yii::app()->params['envSuffix'];
-        $startDate = date("Y-m-d");
-        $date = date("Y/m/01");
-        $endDate = date("Y-m-01",strtotime("$date -3 month"));
-        $row = Yii::app()->db->createCommand()->select("b.id,b.code,b.name")->from("hr$suffix.hr_binding a")
-            ->leftJoin("hr$suffix.hr_employee b","a.employee_id=b.id")
-            ->leftJoin("hr$suffix.hr_dept f","b.position=f.id")
-            ->leftJoin("security$suffix.sec_user_access e","a.user_id=e.username")
-            ->where("replace(b.entry_time,'/', '-')>=:endDate $dateSql and replace(b.entry_time,'/', '-')<=:startDate and a.user_id=:user_id and e.system_id='quiz' and e.a_read_write like '%EM02%' and b.staff_status=0 and f.technician=1",
-                array(":user_id"=>$uid,":endDate"=>$endDate,":startDate"=>$startDate))->queryRow();//var_dump($dateSql);
-        if($row){
-            $title = Yii::app()->db->createCommand()->select("MAX(title_num/title_sum)")->from("quiz$suffix.exa_join")
-                ->where("employee_id=:employee_id",array(":employee_id"=>$row['id']))->queryScalar();
-            $title = $title===null?0:floatval($title);
-            if($title<0.85){//測驗後的正確率小於85%
-                return false;
+	public function validateNewStaff($key,&$value) {
+	    if($this->systemIsCN==0||$this->systemIsCN==1){//大陸、台灣執行
+            $dateSql = "replace(b.entry_time,'/', '-')>='2021-01-01' ";//起始日期設置為2021-01-01
+            $uid = Yii::app()->user->id;
+            $suffix = Yii::app()->params['envSuffix'];
+            $row = Yii::app()->db->createCommand()->select("b.id,b.code,b.name,b.entry_time")->from("hr$suffix.hr_binding a")
+                ->leftJoin("hr$suffix.hr_employee b","a.employee_id=b.id")
+                ->leftJoin("hr$suffix.hr_dept f","b.position=f.id")
+                ->leftJoin("security$suffix.sec_user_access e","a.user_id=e.username")
+                ->where("$dateSql and a.user_id=:user_id and e.system_id='quiz' and e.a_read_write like '%EM02%' and b.staff_status=0 and f.technician=1",
+                    array(":user_id"=>$uid))->queryRow();
+            if($row){
+                $entry_time = strtotime($row["entry_time"]);
+                if(strtotime("- 3 month")<=$entry_time&&time()>=$entry_time){
+                    //员工入职三个月以内只提示不限制行为
+                    $this->checkItems[$key]["function"]="";
+                    $value["function"]="";
+                }
+                $quizId =General::getQuizIdForMust();
+                $title = Yii::app()->db->createCommand()->select("MAX(title_num/title_sum)")->from("quiz$suffix.exa_join")
+                    ->where("employee_id=:employee_id and quiz_id='{$quizId}'",array(":employee_id"=>$row['id']))->queryScalar();
+                $title = $title===null?0:floatval($title);
+                if($title<0.85){//測驗後的正確率小於85%
+                    return false;
+                }
             }
         }
 		return true;
 	}
 
     /**
-    新同事（入职未满3个月）每次登陆系统限制（与QC未达75分一样弹出方框）
+     * 技術員每年必須測驗一次
      **/
-	public function validateNewStaff() {
-        $dateSql = " and replace(b.entry_time,'/', '-')>='2021-01-01' ";//起始日期設置為2021-01-01
+	public function EveryYearForExamination($key,&$value){
+	    if($this->systemIsCN!=0){//進大陸執行
+	        return true;
+        }
+        $dateSql = "replace(b.entry_time,'/', '-')<'2021-01-01' ";//入職日期小於2021-01-01
         $uid = Yii::app()->user->id;
         $suffix = Yii::app()->params['envSuffix'];
-        $date = date("Y/m/01");
-        $endDate = date("Y-m-01",strtotime("$date -3 month"));
-        $row = Yii::app()->db->createCommand()->select("b.id,b.code,b.name")->from("hr$suffix.hr_binding a")
+        $row = Yii::app()->db->createCommand()->select("b.id,b.code,b.name,b.entry_time")->from("hr$suffix.hr_binding a")
             ->leftJoin("hr$suffix.hr_employee b","a.employee_id=b.id")
             ->leftJoin("hr$suffix.hr_dept f","b.position=f.id")
             ->leftJoin("security$suffix.sec_user_access e","a.user_id=e.username")
-            ->where("replace(b.entry_time,'/', '-')<:endDate $dateSql and a.user_id=:user_id and e.system_id='quiz' and e.a_read_write like '%EM02%' and b.staff_status=0 and f.technician=1",
-                array(":user_id"=>$uid,":endDate"=>$endDate))->queryRow();
+            ->where("$dateSql and a.user_id=:user_id and e.system_id='quiz' and e.a_read_write like '%EM02%' and b.staff_status=0 and f.technician=1",
+                array(":user_id"=>$uid))->queryRow();
         if($row){
+            $dateTime = time();
+            //$dateTime = strtotime("2022-01-21");
+            $entryM = date("m",strtotime($row["entry_time"]));
+            $entryMD = date("m-d",strtotime($row["entry_time"]));
+            $dateYear = date("Y",$dateTime);
+            $dateMonth = date("m-d",$dateTime);
+            //如果員工的入職月份在12月，則計算上一年是否測試
+            $dateYear = (intval($entryM)>11&&$dateMonth<$entryMD)?$dateYear-1:$dateYear;
+            //$entryDate = date("Y-m-d",strtotime($row["entry_time"]));
+            $entryM = "{$dateYear}-{$entryM}-01";
+            $entryMD = $dateYear."-".$entryMD;
+            $hindStartDate = strtotime($entryMD);
+            $hindEndDate = strtotime("$entryM + 2 month -1 day");
+            $sqlStartDate = " and date_format(lcd,'%Y-%m-%d')>='{$entryMD}'";
+            $quizId =General::getQuizIdForMust();
+            if($dateTime<$hindStartDate){
+                //需要查以前有沒有測驗（不限時間）
+                $sqlStartDate = "";
+            }elseif($hindEndDate>=$dateTime&&$hindStartDate<=$dateTime){
+                //只提示不限制行为
+                $this->checkItems[$key]["function"]="";
+                $value["function"]="";
+            }
             $title = Yii::app()->db->createCommand()->select("MAX(title_num/title_sum)")->from("quiz$suffix.exa_join")
-                ->where("employee_id=:employee_id",array(":employee_id"=>$row['id']))->queryScalar();
+                ->where("employee_id=:employee_id and quiz_id='{$quizId}' $sqlStartDate",array(":employee_id"=>$row['id']))->queryScalar();
             $title = $title===null?0:floatval($title);
             if($title<0.85){//測驗後的正確率小於85%
                 return false;
             }
         }
-		return true;
-	}
+        return true;
+    }
 
 	public function test() {
 		return false;

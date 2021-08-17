@@ -26,8 +26,9 @@ $this->pageTitle=Yii::app()->name . ' - statisticsQuiz';
     <?php
     $search = array(
         'employee_name',
-        'endDate',
-        'question',
+        'city',
+        //'endDate',
+        //'question',
     );
    $this->widget('ext.layout.ListPageWidget', array(
         'title'=>Yii::t('app','Quiz results statistics'),

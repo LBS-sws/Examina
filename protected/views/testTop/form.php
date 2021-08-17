@@ -60,6 +60,12 @@ $this->pageTitle=Yii::app()->name . ' - testTop Form';
 			<?php echo $form->hiddenField($model, 'id'); ?>
             <?php echo $form->hiddenField($model, 'bumen',array("id"=>"bumen")); ?>
 
+            <div class="form-group">
+                <?php echo $form->labelEx($model,'join_must',array('class'=>"col-sm-2 control-label")); ?>
+                <div class="col-sm-3">
+                    <?php echo $form->dropDownList($model,"join_must",TestTopList::getTestType(),array('readonly'=>($model->scenario=='view')))?>
+                </div>
+            </div>
             <?php
             $this->renderPartial('//site/testTopForm',array(
                 'form'=>$form,

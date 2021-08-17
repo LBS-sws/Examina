@@ -147,8 +147,8 @@ class Examina{
     public function validateTime(){
         $date = date("Y-m-d");
         $quizList = $this->_quizList;
-        $startDate = date("Y-m-d",strtotime($quizList["start_time"]));
-        $endDate = date("Y-m-d",strtotime($quizList["end_time"]));
+        $startDate = CGeneral::toMyDate($quizList["start_time"]);
+        $endDate = CGeneral::toMyDate($quizList["end_time"]);
         if($date<$startDate||$date>$endDate){
             return false;
         }else{

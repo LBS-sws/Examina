@@ -22,7 +22,92 @@ class StatisticsQuizList extends CListPageModel
 		);
 	}
 
-	public function retrieveDataByPage($pageNum=1)
+	public function retrieveDataByPageAll($pageNum=1){
+	    switch (General::SystemIsCN()){
+            case 1://台灣
+                $this->retrieveDataByPageForTW($pageNum);
+                break;
+            default:
+                $this->retrieveDataByPageForCN($pageNum);
+        }
+    }
+
+    //大陸版
+    public function retrieveDataByPageForCN($pageNum=1){
+        $city_allow = Yii::app()->user->city_allow();
+        $suffix = Yii::app()->params['envSuffix'];
+        $quiz_id = General::getQuizIdForMust();
+        $sql1 = "select a.id,a.name,a.code,a.entry_time,b.name as city_name from hr$suffix.hr_employee a 
+                LEFT JOIN security$suffix.sec_city b ON a.city=b.code 
+                where a.staff_status=0 and a.id>0 and a.city in ($city_allow) 
+			";
+        $clause = "";
+        if (!empty($this->searchField) && !empty($this->searchValue)) {
+            $svalue = str_replace("'","\'",$this->searchValue);
+            switch ($this->searchField) {
+                case 'employee_name':
+                    $clause .= General::getSqlConditionClause('a.name',$svalue);
+                    break;
+                case 'city':
+                    $clause .= General::getSqlConditionClause('b.name',$svalue);
+                    break;
+            }
+        }
+
+        $order = "";
+        if (!empty($this->orderField)) {
+            $orderField = $this->orderField;
+            switch ($this->orderField){
+                case "m.job_staff":
+                    $orderField = "a.name";
+                    break;
+                case "m.city":
+                    $orderField = "b.name";
+                    break;
+                default:
+                    $orderField = "a.entry_time";
+            }
+            $order .= " order by ".$orderField." ";
+            if ($this->orderType=='D') $order .= "desc ";
+        }
+        $sql = $sql1.$clause.$order;
+        $records = Yii::app()->db->createCommand($sql)->queryAll();
+        $this->totalRow = 0;
+        $this->attr = array();
+        if (count($records) > 0) {
+            $startNum = ($pageNum-1)*$this->noOfItem;
+            $endNum = $pageNum*$this->noOfItem;
+            foreach ($records as $k=>$row) {
+                $bool = self::checkTestForStaff($row,$quiz_id);
+                if($bool){
+                    if($k>=$startNum&&$k<$endNum){
+                        $this->attr[] = array(
+                            'id'=>$row['id'],
+                            'employee_id'=>$row['id'],
+                            'employee_name'=>$row['name'],
+                            'city'=>$row['city_name'],
+                            'entry_time'=>date("Y-m-d",strtotime($row['entry_time'])),
+
+                            'question'=>$row['question'],
+                            'endDate'=>$row['endDate'],
+                            'testDate'=>$row["testDate"],
+                            'correctNum'=>$row["correctNum"],
+                            'correct'=>$row["correct"],
+                            'style'=>$row["style"],
+
+                        );
+                    }
+                    $this->totalRow++;
+                }
+            }
+        }
+        $session = Yii::app()->session;
+        $session['statisticsQuiz_01'] = $this->getCriteria();
+        return true;
+    }
+
+    //台灣專用
+	public function retrieveDataByPageForTW($pageNum=1)
 	{
         $city_allow = Yii::app()->user->city_allow();
         $suffix = Yii::app()->params['envSuffix'];
@@ -192,6 +277,64 @@ class StatisticsQuizList extends CListPageModel
             $row["correctNum"] = "-";
             $row["correct"] = "-";
             $row["style"] = " text-danger";
+        }
+    }
+
+
+    /**
+     * 判斷員工需不需要測驗
+     * @param $staffRow 员工表array("entry_time"=>"","id"=>"")
+     * @param $quiz_id 测验单id
+     * @return bool true：需要測驗
+     */
+    private static function checkTestForStaff(&$staffRow,$quiz_id){
+        $dateTime = time();
+        $suffix = Yii::app()->params['envSuffix'];
+        $entryDate = date("Y-m-d",strtotime($staffRow["entry_time"]));
+        $entryM = date("m",strtotime($staffRow["entry_time"]));
+        $entryMD = date("m-d",strtotime($staffRow["entry_time"]));
+        $dateYear = date("Y",$dateTime);
+        $dateMonth = date("m-d",$dateTime);
+        //如果員工的入職月份在12月，則計算上一年是否測試
+        $dateYear = (intval($entryM)>11&&$dateMonth<$entryMD)?$dateYear-1:$dateYear;
+        //$entryDate = date("Y-m-d",strtotime($row["entry_time"]));
+        $entryM = "{$dateYear}-{$entryM}-01";
+        $entryMD = $dateYear."-".$entryMD;
+        $hindStartDate = strtotime($entryMD);
+        $hindEndDate = strtotime("$entryM + 2 month -1 day");
+        $sqlStartDate = " and date_format(lcd,'%Y-%m-%d')>='{$entryMD}'";
+        if($entryDate>=date("Y-m-d",strtotime("-3 month"))&&$entryDate<=date("Y-m-d")){
+            //新入職員工(三個月以內必須測試)
+            $sqlStartDate = "";
+            $endDate = date("Y-m-d",strtotime($entryDate."+ 3 month"));
+            $staffRow["question"] = "新同事";
+        }elseif($dateTime<$hindStartDate){
+            $sqlStartDate = "";
+            $endDate = $entryMD;
+            $staffRow["question"] = ($dateYear-1)."年测验（限制）";
+        }elseif($hindEndDate>=$dateTime&&$hindStartDate<=$dateTime){
+            //老員工(一年測試一次) 今年以內2021-06-01>=2021-05-01
+            $endDate = date("Y-m-d",$hindEndDate);
+            $staffRow["question"] = $dateYear."年测验（提醒）";
+        }else{
+            //老員工(一年測試一次)今年以外
+            $endDate = date("Y-m-d",strtotime($entryMD."+1 year"));
+            $staffRow["question"] = "{$dateYear}年测验（限制）";
+        }
+        $joinRow = Yii::app()->db->createCommand()->select("id,title_num,title_sum,lcd,(title_num/title_sum) as correctNum")->from("quiz$suffix.exa_join")
+            ->where("quiz_id='{$quiz_id}' and employee_id=:employee_id $sqlStartDate",
+                array(":employee_id"=>$staffRow["id"])
+            )->order("correctNum desc")->queryRow();
+        if($joinRow&&$joinRow["correctNum"]>=0.85){
+            return false;
+        }else{
+            $correctNum = $joinRow?floatval($joinRow["correctNum"]):"";
+            $staffRow["endDate"] = $endDate;
+            $staffRow["testDate"] = $joinRow?$joinRow["lcd"]:"";
+            $staffRow["correctNum"] = $correctNum===""?"":$correctNum."%";
+            $staffRow["correct"] = $joinRow?$joinRow["title_num"]:"";
+            $staffRow["style"] = " text-danger";
+            return true;
         }
     }
 }

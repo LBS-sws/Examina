@@ -18,6 +18,7 @@ class TestTopList extends CListPageModel
 			'end_time'=>Yii::t('examina','end time'),
 			'exa_num'=>Yii::t('examina','question num'),
             'bumen_ex'=>Yii::t('examina','department'),
+            'join_must'=>Yii::t('examina','Test Type'),
 		);
 	}
 
@@ -86,13 +87,15 @@ class TestTopList extends CListPageModel
                     $bumenList = array_slice($bumenList,0,2);
                     $record['bumen_ex'] = implode(",",$bumenList).".....";
                 }
+                //$datetime = new DateTime($date);
 				$this->attr[] = array(
 					'id'=>$record['id'],
-					'start_time'=>date("Y-m-d",strtotime($record['start_time'])),
-					'end_time'=>date("Y-m-d",strtotime($record['end_time'])),
+					'start_time'=>CGeneral::toMyDate($record['start_time']),
+					'end_time'=>CGeneral::toMyDate($record['end_time']),
 					'name'=>$record['name'],
 					'exa_num'=>$record['exa_num'],
 					'bumen_ex'=>$record['bumen_ex'],
+					'join_must'=>self::getTestType($record['join_must'],true),
 				);
 			}
 		}
@@ -116,5 +119,19 @@ class TestTopList extends CListPageModel
             $arr = implode(",",$arr);
             return "($arr)";
         }
+    }
+
+    public static function getTestType($type="",$bool=false){
+        $arr = array(Yii::t("examina","general Test"),Yii::t("examina","must Test"));
+        if($bool){
+            if(key_exists($type,$arr)){
+                return $arr[$type];
+            }else{
+                return $type;
+            }
+        }else{
+            return $arr;
+        }
+
     }
 }

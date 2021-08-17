@@ -101,6 +101,7 @@ return array(
     'Communication answer'=>'第四步：沟通对答学习',
     'exam(Theory + practice)'=>'考试（理论+实操）',
     'System exam(In previous)'=>'系统操作培训（独立做单前）',
+    'Flow plan'=>'员工观看培训进度',
     //沈超添加结束
 );
 ?>

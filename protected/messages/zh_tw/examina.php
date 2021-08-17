@@ -100,5 +100,9 @@ return array(
     'show bool'=>'是否顯示',
     'show'=>'顯示',
     'none'=>'不顯示',
+
+    'general Test'=>'普通測驗',
+    'must Test'=>'必須測驗',
+    'Test Type'=>'測驗單類型',
 );
 ?>

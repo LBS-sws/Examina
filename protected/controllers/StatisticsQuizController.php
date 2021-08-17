@@ -54,7 +54,7 @@ class StatisticsQuizController extends Controller
             }
         }
         $model->determinePageNum($pageNum);
-        $model->retrieveDataByPage($model->pageNum);
+        $model->retrieveDataByPageAll($model->pageNum);
         $this->render('index',array('model'=>$model));
     }
 }

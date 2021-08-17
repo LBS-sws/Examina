@@ -93,6 +93,7 @@ return array(
 'Test categories'=>'測驗類別',
 'Quiz results statistics'=>'應測試人員統計',
 'All Quiz results statistics'=>'所有應測試人員統計',
+'Flow plan'=>'員工观看培训进度',
 //沈超添加結束
 );
 ?>

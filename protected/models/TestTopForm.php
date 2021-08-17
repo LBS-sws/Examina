@@ -20,6 +20,7 @@ class TestTopForm extends CFormModel
 	public $lcd;
 	public $bumen;
     public $bumen_ex="全部";
+    public $join_must="全部";
 	/**
 	 * Declares customized attribute labels.
 	 * If not declared here, an attribute would have a label that is
@@ -39,6 +40,7 @@ class TestTopForm extends CFormModel
             'lcd'=>Yii::t('examina','Participate in time'),
             'bumen_ex'=>Yii::t('examina','department'),
             'bumen'=>Yii::t('examina','department'),
+            'join_must'=>Yii::t('examina','Test Type'),
         );
 	}
 
@@ -49,15 +51,22 @@ class TestTopForm extends CFormModel
 	{
 		return array(
 			//array('id, position, leave_reason, remarks, email, staff_type, leader','safe'),
-            array('id, name, dis_name, start_time, end_time, exa_num, bumen, bumen_ex','safe'),
+            array('id, name, dis_name, start_time, end_time, exa_num, bumen, bumen_ex, join_must','safe'),
 			array('name','required'),
 			array('start_time','required'),
 			array('end_time','required'),
 			array('exa_num','required'),
 			array('name','validateName'),
+			array('join_must','validateMust'),
             array('exa_num', 'numerical', 'min'=>1, 'integerOnly'=>true),
 		);
 	}
+
+	public function validateMust($attribute, $params){
+	    if($this->join_must == 1){
+            Yii::app()->db->createCommand()->update("exa_quiz",array("join_must"=>0),"id!=:id",array("id"=>$this->id));
+        }
+    }
 
 	public function validateName($attribute, $params){
         $id = -1;
@@ -130,9 +139,9 @@ class TestTopForm extends CFormModel
         $arr= array(""=>"");
         $rows = Yii::app()->db->createCommand()->select("id,name")->from("exa_quiz")
             ->where("(bumen LIKE '%,$bumen,%' or bumen='') and date_format(start_time,'%Y-%m-%d')<='$date' and date_format(end_time,'%Y-%m-%d')>='$date'")
-            ->queryAll();
+            ->order("join_must desc,id desc")->queryAll();
         if($rows){
-            foreach ($rows as $row){
+            foreach ($rows as $key =>$row){
                 $arr[$row["id"]] = $row["name"];
             }
         }
@@ -225,6 +234,7 @@ class TestTopForm extends CFormModel
                 $this->exa_num = $row['exa_num'];
                 $this->bumen = $row['bumen'];
                 $this->bumen_ex = $row['bumen_ex'];
+                $this->join_must = $row['join_must'];
 				break;
 			}
 		}
@@ -258,14 +268,15 @@ class TestTopForm extends CFormModel
 				break;
 			case 'new':
 				$sql = "insert into exa_quiz(
-							dis_name, name, start_time, end_time, exa_num, bumen_ex, bumen, lcu
+							dis_name,join_must, name, start_time, end_time, exa_num, bumen_ex, bumen, lcu
 						) values (
-							:dis_name, :name, :start_time, :end_time, :exa_num, :bumen_ex, :bumen, :lcu
+							:dis_name,:join_must, :name, :start_time, :end_time, :exa_num, :bumen_ex, :bumen, :lcu
 						)";
 				break;
 			case 'edit':
 				$sql = "update exa_quiz set
 							dis_name = :dis_name, 
+							join_must = :join_must, 
 							name = :name, 
 							start_time = :start_time, 
 							end_time = :end_time, 
@@ -281,6 +292,8 @@ class TestTopForm extends CFormModel
 		$command=$connection->createCommand($sql);
 		if (strpos($sql,':id')!==false)
 			$command->bindParam(':id',$this->id,PDO::PARAM_INT);
+		if (strpos($sql,':join_must')!==false)
+			$command->bindParam(':join_must',$this->join_must,PDO::PARAM_INT);
 		if (strpos($sql,':dis_name')!==false)
 			$command->bindParam(':dis_name',$this->dis_name,PDO::PARAM_STR);
 		if (strpos($sql,':name')!==false)

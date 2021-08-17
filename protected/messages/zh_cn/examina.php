@@ -110,5 +110,9 @@ return array(
     'show bool'=>'是否显示',
     'show'=>'显示',
     'none'=>'不显示',
+
+    'general Test'=>'普通测验',
+    'must Test'=>'必须测验',
+    'Test Type'=>'测验单类型',
 );
 ?>
