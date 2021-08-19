@@ -38,8 +38,9 @@ class StatisticsQuizList extends CListPageModel
         $suffix = Yii::app()->params['envSuffix'];
         $quiz_id = General::getQuizIdForMust();
         $sql1 = "select a.id,a.name,a.code,a.entry_time,b.name as city_name from hr$suffix.hr_employee a 
+                LEFT JOIN hr$suffix.hr_dept f ON a.position=f.id 
                 LEFT JOIN security$suffix.sec_city b ON a.city=b.code 
-                where a.staff_status=0 and a.id>0 and a.city in ($city_allow) 
+                where a.staff_status=0 and a.id>0 and a.city in ($city_allow) and f.technician=1
 			";
         $clause = "";
         if (!empty($this->searchField) && !empty($this->searchValue)) {
