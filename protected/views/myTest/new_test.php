@@ -12,6 +12,7 @@ $this->pageTitle=Yii::app()->name . ' - myTest Form';
     'htmlOptions'=>array('enctype' => 'multipart/form-data')
 )); ?>
 
+<!--遺漏文件-->
 <style>
     #staffDiv .checkbox-inline{width: 100px;}
     .resultDiv.have-error .resultBody_t{color:red;}

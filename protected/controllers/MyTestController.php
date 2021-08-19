@@ -10,6 +10,7 @@ class MyTestController extends Controller
 {
 	public $function_id='EM01';
 
+//遺漏文件
     public function filters()
     {
         return array(

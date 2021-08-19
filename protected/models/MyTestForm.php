@@ -189,7 +189,8 @@ class MyTestForm extends CFormModel
         ),"id='$this->join_id'");
         $this->title_sum=$title_sum;
         $this->title_num=$title_num;
-        if(($title_num/$title_sum<0.85)&&$this->staffList["technician"]==1){
+        $mustJoinID = General::getQuizIdForMust();
+        if($mustJoinID==$this->join_id&&($title_num/$title_sum<0.85)&&$this->staffList["technician"]==1){
             $startDate = date("Y/m/d");
             $date = date("Y/m/01");
             $endDate = date("Y-m",strtotime("$date -3 month"));

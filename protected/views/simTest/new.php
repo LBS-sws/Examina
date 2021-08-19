@@ -16,6 +16,7 @@ $this->pageTitle=Yii::app()->name . ' - simTest Form';
 'layout'=>TbHtml::FORM_LAYOUT_HORIZONTAL,
 )); ?>
 
+<!--遺漏文件-->
 <section class="content-header">
 	<h1>
 		<strong><?php echo Yii::t('app','Simulation test')." - ".$model->getQuizList()["name"]; ?></strong>

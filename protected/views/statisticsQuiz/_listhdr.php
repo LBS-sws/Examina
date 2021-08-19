@@ -34,3 +34,4 @@
         <?php echo "<a href='#'>".Yii::t("examina","correct num")."</a>";?>
     </th>
 </tr>
+<!--遺漏文件-->

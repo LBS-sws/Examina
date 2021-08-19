@@ -17,6 +17,7 @@ $this->pageTitle=Yii::app()->name . ' - myTest Form';
     //'htmlOptions'=>array('enctype' => 'multipart/form-data','action' => Yii::app()->createUrl('myTest/save'))
 )); ?>
 
+<!--遺漏文件-->
 <section class="content-header">
 	<h1>
 		<strong><?php echo Yii::t('app','My test')." - ".$model->getQuizList()["name"]; ?></strong>
