@@ -163,7 +163,7 @@ $('#resultChange').on('click',function(){
         return false;
     }
     if(resultDiv.length == 0){
-        $('#simTest-form').submit();
+        resultTest();
         return false;
     };
     $('.resultDiv.now').stop().slideUp(100).removeClass('now');

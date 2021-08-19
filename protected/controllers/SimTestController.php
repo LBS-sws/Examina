@@ -9,7 +9,7 @@
 class SimTestController extends Controller
 {
 	public $function_id='EM02';
-
+//遺漏文件
     public function filters()
     {
         return array(
