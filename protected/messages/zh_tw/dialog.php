@@ -20,6 +20,7 @@ return array(
 'Save Done' => '記錄保存完成',
 'Validation Message' => '驗證信息',
 'Warning'=>'警告',
+'Hint'=>'提示',
 'Confirmation'=>'確認',
 'Are you sure to delete record?'=>'確定要刪除記錄?',
 'Are you sure to delete?'=>'確定要刪除?',

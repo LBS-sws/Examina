@@ -21,6 +21,7 @@ return array(
 	'Save Done' => '记录保存完成',
 	'Validation Message' => '验证信息',
 	'Warning'=>'警告',
+	'Hint'=>'提示',
 	'Confirmation'=>'确认',
 	'Are you sure to delete record?'=>'确定要删除记录?',
 	'Are you sure to delete?'=>'确定要删除?',

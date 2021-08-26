@@ -59,7 +59,13 @@ class SiteController extends Controller
 			Yii::app()->user->saveUserOption($uname, 'system', Yii::app()->params['systemId']);
 			$obj = new SysBlock();
 			$blkmsg = $obj->getBlockMessage(Yii::app()->params['systemId']);
-			if ($blkmsg!==false) Dialog::message(Yii::t('dialog','Warning'), $blkmsg);
+			if ($blkmsg!==false){
+			    if($blkmsg["function"] == ""){
+                    Dialog::message(Yii::t('dialog','Hint'), $blkmsg["message"]);
+                }else{
+                    Dialog::message(Yii::t('dialog','Warning'), $blkmsg["message"]);
+                }
+            }
 			$this->render('index');
 		}
 	}
