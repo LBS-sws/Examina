@@ -63,7 +63,7 @@ class SiteController extends Controller
 			    if($blkmsg["function"] == ""){
                     Dialog::message(Yii::t('dialog','Hint'), $blkmsg["message"]);
                 }else{
-                    Dialog::message(Yii::t('dialog','Warning'), $blkmsg["message"]);
+                    Dialog::message(Yii::t('dialog','Advice'), $blkmsg["message"]);
                 }
             }
 			$this->render('index');
