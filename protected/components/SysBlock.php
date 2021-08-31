@@ -17,10 +17,7 @@ class SysBlock {
         foreach ($this->checkItems as $key=>$value) {
             if (!isset($sysblock[$key]) || $sysblock[$key]==false) {
                 $result = call_user_func_array('self::'.$value['validation'],array($key,&$value));
-                $sysblock[$key] = array(
-                    "bool"=>$result,
-                    "function"=>$value["function"]
-                );
+                $sysblock[$key] = $result;
                 $session['sysblock'] = $sysblock;
                 //function設置為空時，只提示一次，不限制行為(start)
                 if($value['function']===""){
@@ -53,11 +50,8 @@ class SysBlock {
         $session = Yii::app()->session;
         if (isset($session['sysblock'])) {
             foreach ($session['sysblock'] as $key=>$value) {
-                if (!$value["bool"] && isset($this->checkItems[$key])) {
-                    return array(
-                        "message"=>$this->checkItems[$key]['message'],
-                        "function"=>$value["function"],
-                    );
+                if (!$value && isset($this->checkItems[$key])) {
+                    return $this->checkItems[$key]['message'];
                 }
             }
         }
@@ -229,7 +223,7 @@ class SysBlock {
         $city = Yii::app()->user->city();
         $suffix = Yii::app()->params['envSuffix'];
         $email=Yii::app()->user->email();
-        $lastdate = date('d')<3 ? date('Y-m-d',strtotime(date('Y-m-3').' -3 months')) : date('Y-m-d',strtotime(date('Y-m-4').' -2 months'));
+        $lastdate = date('d')<3 ? date('Y-m-3',strtotime('-3 months')) : date('Y-m-d',strtotime('-2 months'));
         $year = date("Y", strtotime($lastdate));
         $month = date("n", strtotime($lastdate));
         $sql = "select a_control from security$suffix.sec_user_access 
@@ -238,8 +232,16 @@ class SysBlock {
         $row = Yii::app()->db->createCommand($sql)->queryRow();
         if ($row===false) return true;
         $subject="月报表总汇-" .$year.'/'.$month;
+//        if($month==1){
+//            $months=12;
+//            $years=$year-1;
+//       }else{
+//            $months=$month-1;
+//            $years=$year;
+//        }
+//        $subjectlast="月报表总汇-" .$years.'/'.$months;
         $star = date("Y-m-01", strtotime($lastdate));
-        $end = date("Y-m-t", strtotime($lastdate));
+        $end = date("Y-m-31", strtotime($lastdate));
         $sql = "select * from swoper$suffix.swo_month_email               
                 where city='$city' and  request_dt>= '$star' and  request_dt<= '$end' and subject='$subject' 	
 			";
