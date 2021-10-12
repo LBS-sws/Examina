@@ -332,7 +332,7 @@ class StatisticsQuizList extends CListPageModel
             $correctNum = $joinRow?floatval($joinRow["correctNum"]):"";
             $staffRow["endDate"] = $endDate;
             $staffRow["testDate"] = $joinRow?$joinRow["lcd"]:"";
-            $staffRow["correctNum"] = $correctNum===""?"":$correctNum."%";
+            $staffRow["correctNum"] = $correctNum===""?"":($correctNum*100)."%";
             $staffRow["correct"] = $joinRow?$joinRow["title_num"]:"";
             $staffRow["style"] = " text-danger";
             return true;
