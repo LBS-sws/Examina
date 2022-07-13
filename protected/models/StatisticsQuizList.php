@@ -78,10 +78,10 @@ class StatisticsQuizList extends CListPageModel
         if (count($records) > 0) {
             $startNum = ($pageNum-1)*$this->noOfItem;
             $endNum = $pageNum*$this->noOfItem;
-            foreach ($records as $k=>$row) {
+            foreach ($records as $row) {
                 $bool = self::checkTestForStaff($row,$quiz_id);
                 if($bool){
-                    if($k>=$startNum&&$k<$endNum){
+                    if($this->totalRow>=$startNum&&$this->totalRow<$endNum){
                         $this->attr[] = array(
                             'id'=>$row['id'],
                             'employee_id'=>$row['id'],
