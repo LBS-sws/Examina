@@ -5,11 +5,13 @@
 			;
 		?>
 	</th>
+    <!--
     <th>
         <?php echo TbHtml::link($this->getLabelName('bumen_ex').$this->drawOrderArrow('a.bumen_ex'),'#',$this->createOrderLink('myTest-list','a.bumen_ex'))
         ;
         ?>
     </th>
+    -->
 	<th>
 		<?php echo TbHtml::link($this->getLabelName('exa_num').$this->drawOrderArrow('a.exa_num'),'#',$this->createOrderLink('myTest-list','a.exa_num'))
 			;
