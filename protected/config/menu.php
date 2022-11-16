@@ -23,6 +23,10 @@ return array(
                 'access'=>'SS02',
                 'url'=>'/testTop/index',
             ),
+            'menu setting'=>array(
+                'access'=>'SS03',
+                'url'=>'/menuSet/index',
+            ),
         ),
     ),
     'statistical'=>array(
