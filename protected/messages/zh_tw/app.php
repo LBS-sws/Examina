@@ -94,6 +94,17 @@ return array(
 'Quiz results statistics'=>'應測試人員統計',
 'All Quiz results statistics'=>'所有應測試人員統計',
 'Flow plan'=>'員工观看培训进度',
+    'Study guide'=>'學習指南',
+    'Study mutual'=>'學習互助',
+    'Mock test'=>'模擬考試',
+    'Markedly test'=>'綜合測驗',
+    'Technical'=>'技術部',
+    'Paper Wrong'=>'我的錯題集',
+    'Paper My'=>'我的測驗記錄',
+    'Conclude Paper'=>'測驗統計',
+    'Conclude Staff'=>'員工統計',
+    'Conclude Question'=>'試題統計',
+    'menu setting'=>'菜單配置',
 //沈超添加結束
 );
 ?>

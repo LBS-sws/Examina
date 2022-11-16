@@ -107,6 +107,7 @@ class TbApiEx extends TbApi {
 		$cs->registerScriptFile($this->assetPath.'/bower_components/bootstrap-daterangepicker/daterangepicker.js',CClientScript::POS_END);
 		$cs->registerScriptFile($this->assetPath.'/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',CClientScript::POS_END);
 		$cs->registerScriptFile($this->assetPath.'/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js',CClientScript::POS_END);
+		$cs->registerScriptFile($this->assetPath.'/bower_components/ckeditor/ckeditor.js',CClientScript::POS_END);
 		$cs->registerScriptFile($this->assetPath.'/bower_components/jquery-slimscroll/jquery.slimscroll.min.js',CClientScript::POS_END);
 		$cs->registerScriptFile($this->assetPath.'/bower_components/fastclick/lib/fastclick.js',CClientScript::POS_END);
 		$cs->registerScriptFile($this->assetPath.'/bower_components/select2/dist/js/select2.full.min.js',CClientScript::POS_END);

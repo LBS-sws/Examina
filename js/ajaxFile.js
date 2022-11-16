@@ -6,8 +6,8 @@
             var options = $.extend({
                 fileType: "gif|jpg|jpeg|png|bmp",  //允许的文件格式
                 uploadUrl: "", //上传URL地址
-                width: "",   //图片显示的宽度
-                height: 100,   //图片显示的高度
+                width: "80px",   //图片显示的宽度
+                height: "80px",   //图片显示的高度
                 imgSelector: ".imgdiv",   //图片选择器
                 uploadData: {},   //上传时需要附加的参数
 
@@ -84,11 +84,14 @@
                         return false;
                     }
 
+                    var imgSrcLocal = getPhoto($fileInput.get(0));
+
                     //创建表单
                     var $form = methods.createForm();
 
                     //把上传控件附加到表单
                     $fileInput.appendTo($form);
+                    fileBox.find(".text-error").remove();
                     fileBox.append("<label class='uploading-label'>正在上传...</label>");
                     //$this.prop("disabled", true);
 
@@ -106,10 +109,12 @@
                         $fileInput.hide();
                         if(response.status == 1){
                             $fileInput.hide();
-                            fileBox.find("input[type='hidden']:first").val(response.data);
-                            fileBox.append("<div class='media fileImgShow'><div class='media-left'><img height='80px' src='"+response.data+"'></div><div class='media-body media-bottom'><a>修改</a></div></div>")
+                            fileBox.find("input[type='hidden']:first").val(response.imgType);
+                            fileBox.append("<div class='media fileImgShow'><div class='media-left'><img width='"+options.width+"' src='"+imgSrcLocal+"'></div><div class='media-body media-bottom'><a>修改</a></div></div>")
                         }else{
-                            fileBox.append("<label>上傳失敗，請刷新頁面</label>")
+                            $this.val('');
+                            $fileInput.show();
+                            fileBox.append("<label class='text-error'>"+response.error.file+"</label>")
                         }
                     };
 
@@ -124,4 +129,32 @@
         }
     });
 })(jQuery)
+
+
+function getPhoto(node) {
+    var imgURL = "";
+    try{
+        var file = null;
+        if(node.files && node.files[0] ){
+            file = node.files[0];
+        }else if(node.files && node.files.item(0)) {
+            file = node.files.item(0);
+        }
+        //Firefox 因安全性问题已无法直接通过input[file].value 获取完整的文件路径
+        try{
+            imgURL =  file.getAsDataURL();
+        }catch(e){
+            imgURL = window.URL.createObjectURL(file);
+        }
+    }catch(e){
+        if (node.files && node.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                imgURL = e.target.result;
+            };
+            reader.readAsDataURL(node.files[0]);
+        }
+    }
+    return imgURL;
+}
 

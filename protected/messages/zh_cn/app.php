@@ -102,6 +102,17 @@ return array(
     'exam(Theory + practice)'=>'考试（理论+实操）',
     'System exam(In previous)'=>'系统操作培训（独立做单前）',
     'Flow plan'=>'员工观看培训进度',
+    'Study guide'=>'学习指南',
+    'Study mutual'=>'学习互助',
+    'Mock test'=>'模拟考试',
+    'Markedly test'=>'综合测验',
+    'Technical'=>'技术部',
+    'Paper Wrong'=>'我的错题集',
+    'Paper My'=>'我的测验记录',
+    'Conclude Paper'=>'测验统计',
+    'Conclude Staff'=>'员工统计',
+    'Conclude Question'=>'试题统计',
+    'menu setting'=>'菜单配置',
     //沈超添加结束
 );
 ?>
