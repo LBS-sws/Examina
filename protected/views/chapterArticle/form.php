@@ -5,7 +5,7 @@ if($this->function_id!=$model->menu_code){
 $this->pageTitle=Yii::app()->name . ' - ChapterArticle Form';
 ?>
 <?php
-Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . "/css/study.css?1.1");//
+Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . "/css/study.css?2.1");//
 ?>
 
 <?php $form=$this->beginWidget('TbActiveForm', array(
@@ -74,7 +74,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . "/css/study.css?
 		</div>
 	</div>
     <!--答题卡-->
-    <div class="visible-lg-block answer-sheet">
+    <div class="answer-sheet">
         <div class="sheet-div">
             <?php
             echo ChapterArticleModel::showAnswerSheet($model->paper_list,true);

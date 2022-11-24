@@ -17,7 +17,7 @@
 .img-article img{ width: 100%;}
 .article-body{ word-break: break-all;}
 .article-body>h4,.article-body>p{ word-break: break-all;}
-.article-div .media-body{ padding-bottom: 30px;}
+.article-div .media-body{ padding-bottom: 15px;}
 .article-footer{ position: absolute;bottom: 15px;right: 22px;left: 273px;height: 25px;}
 .article-footer>.footer-date{ float:left;color: #ccc;}
 .article-footer>.footer-link{ float:right;}
@@ -37,7 +37,7 @@
 .resultBody .text-primary:after{ content: "\f00c"}
 .resultBody .text-danger:after{ content: "\f00d"}
 
-.answer-sheet{ position: fixed;right: 20px;top:125px;width: 16.6%;}
+.answer-sheet{ position: fixed;right: 20px;top:125px;}
 .answer-sheet>div{ width: 200px;margin: 0 auto;padding:10px 5px;border: 1px solid #d2d6de;border-radius: 5px;box-shadow: 1px 1px 1px rgba(0,0,0,0.1);background: #fff;}
 .list-inline.answer-sheet-ul{
 	margin: 0px;
@@ -62,3 +62,17 @@
 .answer-sheet-ul>li.success{ background: #3da600;color: #fff;}
 .checkbox.disabled>label{ pointer-events: none;}
 .radio.disabled>label{ pointer-events: none;}
+@media (max-width: 750px){
+	.article-div .media,.article-div .media-body,.article-div .media-left,.article-div .media-right{
+		display: block;width: 100%;
+	}
+	.article-div .media-left{padding-right: 0px;}
+	.article-div .media-right{padding-left: 0px;}
+	.article-div .media-body{padding-left: 10px;padding-right: 10px;}
+	.article-footer{ left: 28px;}
+	.img-article{ width: 100%;height: auto;max-height: 175px;}
+
+	.answer-sheet{ position: relative;top: 0px;right: 0px;width: 100%;}
+	.answer-sheet>div{ width: 100%;}
+	.list-inline.answer-sheet-ul{min-height: 30px;}
+}

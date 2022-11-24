@@ -5,7 +5,7 @@ if($this->function_id!=$model->menu_code){
 $this->pageTitle=Yii::app()->name . ' - TeStudy';
 ?>
 <?php
-Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . "/css/study.css?1.2");//
+Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . "/css/study.css?2.1");//
 ?>
 <section class="content-header">
     <h1><?php echo $model->class_name;?></h1>

@@ -5,7 +5,7 @@ if($this->function_id!=$model->menu_code){
 $this->pageTitle=Yii::app()->name . ' - concludeQuestion Form';
 ?>
 <?php
-Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . "/css/study.css?1.1");//
+Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . "/css/study.css?2.1");//
 ?>
 <style>
     #staffDiv .checkbox-inline{width: 100px;}

@@ -5,7 +5,7 @@ if($this->function_id!=$model->menu_code){
 $this->pageTitle=Yii::app()->name . ' - Mock test';
 ?>
 <?php
-Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . "/css/study.css?1.1");//
+Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . "/css/study.css?2.1");//
 ?>
 <section class="content-header">
     <h1><?php echo Yii::t("app","Mock test");?><small>模拟测试不会保存到“测验统计”及“我的测验记录”，但错题会保存到“我的错题集”</small></h1>
