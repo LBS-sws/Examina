@@ -70,7 +70,7 @@
 	.article-div .media-right{padding-left: 0px;}
 	.article-div .media-body{padding-left: 10px;padding-right: 10px;}
 	.article-footer{ left: 28px;}
-	.img-article{ width: 100%;height: auto;max-height: 175px;}
+	.img-article{ width: 100%;height: auto;max-height: 175px;border-bottom:1px solid #d2d6de}
 
 	.answer-sheet{ position: relative;top: 0px;right: 0px;width: 100%;}
 	.answer-sheet>div{ width: 100%;}
