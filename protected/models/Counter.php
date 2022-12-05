@@ -1,55 +1,30 @@
 <?php
 
 class Counter {
-	public static function countConfReq() {
-		$rtn = 0;
+    public static function countAuditMutual() {
+        $arr = array();
+        $menuRows = Yii::app()->db->createCommand()->select("id,menu_code")
+            ->from("exa_setting")->where("display=1")->queryAll();
+        if($menuRows){
+            foreach ($menuRows as $menu){
+                $count = Yii::app()->db->createCommand()->select("count(a.id)")->from("exa_mutual a")
+                    ->where("a.menu_id=:menu_id and a.mutual_state=1",array(":menu_id"=>$menu["id"]))
+                    ->queryScalar();
+                $arr[]=array('code'=>$menu["menu_code"]."10",'count'=>$count,'color'=>"bg-yellow");
+            }
+        }
+        return $arr;
+    }
 
-		$wf = new WorkflowPayment;
-		$wf->connection = Yii::app()->db;
-		$list = $wf->getPendingRequestIdList('PAYMENT', 'PB', Yii::app()->user->id);
-		$items = empty($list) ? array() : explode(',',$list);
-		$rtn = count($items);
-
-		return $rtn;
-	}
-
-	public static function countApprReq() {
-		$rtn = 0;
-
-		$wf = new WorkflowPayment;
-		$wf->connection = Yii::app()->db;
-		$list = $wf->getPendingRequestIdList('PAYMENT', 'PA', Yii::app()->user->id);
-		$items = empty($list) ? array() : explode(',',$list);
-		$rtn = count($items);
-
-		return $rtn;
-	}
-	
-	public static function countReimb() {
-		$rtn = 0;
-		
-		$wf = new WorkflowPayment;
-		$wf->connection = Yii::app()->db;
-		$list1 = $wf->getPendingRequestIdList('PAYMENT', 'PR', Yii::app()->user->id);
-		$items = empty($list1) ? array() : explode(',',$list1);
-		$rtn = count($items);
-		
-		$list2 = $wf->getPendingRequestIdList('PAYMENT', 'QR', Yii::app()->user->id);
-		$items = empty($list2) ? array() : explode(',',$list2);
-		$rtn += count($items);
-		
-		return $rtn;
-	}
-	
 	public static function countSign() {
 		$rtn = 0;
-		
+
 		$wf = new WorkflowPayment;
 		$wf->connection = Yii::app()->db;
 		$list = $wf->getPendingRequestIdList('PAYMENT', 'PS', Yii::app()->user->id);
 		$items = empty($list) ? array() : explode(',',$list);
 		$rtn = count($items);
-		
+
 		return $rtn;
 	}
 }

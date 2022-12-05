@@ -194,6 +194,7 @@ class MenuSetForm extends CFormModel
 	        array("itemName"=>"Mock test","action"=>"MockChapter","num"=>"02"),//模擬考試
             array("itemName"=>"Markedly test","action"=>"MarkedlyTest","num"=>"07"),//综合测验
 	        array("itemName"=>"Study mutual","action"=>"Mutual","num"=>"03"),//學習互動
+	        array("itemName"=>"Study mutual audit","action"=>"MutualAudit","num"=>"10"),//審核學習互動
 	        array("itemName"=>"Paper Wrong","action"=>"PaperWrong","num"=>"04"),//错题集
 	        array("itemName"=>"Paper My","action"=>"PaperMy","num"=>"05"),//我的测验单
 	        array("itemName"=>"Conclude Paper","action"=>"concludePaper","num"=>"06"),//测验统计

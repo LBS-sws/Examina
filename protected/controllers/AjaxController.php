@@ -142,6 +142,9 @@ class AjaxController extends Controller
 			}
 //			} 
 		}
+		//动态审核提示数字
+        $list = Counter::countAuditMutual();
+        $rtn = array_merge($rtn,$list);
 		echo json_encode($rtn);
 		Yii::app()->end();
 	}

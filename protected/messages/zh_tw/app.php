@@ -105,6 +105,7 @@ return array(
     'Conclude Staff'=>'員工統計',
     'Conclude Question'=>'試題統計',
     'menu setting'=>'菜單配置',
+    'Study mutual audit'=>'審核學習互動',
 //沈超添加結束
 );
 ?>
