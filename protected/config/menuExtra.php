@@ -1,52 +1,9 @@
 <?php
 
 return array(
-    /*
-    'Technical'=>array(
-        'access'=>'TE',
-		'icon'=>'fa-pencil',
-        'items'=>array(
-            'Study guide'=>array( //學習指南
-                'access'=>'TE01',
-                'url'=>'/StudyClass/index?index=1&menu_code=TE',
-            ),
-            'Mock test'=>array( //模擬考試
-                'access'=>'TE02',
-                'url'=>'/MockChapter/index?index=1&menu_code=TE',
-            ),
-            'Markedly test'=>array( //综合测验
-                'access'=>'TE07',
-                'url'=>'/MarkedlyTest/index?index=1&menu_code=TE',
-            ),
-            'Study mutual'=>array( //學習互動
-                'access'=>'TE03',
-                'url'=>'/Mutual/index?index=1&menu_code=TE',
-            ),
-            'Paper Wrong'=>array( //错题集
-                'access'=>'TE04',
-                'url'=>'/PaperWrong/index?index=1&menu_code=TE',
-            ),
-            'Paper My'=>array( //我的测验单
-                'access'=>'TE05',
-                'url'=>'/PaperMy/index?index=1&menu_code=TE',
-            ),
-            'Conclude Paper'=>array( //测验统计
-                'access'=>'TE06',
-                'url'=>'/concludePaper/index?index=1&menu_code=TE',
-            ),
-            'Conclude Staff'=>array( //员工统计
-                'access'=>'TE08',
-                'url'=>'/concludeStaff/index?index=1&menu_code=TE',
-            ),
-            'Conclude Question'=>array( //试题统计
-                'access'=>'TE09',
-                'url'=>'/concludeQuestion/index?index=1&menu_code=TE',
-            ),
-        ),
-    ),
-    'examina'=>array(
+    'examina'=>array(//舊系統菜單
         'access'=>'EM',
-		'icon'=>'fa-pencil',
+        'icon'=>'fa-pencil',
         'items'=>array(
             'My test'=>array(
                 'access'=>'EM01',
@@ -58,27 +15,23 @@ return array(
             ),
         ),
     ),
-    */
     'System Setting'=>array(
         'access'=>'SS',
         'icon'=>'fa-gear',
         'items'=>array(
-            /*
-            'Test list'=>array(
+            'Test list'=>array(//舊系統菜單
                 'access'=>'SS02',
                 'url'=>'/testTop/index',
             ),
-            */
             'menu setting'=>array(
                 'access'=>'SS03',
                 'url'=>'/menuSet/index',
             ),
         ),
     ),
-    /*
-    'statistical'=>array(
+    'statistical'=>array(//舊系統菜單
         'access'=>'SC',
-		'icon'=>'fa-bar-chart',
+        'icon'=>'fa-bar-chart',
         'items'=>array(
             'Test results statistics'=>array(
                 'access'=>'SC01',
@@ -98,9 +51,9 @@ return array(
             ),
         ),
     ),
-    'training process'=>array(
+    'training process'=>array(//舊系統菜單
         'access'=>'TP',
-		'icon'=>'fa-superpowers',
+        'icon'=>'fa-superpowers',
         'items'=>array(
             'Enterprise situation'=>array(
                 'access'=>'TP01',
@@ -126,11 +79,6 @@ return array(
                 'access'=>'TP06',
                 'url'=>'/examPrevious/index',
             ),
-            'Flow plan'=>array(
-                'access'=>'TP07',
-                'url'=>'/flowPlan/index',
-            ),
         ),
     ),
-    */
 );

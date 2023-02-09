@@ -66,7 +66,7 @@ class MenuSetForm extends CFormModel
         $row = Yii::app()->db->createCommand()->select("id")->from("exa_setting")
             ->where('menu_code=:menu_code and id!=:id',
                 array(':menu_code'=>$this->menu_code,':id'=>$id))->queryRow();
-        if($row){
+        if($row||in_array($this->menu_code,array("TP","SC","SS","EM"))){
             $message = "菜单编号已存在，请重新命名";
             $this->addError($attribute,$message);
         }
