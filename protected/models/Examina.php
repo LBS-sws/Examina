@@ -86,7 +86,7 @@ class Examina{
             $rows = $command->select("a.title_id,b.judge")->from("exa_examina a")
                 ->leftJoin("exa_title_choose b","a.choose_id=b.id")
                 ->leftJoin("exa_title c","a.title_id=c.id")
-                ->where("a.employee_id=:employee_id and c.quiz_id=:quiz_id $exprSql",
+                ->where("a.employee_id=:employee_id and c.show_int=1 and c.quiz_id=:quiz_id $exprSql",
                     array(':employee_id'=>$staff_id,':quiz_id'=>$this->_quizId))->queryAll();
             if($rows){
                 foreach ($rows as $row){
