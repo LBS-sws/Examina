@@ -415,11 +415,7 @@ class SysBlock {
             ->leftJoin("hr$suffix.hr_dept f","b.position=f.id")
             ->leftJoin("security$suffix.sec_user_access e","a.user_id=e.username")
             ->where("a.user_id=:user_id $dateSql and e.system_id='quiz' and e.a_read_write like '%EM02%' and f.technician=1",array(":user_id"=>$uid))->queryRow();
-if($uid=="TNT0038"){
-    echo "user:<br/>";
-    var_dump($row);
-    echo "<br/>";
-}
+
         if($row){//技術員需要驗證質檢分數
             $date = date("Y/m/01");
             $date = date("Y-m",strtotime("$date -2 month"));
@@ -427,25 +423,12 @@ if($uid=="TNT0038"){
             $result = Yii::app()->db->createCommand()->select("date_format(qc_dt,'%Y-%m') as qc_date,avg(qc_result) as result")->from("swoper$suffix.swo_qc")
                 ->where("date_format(qc_dt,'%Y-%m')<='$date' and job_staff like '%$username' and date_format(qc_dt,'%Y-%m')>='2021-01'")
                 ->group("qc_date")->getText();
-			if($uid=="TNT0038"){
-                echo "swo_qc:<br/>";
-                $test = Yii::app()->db->createCommand()->select("date_format(qc_dt,'%Y-%m') as qc_date,avg(qc_result) as result")->from("swoper$suffix.swo_qc")
-                    ->where("date_format(qc_dt,'%Y-%m')<='$date' and job_staff like '%$username' and date_format(qc_dt,'%Y-%m')>='2021-01'")
-                    ->group("qc_date")->queryRow();
-                var_dump($test);
-                echo "<br/>";
-            }
-            $result = Yii::app()->db->createCommand()->select("a.qc_date,a.result")
+
+            $result = Yii::app()->db->createCommand()->select("a.qc_date")
                 ->from("($result) a")
                 ->where("a.result<75")//檢查分數是否低於75分
                 ->order("a.qc_date desc")
                 ->queryScalar();
-            if($uid=="TNT0038"){
-                echo "result:<br/>";
-                var_dump($result);
-                echo "<br/>";
-				die();
-            }
             if($result){
                 $nowMonth = date("Y/m/01");
                 $nowMonth = date("Y-m",strtotime("$nowMonth -1 month"));
