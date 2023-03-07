@@ -418,7 +418,7 @@ class SysBlock {
 if($uid=="TNT0038"){
     echo "user:<br/>";
     var_dump($row);
-    echo "br/>";
+    echo "<br/>";
 }
         if($row){//技術員需要驗證質檢分數
             $date = date("Y/m/01");
@@ -434,13 +434,18 @@ if($uid=="TNT0038"){
                     ->group("qc_date")->queryRow();
                 var_dump($test);
                 echo "<br/>";
-                die();
             }
-            $result = Yii::app()->db->createCommand()->select("a.qc_date")
+            $result = Yii::app()->db->createCommand()->select("a.qc_date,a.result")
                 ->from("($result) a")
                 ->where("a.result<75")//檢查分數是否低於75分
                 ->order("a.qc_date desc")
                 ->queryScalar();
+            if($uid=="TNT0038"){
+                echo "result:<br/>";
+                var_dump($result);
+                echo "<br/>";
+				die();
+            }
             if($result){
                 $nowMonth = date("Y/m/01");
                 $nowMonth = date("Y-m",strtotime("$nowMonth -1 month"));
