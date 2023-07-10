@@ -1,9 +1,9 @@
 <?php
-$this->pageTitle=Yii::app()->name . ' - statisticsQuiz';
+$this->pageTitle=Yii::app()->name . ' - statisticsAll';
 ?>
 
 <?php $form=$this->beginWidget('TbActiveForm', array(
-    'id'=>'statisticsQuiz-list',
+    'id'=>'statisticsAll-list',
     'enableClientValidation'=>true,
     'clientOptions'=>array('validateOnSubmit'=>true,),
     'layout'=>TbHtml::FORM_LAYOUT_INLINE,
@@ -11,7 +11,7 @@ $this->pageTitle=Yii::app()->name . ' - statisticsQuiz';
 
 <section class="content-header">
     <h1>
-        <strong><?php echo Yii::t('app','Quiz results statistics'); ?></strong>
+        <strong><?php echo "所有答题列表"; ?></strong>
     </h1>
     <!--
         <ol class="breadcrumb">
@@ -26,26 +26,24 @@ $this->pageTitle=Yii::app()->name . ' - statisticsQuiz';
     <div class="box"><div class="box-body">
             <div class="btn-group" role="group">
                 <?php
-                //var_dump(Yii::app()->session['rw_func']);
                 if (Yii::app()->user->validRWFunction('SC04'))
-                    echo TbHtml::button('所有测试', array(
-                        'submit'=>Yii::app()->createUrl('statisticsAll/index'),
+                    echo TbHtml::button('返回', array(
+                        'submit'=>Yii::app()->createUrl('statisticsQuiz/index'),
                     ));
                 ?>
             </div>
         </div></div>
     <?php
     $search = array(
+        'quiz_name',
         'employee_name',
-        'city',
-        //'endDate',
-        //'question',
+        'city_name',
     );
-   $this->widget('ext.layout.ListPageWidget', array(
-        'title'=>Yii::t('app','Quiz results statistics'),
+    $this->widget('ext.layout.ListPageWidget', array(
+        'title'=>"所有测试人员",
         'model'=>$model,
-        'viewhdr'=>'//statisticsQuiz/_listhdr',
-        'viewdtl'=>'//statisticsQuiz/_listdtl',
+        'viewhdr'=>'//statisticsAll/_listhdr',
+        'viewdtl'=>'//statisticsAll/_listdtl',
         'gridsize'=>'24',
         'height'=>'600',
         'search'=>$search,
@@ -61,7 +59,7 @@ echo $form->hiddenField($model,'orderType');
 <?php $this->endWidget(); ?>
 
 <?php
-$js = Script::genTableRowClick();
-Yii::app()->clientScript->registerScript('rowClick',$js,CClientScript::POS_READY);
+//$js = Script::genTableRowClick();
+//Yii::app()->clientScript->registerScript('rowClick',$js,CClientScript::POS_READY);
 ?>
 
