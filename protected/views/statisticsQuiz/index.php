@@ -27,7 +27,7 @@ $this->pageTitle=Yii::app()->name . ' - statisticsQuiz';
             <div class="btn-group" role="group">
                 <?php
                 //var_dump(Yii::app()->session['rw_func']);
-                if (Yii::app()->user->validRWFunction('SC04'))
+                if (Yii::app()->user->validFunction('SS03'))
                     echo TbHtml::button('所有测试', array(
                         'submit'=>Yii::app()->createUrl('statisticsAll/index'),
                     ));
