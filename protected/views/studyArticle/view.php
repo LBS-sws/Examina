@@ -63,7 +63,6 @@ $this->pageTitle=Yii::app()->name . ' - StudyArticle Form';
 $link = Yii::app()->createUrl('StudyArticle/hits');
 $js="
 $('#study_article_body a').click(function(e){
-    e.preventDefault();
     var startStr = $(this).data('start');
     var link_url = $(this).attr('href');
     var that = $(this);
@@ -80,18 +79,13 @@ $('#study_article_body a').click(function(e){
             dataType: 'json',
             success: function(data) {
                 that.data('start','off');
-                if($('#hitsClick').length>0){
-                    $('#hitsClick').parent('a').remove();
-                }
-                var hitsClick = that.clone();
-                hitsClick.css({ display:'block',width:'0px',height:'0px',overflow:'hidden'}).html(\"<p id='hitsClick'></p>\");
-                $('body').append(hitsClick);
-                $('#hitsClick').trigger('click');
             },
             error: function(data) { // if error occured
                 alert('Error occured.please try again');
             }
         });
+    }else{
+        e.preventDefault();
     }
 });
 ";
