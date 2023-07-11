@@ -30,7 +30,7 @@ class VideoHitsList extends CListPageModel
         );
     }
 
-    public function retrieveAll($menu_id,$pageNum=1){
+    public function retrieveAll($menu_id,$pageNum=1,$test=false){
         $menu = Yii::app()->db->createCommand()->select("menu_name,menu_code")
             ->from("exa_setting")
             ->where("id =:id",array(":id"=>$menu_id))->queryRow();
@@ -38,13 +38,13 @@ class VideoHitsList extends CListPageModel
             $this->menu_id = $menu_id;
             $this->menu_name = $menu["menu_name"];
             $this->menu_code = $menu["menu_code"].$this->code_pre;
-            $this->retrieveDataByPage($pageNum);
+            $this->retrieveDataByPage($pageNum,$test);
             return true;
         }
         return false;
     }
 
-    public function retrieveDataByPage($pageNum=1)
+    public function retrieveDataByPage($pageNum=1,$test=false)
     {
         $suffix = Yii::app()->params['envSuffix'];
         $city = Yii::app()->user->city();
@@ -94,6 +94,9 @@ class VideoHitsList extends CListPageModel
         $sql = $this->sqlWithPageCriteria($sql, $this->pageNum);
         $records = Yii::app()->db->createCommand($sql)->queryAll();
         $this->attr = array();
+        if($test){//添加虛擬數據
+            $this->totalRow+=$this->preTestList($records);
+        }
         if (count($records) > 0) {
             foreach ($records as $k=>$record) {
                 $this->attr[] = array(
@@ -114,4 +117,11 @@ class VideoHitsList extends CListPageModel
         return true;
     }
 
+    private function preTestList(&$records){
+        $records=$records?$records:array();
+        $model = new VideoHitsModel($this->menu_id);
+        $list = $model->getRoundList();
+        $records = array_merge($records,$list);
+        return count($list);
+    }
 }

@@ -68,7 +68,7 @@ class VideoHitsController extends Controller
         return true;
     }
 
-    public function actionIndex($index,$pageNum=0){
+    public function actionIndex($index,$pageNum=0,$test=false){
         $model = new VideoHitsList;
         if (isset($_POST['VideoHitsList'])) {
             $model->attributes = $_POST['VideoHitsList'];
@@ -80,7 +80,7 @@ class VideoHitsController extends Controller
             }
         }
         $model->determinePageNum($pageNum);
-        $model->retrieveAll($index,$model->pageNum);
+        $model->retrieveAll($index,$model->pageNum,$test);
         $this->render('index',array('model'=>$model));
     }
 }
