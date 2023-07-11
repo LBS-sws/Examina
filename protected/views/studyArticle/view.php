@@ -51,7 +51,7 @@ $this->pageTitle=Yii::app()->name . ' - StudyArticle Form';
 			<?php echo $form->hiddenField($model, 'menu_id'); ?>
 			<?php echo $form->hiddenField($model, 'class_id'); ?>
             <h2 class="text-center"><?php echo $model->study_title;?></h2>
-            <div>
+            <div id="study_article_body">
                 <?php echo $model->study_body;?>
             </div>
             <p class="text-right"><small><?php echo $model->study_date;?></small></p>
@@ -60,7 +60,42 @@ $this->pageTitle=Yii::app()->name . ' - StudyArticle Form';
 </section>
 
 <?php
-
+$link = Yii::app()->createUrl('StudyArticle/hits');
+$js="
+$('#study_article_body a').click(function(e){
+    e.preventDefault();
+    var startStr = $(this).data('start');
+    var link_url = $(this).attr('href');
+    var that = $(this);
+    if(startStr==undefined||startStr=='off'){
+        $(this).data('start','on');
+        $.ajax({
+            type: 'POST',
+            url: '{$link}',
+            data: {
+                menu_id:'{$model->menu_id}',
+                study_id:'{$model->id}',
+                link_url:link_url
+            },
+            dataType: 'json',
+            success: function(data) {
+                that.data('start','off');
+                if($('#hitsClick').length>0){
+                    $('#hitsClick').parent('a').remove();
+                }
+                var hitsClick = that.clone();
+                hitsClick.css({ display:'block',width:'0px',height:'0px',overflow:'hidden'}).html(\"<p id='hitsClick'></p>\");
+                $('body').append(hitsClick);
+                $('#hitsClick').trigger('click');
+            },
+            error: function(data) { // if error occured
+                alert('Error occured.please try again');
+            }
+        });
+    }
+});
+";
+Yii::app()->clientScript->registerScript('calcFunction',$js,CClientScript::POS_READY);
 $js = Script::genReadonlyField();
 Yii::app()->clientScript->registerScript('readonlyClass',$js,CClientScript::POS_READY);
 ?>

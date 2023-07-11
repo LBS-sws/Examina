@@ -200,6 +200,7 @@ class MenuSetForm extends CFormModel
 	        array("itemName"=>"Conclude Paper","action"=>"concludePaper","num"=>"06"),//测验统计
 	        array("itemName"=>"Conclude Staff","action"=>"concludeStaff","num"=>"08"),//员工统计
 	        array("itemName"=>"Conclude Question","action"=>"concludeQuestion","num"=>"09"),//试题统计
+	        array("itemName"=>"Video link hits","action"=>"videoHits","num"=>"11"),//链接点击量
         );
         $rows = Yii::app()->db->createCommand()->select("id,menu_name,menu_code")->from("exa_setting")
             ->where("display=1")->order("z_index asc")->queryAll();

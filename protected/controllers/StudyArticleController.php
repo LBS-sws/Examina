@@ -42,7 +42,7 @@ class StudyArticleController extends Controller
 				'expression'=>array('StudyArticleController','allowReadWrite'),
 			),
 			array('allow', 
-				'actions'=>array('index','view'),
+				'actions'=>array('index','view','hits'),
 				'expression'=>array('StudyArticleController','allowReadOnly'),
 			),
             array('allow',
@@ -121,6 +121,16 @@ class StudyArticleController extends Controller
 		} else {
 			$this->render('view',array('model'=>$model,));
 		}
+	}
+
+	public function actionHits(){
+        if(Yii::app()->request->isAjaxRequest) {//是否ajax请求
+            $model = new StudyArticleModel();
+            $model->saveLinkHits();
+            echo CJSON::encode(array('status'=>1));
+        }else{
+            $this->redirect(Yii::app()->createUrl(''));
+        }
 	}
 	
 	public function actionDelete()

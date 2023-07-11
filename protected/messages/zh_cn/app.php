@@ -115,6 +115,7 @@ return array(
     'Conclude Question'=>'试题统计',
     'menu setting'=>'菜单配置',
     'Study mutual audit'=>'审核学习互动',
+    'Video link hits'=>'视频链接点击量',
     //沈超添加结束
 );
 ?>

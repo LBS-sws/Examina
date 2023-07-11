@@ -191,4 +191,37 @@ class StudyArticleModel extends CFormModel
             ), "id={$this->class_id}");
         }
     }
+
+    public function saveLinkHits(){
+        $uid = Yii::app()->user->id;
+        $menu_id = key_exists("menu_id",$_POST)?$_POST["menu_id"]:0;
+        $study_id = key_exists("study_id",$_POST)?$_POST["study_id"]:0;
+        $link_url = key_exists("link_url",$_POST)?$_POST["link_url"]:'';
+        $employee_id = self::getEmployeeId();
+        if($employee_id){
+            Yii::app()->db->createCommand()->insert("exa_link_hits", array(
+                'menu_id'=>$menu_id,
+                'study_id'=>$study_id,
+                'link_url'=>$link_url,
+                'employee_id'=>$employee_id,
+                'hit_type'=>1,
+                'hit_date'=>date("Y/m/d H:i:s"),
+                'lcu'=>$uid,
+            ));
+        }
+    }
+
+    public static function getEmployeeId(){
+        $uid = Yii::app()->user->id;
+        $suffix = Yii::app()->params['envSuffix'];
+        $rs = Yii::app()->db->createCommand()->select("b.id,b.code,b.name")
+            ->from("hr$suffix.hr_binding a")
+            ->leftJoin("hr$suffix.hr_employee b","a.employee_id = b.id")
+            ->where("a.user_id ='$uid'")->queryRow();
+        if($rs){
+            return $rs["id"];
+        }else{
+            return false;
+        }
+    }
 }

@@ -128,5 +128,6 @@ return array(
     'reject remark' => '拒絕原因',
     'Rejected' => '拒絕原因',
     'audit all' => '全部通過',
+    'hit date' => '點擊時間',
 );
 ?>
