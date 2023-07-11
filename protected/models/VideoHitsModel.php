@@ -123,7 +123,7 @@ class VideoHitsModel
             ->queryAll();
         if($rs){
             foreach ($rs as $row){
-                $this->employee_list[$row["id"]] = $row;
+                $this->employee_list[] = $row;
             }
         }
     }
