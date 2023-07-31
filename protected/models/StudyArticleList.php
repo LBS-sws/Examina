@@ -91,7 +91,7 @@ class StudyArticleList extends CListPageModel
             $order .= " order by ".$this->orderField." ";
             if ($this->orderType=='D') $order .= "desc ";
         }else{
-            $order .= " order by z_index asc ";
+            $order .= " order by z_index asc,study_date desc,id desc ";
         }
 
         $sql = $sql2.$clause;

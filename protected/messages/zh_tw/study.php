@@ -129,5 +129,7 @@ return array(
     'Rejected' => '拒絕原因',
     'audit all' => '全部通過',
     'hit date' => '點擊時間',
+    'Article Body (pc)'=>'文章內容(PC端)',
+    'Article Body (min)'=>'文章內容(手機端)',
 );
 ?>

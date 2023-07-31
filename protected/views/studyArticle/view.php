@@ -52,7 +52,12 @@ $this->pageTitle=Yii::app()->name . ' - StudyArticle Form';
 			<?php echo $form->hiddenField($model, 'class_id'); ?>
             <h2 class="text-center"><?php echo $model->study_title;?></h2>
             <div id="study_article_body">
-                <?php echo $model->study_body;?>
+                <div class="body_max hide">
+                    <?php echo $model->study_body;?>
+                </div>
+                <div class="body_min hide">
+                    <?php echo $model->study_body_min;?>
+                </div>
             </div>
             <p class="text-right"><small><?php echo $model->study_date;?></small></p>
 		</div>
@@ -62,6 +67,14 @@ $this->pageTitle=Yii::app()->name . ' - StudyArticle Form';
 <?php
 $link = Yii::app()->createUrl('StudyArticle/hits');
 $js="
+if(!navigator.userAgent.match(/mobile/i)){
+//PC端
+    $('#study_article_body>.body_max').removeClass('hide');
+}else{
+//移动端
+    $('#study_article_body>.body_min').removeClass('hide');
+}
+
 $('#study_article_body a').click(function(e){
     var startStr = $(this).data('start');
     var link_url = $(this).attr('href');

@@ -16,6 +16,7 @@ class StudyArticleModel extends CFormModel
     public $study_img;
     public $study_subtitle;
     public $study_body;
+    public $study_body_min;
     public $study_date;
     public $display=1;
     public $z_index=0;
@@ -35,7 +36,8 @@ class StudyArticleModel extends CFormModel
             'study_title'=>Yii::t('study','Article Name'),
             'study_img'=>Yii::t('study','Article Image'),
             'study_subtitle'=>Yii::t('study','Article Subtitle'),
-            'study_body'=>Yii::t('study','Article Body'),
+            'study_body'=>Yii::t('study','Article Body (pc)'),
+            'study_body_min'=>Yii::t('study','Article Body (min)'),
             'study_date'=>Yii::t('study','Article Date'),
             'display'=>Yii::t('study','display'),
             'z_index'=>Yii::t('study','z_index'),
@@ -49,7 +51,7 @@ class StudyArticleModel extends CFormModel
     {
         return array(
             //array('id, position, leave_reason, remarks, email, staff_type, leader','safe'),
-            array('id, menu_id, class_id,study_title,study_subtitle,study_body,study_date,study_img,display,z_index','safe'),
+            array('id, menu_id, class_id, study_body_min,study_title,study_subtitle,study_body,study_date,study_img,display,z_index','safe'),
             array('class_id,study_title,study_subtitle,study_body,study_date','required'),
             array('class_id','validateID'),
             array('study_title','validateName','on'=>array("edit","new")),
@@ -122,6 +124,7 @@ class StudyArticleModel extends CFormModel
             $this->study_img = $menu["study_img"];
             $this->study_subtitle = $menu["study_subtitle"];
             $this->study_body = $menu["study_body"];
+            $this->study_body_min = $menu["study_body_min"];
             $this->study_date = empty($menu["study_date"])?"":CGeneral::toDate($menu["study_date"]);
             $this->display = $menu["display"];
             $this->z_index = $menu["z_index"];
@@ -142,6 +145,7 @@ class StudyArticleModel extends CFormModel
                     'study_img'=>$this->study_img,
                     'study_subtitle'=>$this->study_subtitle,
                     'study_body'=>$this->study_body,
+                    'study_body_min'=>$this->study_body_min,
                     'study_date'=>empty($this->study_date)?null:$this->study_date,
                     'display'=>$this->display,
                     'z_index'=>$this->z_index,
@@ -156,6 +160,7 @@ class StudyArticleModel extends CFormModel
                     'study_img'=>$this->study_img,
                     'study_subtitle'=>$this->study_subtitle,
                     'study_body'=>$this->study_body,
+                    'study_body_min'=>$this->study_body_min,
                     'study_date'=>empty($this->study_date)?null:$this->study_date,
                     'display'=>$this->display,
                     'z_index'=>$this->z_index,

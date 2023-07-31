@@ -101,6 +101,15 @@ $this->pageTitle=Yii::app()->name . ' - StudyArticle Form';
                 </div>
             </div>
             <div class="form-group">
+                <?php echo $form->labelEx($model,'study_body_min',array('class'=>"col-lg-2 control-label")); ?>
+                <div class="col-lg-10">
+                    <?php
+                    echo $form->textArea($model, 'study_body_min',
+                        array('readonly'=>($model->scenario=='view'),'id'=>"study_body_min",'rows'=>10)
+                    ); ?>
+                </div>
+            </div>
+            <div class="form-group">
                 <?php echo $form->labelEx($model,'study_img',array('class'=>"col-lg-2 control-label")); ?>
                 <div class="col-lg-5">
                     <?php
@@ -150,7 +159,7 @@ $this->pageTitle=Yii::app()->name . ' - StudyArticle Form';
 <?php
 $uploadImage = Yii::app()->createUrl('studyArticle/uploadImgArea');
 $js = "
-CKEDITOR.replace('study_body',{
+var config_edit={
       toolbar: [
         {
           name: 'clipboard',
@@ -207,7 +216,9 @@ CKEDITOR.replace('study_body',{
 
       removeDialogTabs: 'image:advanced;link:advanced',
       removeButtons: 'PasteFromWord'
-});
+};
+CKEDITOR.replace('study_body',config_edit);
+CKEDITOR.replace('study_body_min',config_edit);
     $('.file-update').upload({
         uploadUrl:'".Yii::app()->createUrl('studyArticle/uploadImg')."',
         uploadData:{class_id:'{$model->class_id}',id:'{$model->id}'},
