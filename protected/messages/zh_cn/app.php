@@ -23,7 +23,8 @@ return array(
 	'Online Library'=>'网上文库',
 	'Charitable Credit'=>'慈善分系统',
 	'Service Report'=>'服务报告系统',
-	'Investment'=>'投资管理系统',
+    'Investment'=>'投资管理系统',
+    'Project progress'=>'项目跟进系统',
 
 	'System Use'=>'系统使用',
 
