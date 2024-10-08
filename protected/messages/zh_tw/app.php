@@ -25,6 +25,7 @@ return array(
 'Service Report'=>'服務報告系統',
     'Investment'=>'投資管理系統',
     'Project progress'=>'項目跟進系統',
+    'New United'=>'派单系统',
 
 'System Use'=>'系統使用',
 
