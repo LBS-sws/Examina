@@ -112,9 +112,9 @@ class WebUser extends CWebUser
 
 		$user=User::model()->find('LOWER(username)=?',array($this->name));
 		$city = City::model()->find('code=?',array($user->city));
-        $cstr = $user->city;
-        $city_allow = str_replace(",","','",$user->look_city);//将,号替换成','
-        $city_allow = empty($city_allow)? "'$cstr'" : "'{$city_allow}'";
+		$city_allow = City::model()->getDescendantList($user->city);
+		$cstr = $user->city;
+		$city_allow .= (empty($city_allow)) ? "'$cstr'" : ",'$cstr'";
 		
 		$session = Yii::app()->session;
 		$this->getUserOption($user);
@@ -196,11 +196,6 @@ class WebUser extends CWebUser
 		$returnUrl = $this->getFullUrl($baseUrl, $this->returnUrl);
 		
 		$session = Yii::app()->session;
-		if(isset($session['system']) && $session['system']=='svc'){
-			unset($session['system']);
-			//跳转到dr 日报表系统
-			Header('Location:https://dms.lbsapps.cn/dr-prod/index.php');
-		}
 		if (isset($session['system'])) {
 			if (strpos($returnUrl,$systems[$session['system']]['webroot'])===false) {
 				$found = '';
